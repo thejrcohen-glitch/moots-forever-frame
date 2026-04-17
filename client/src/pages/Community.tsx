@@ -3,13 +3,19 @@
  * Palette: bone, sienna, amber, flint, charcoal
  * Fonts: Playfair Display (headings), IBM Plex Mono (body/data), Barlow Condensed (labels)
  * Aesthetic: Grain over gloss. Lo-fi. Community-driven. Polaroid gallery feel.
+ *
+ * DATA LAYER: Persistent tRPC API — photos stored in MySQL + S3
+ * Territory enum: "TX" | "OK" | "AR" (uppercase, matches DB schema)
  */
 
 import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "wouter";
 import { toast } from "sonner";
+import { trpc } from "@/lib/trpc";
+import type { CommunityPhoto } from "../../../drizzle/schema";
 
+// ─── Grain overlay ─────────────────────────────────────────────────────────────
 function GrainOverlay({ opacity = 0.18 }: { opacity?: number }) {
   return (
     <div
@@ -72,83 +78,20 @@ function Nav() {
   );
 }
 
-// ─── Seed gallery entries (placeholder community photos using Unsplash) ────────
-const SEED_PHOTOS = [
-  {
-    id: "1",
-    url: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80",
-    rider: "Marcus T.",
-    location: "Bentonville, AR",
-    territory: "ar",
-    venue: "Airship Coffee at Coler",
-    caption: "First gravel ride of the season. The Routt 45 felt like it was made for these trails.",
-    model: "Routt 45",
-    date: "2026-04-12",
-  },
-  {
-    id: "2",
-    url: "https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=800&q=80",
-    rider: "Sarah K.",
-    location: "Austin, TX",
-    territory: "tx",
-    venue: "Flat Track Coffee",
-    caption: "Post-ride espresso ritual. Some things don't need improving.",
-    model: "Vamoots RSL",
-    date: "2026-04-08",
-  },
-  {
-    id: "3",
-    url: "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=800&q=80",
-    rider: "Jake R.",
-    location: "Oklahoma City, OK",
-    territory: "ok",
-    venue: "Lake Hefner Trail",
-    caption: "Wind in Oklahoma is not a suggestion. The RSL doesn't care.",
-    model: "Routt RSL",
-    date: "2026-04-05",
-  },
-  {
-    id: "4",
-    url: "https://images.unsplash.com/photo-1502744688674-c619d1586c9e?w=800&q=80",
-    rider: "Chris M.",
-    location: "Fayetteville, AR",
-    territory: "ar",
-    venue: "Slaughter Pen Trail",
-    caption: "Three years on this frame. Not a single regret.",
-    model: "Routt RSL",
-    date: "2026-03-28",
-  },
-  {
-    id: "5",
-    url: "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&q=80",
-    rider: "Elena V.",
-    location: "Dallas, TX",
-    territory: "tx",
-    venue: "White Rock Lake",
-    caption: "Dawn patrol. Just me, the lake, and a frame that will outlast everything.",
-    model: "Vamoots RSL",
-    date: "2026-03-22",
-  },
-  {
-    id: "6",
-    url: "https://images.unsplash.com/photo-1473091534298-04dcbce3278c?w=800&q=80",
-    rider: "Tom B.",
-    location: "Tulsa, OK",
-    territory: "ok",
-    venue: "River Parks Trail",
-    caption: "Titanium in the golden hour. Worth every penny.",
-    model: "Routt 45",
-    date: "2026-03-15",
-  },
-];
+// ─── Territory helpers ─────────────────────────────────────────────────────────
+function territoryColor(territory: string): string {
+  if (territory === "AR") return "oklch(0.35 0.06 145)";
+  if (territory === "TX") return "oklch(0.52 0.12 45)";
+  return "oklch(0.38 0.015 60)";
+}
 
-type Photo = typeof SEED_PHOTOS[0];
+function formatDate(ts: Date | string): string {
+  const d = typeof ts === "string" ? new Date(ts) : ts;
+  return d.toISOString().split("T")[0];
+}
 
 // ─── Photo Card ────────────────────────────────────────────────────────────────
-function PhotoCard({ photo, onClick }: { photo: Photo; onClick: () => void }) {
-  const territoryColor = photo.territory === "ar" ? "oklch(0.35 0.06 145)" : photo.territory === "tx" ? "oklch(0.52 0.12 45)" : "oklch(0.38 0.015 60)";
-  const territoryLabel = photo.territory === "ar" ? "AR" : photo.territory === "tx" ? "TX" : "OK";
-
+function PhotoCard({ photo, onClick }: { photo: CommunityPhoto; onClick: () => void }) {
   return (
     <motion.div
       layout
@@ -164,32 +107,39 @@ function PhotoCard({ photo, onClick }: { photo: Photo; onClick: () => void }) {
       {/* Polaroid-style frame */}
       <div className="relative overflow-hidden" style={{ aspectRatio: "4/3" }}>
         <img
-          src={photo.url}
-          alt={`${photo.rider} riding a ${photo.model} in ${photo.location}`}
+          src={photo.imageUrl}
+          alt={`${photo.riderName} riding a ${photo.mootsModel ?? "Moots"} in ${photo.location}`}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           style={{ filter: "saturate(0.8) contrast(1.05)" }}
         />
         <GrainOverlay opacity={0.2} />
         {/* Territory badge */}
-        <div className="absolute top-3 right-3 z-20 px-2 py-1 font-label text-xs tracking-widest" style={{ background: territoryColor, color: "oklch(0.945 0.018 78)" }}>
-          {territoryLabel}
+        <div
+          className="absolute top-3 right-3 z-20 px-2 py-1 font-label text-xs tracking-widest"
+          style={{ background: territoryColor(photo.territory), color: "oklch(0.945 0.018 78)" }}
+        >
+          {photo.territory}
         </div>
       </div>
       {/* Caption area */}
       <div className="p-4">
         <div className="flex items-center justify-between mb-2">
-          <span className="font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.72 0.14 65)" }}>{photo.rider}</span>
-          <span className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>{photo.model}</span>
+          <span className="font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.72 0.14 65)" }}>{photo.riderName}</span>
+          <span className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>{photo.mootsModel ?? "Moots"}</span>
         </div>
-        <p className="font-mono-custom text-xs leading-relaxed mb-2" style={{ color: "oklch(0.78 0.03 70)" }}>"{photo.caption}"</p>
-        <p className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>{photo.venue} · {photo.location}</p>
+        {photo.caption && (
+          <p className="font-mono-custom text-xs leading-relaxed mb-2" style={{ color: "oklch(0.78 0.03 70)" }}>"{photo.caption}"</p>
+        )}
+        <p className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>
+          {photo.venue ? `${photo.venue} · ` : ""}{photo.location}
+        </p>
       </div>
     </motion.div>
   );
 }
 
 // ─── Lightbox ─────────────────────────────────────────────────────────────────
-function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
+function Lightbox({ photo, onClose }: { photo: CommunityPhoto; onClose: () => void }) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -215,19 +165,34 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
           ×
         </button>
         <div className="relative overflow-hidden" style={{ aspectRatio: "16/9" }}>
-          <img src={photo.url} alt={photo.caption} className="w-full h-full object-cover" style={{ filter: "saturate(0.85) contrast(1.05)" }} />
+          <img
+            src={photo.imageUrl}
+            alt={photo.caption ?? `${photo.riderName} on a Moots`}
+            className="w-full h-full object-cover"
+            style={{ filter: "saturate(0.85) contrast(1.05)" }}
+          />
           <GrainOverlay opacity={0.18} />
         </div>
         <div className="p-8">
           <div className="flex items-start justify-between gap-6 mb-4">
             <div>
-              <p className="font-label text-xs tracking-[0.3em] uppercase mb-1" style={{ color: "oklch(0.72 0.14 65)" }}>{photo.rider} · {photo.location}</p>
-              <p className="font-display text-2xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>{photo.model}</p>
+              <p className="font-label text-xs tracking-[0.3em] uppercase mb-1" style={{ color: "oklch(0.72 0.14 65)" }}>
+                {photo.riderName} · {photo.location}
+              </p>
+              <p className="font-display text-2xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>
+                {photo.mootsModel ?? "Moots"}
+              </p>
             </div>
-            <p className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>{photo.date}</p>
+            <p className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>
+              {formatDate(photo.createdAt)}
+            </p>
           </div>
-          <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>"{photo.caption}"</p>
-          <p className="font-mono-custom text-xs mt-3" style={{ color: "oklch(0.52 0.04 65)" }}>{photo.venue}</p>
+          {photo.caption && (
+            <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>"{photo.caption}"</p>
+          )}
+          {photo.venue && (
+            <p className="font-mono-custom text-xs mt-3" style={{ color: "oklch(0.52 0.04 65)" }}>{photo.venue}</p>
+          )}
         </div>
       </motion.div>
     </motion.div>
@@ -235,11 +200,34 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
 }
 
 // ─── Upload Form ───────────────────────────────────────────────────────────────
-function UploadForm({ onAdd }: { onAdd: (photo: Photo) => void }) {
+function UploadForm({ onSuccess }: { onSuccess: () => void }) {
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState({ rider: "", location: "", territory: "", venue: "", caption: "", model: "", url: "" });
+  const [form, setForm] = useState({
+    riderName: "",
+    location: "",
+    territory: "" as "TX" | "OK" | "AR" | "",
+    venue: "",
+    caption: "",
+    mootsModel: "",
+  });
   const [preview, setPreview] = useState<string | null>(null);
+  const [imageData, setImageData] = useState<string | null>(null);
+  const [imageMimeType, setImageMimeType] = useState<"image/jpeg" | "image/png" | "image/webp">("image/jpeg");
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const uploadMutation = trpc.community.upload.useMutation({
+    onSuccess: () => {
+      toast.success("Your photo has been added to the community gallery.");
+      setForm({ riderName: "", location: "", territory: "", venue: "", caption: "", mootsModel: "" });
+      setPreview(null);
+      setImageData(null);
+      setOpen(false);
+      onSuccess();
+    },
+    onError: (err) => {
+      toast.error(err.message || "Upload failed. Please try again.");
+    },
+  });
 
   const handleFile = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -248,37 +236,37 @@ function UploadForm({ onAdd }: { onAdd: (photo: Photo) => void }) {
       toast.error("Photo must be under 8MB.");
       return;
     }
+    const mime = file.type as "image/jpeg" | "image/png" | "image/webp";
+    setImageMimeType(mime || "image/jpeg");
     const reader = new FileReader();
     reader.onload = (ev) => {
       const result = ev.target?.result as string;
       setPreview(result);
-      setForm((f) => ({ ...f, url: result }));
+      setImageData(result);
     };
     reader.readAsDataURL(file);
   }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.rider || !form.territory || !form.caption || !form.url) {
+    if (!form.riderName || !form.territory || !form.caption || !imageData) {
       toast.error("Please fill in your name, territory, caption, and upload a photo.");
       return;
     }
-    const newPhoto: Photo = {
-      id: Date.now().toString(),
-      url: form.url,
-      rider: form.rider,
-      location: form.location || form.territory.toUpperCase(),
-      territory: form.territory,
-      venue: form.venue || "The trail",
+    if (!form.location) {
+      toast.error("Please enter a city or location.");
+      return;
+    }
+    uploadMutation.mutate({
+      riderName: form.riderName,
+      territory: form.territory as "TX" | "OK" | "AR",
+      location: form.location,
+      venue: form.venue || undefined,
+      mootsModel: form.mootsModel || undefined,
       caption: form.caption,
-      model: form.model || "Moots",
-      date: new Date().toISOString().split("T")[0],
-    };
-    onAdd(newPhoto);
-    toast.success("Your photo has been added to the community gallery.");
-    setForm({ rider: "", location: "", territory: "", venue: "", caption: "", model: "", url: "" });
-    setPreview(null);
-    setOpen(false);
+      imageData,
+      imageMimeType,
+    });
   };
 
   const inputClass = "w-full font-mono-custom text-sm px-4 py-3 border-0 border-b-2 bg-transparent outline-none transition-colors duration-200";
@@ -318,7 +306,13 @@ function UploadForm({ onAdd }: { onAdd: (photo: Photo) => void }) {
                     <p className="font-label text-xs tracking-[0.3em] uppercase mb-1" style={{ color: "oklch(0.72 0.14 65)" }}>Community Gallery</p>
                     <h3 className="font-display text-3xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>Share Your Ride.</h3>
                   </div>
-                  <button onClick={() => setOpen(false)} className="font-mono-custom text-xl w-8 h-8 flex items-center justify-center hover:opacity-70" style={{ color: "oklch(0.945 0.018 78)" }}>×</button>
+                  <button
+                    onClick={() => setOpen(false)}
+                    className="font-mono-custom text-xl w-8 h-8 flex items-center justify-center hover:opacity-70"
+                    style={{ color: "oklch(0.945 0.018 78)" }}
+                  >
+                    ×
+                  </button>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -335,7 +329,7 @@ function UploadForm({ onAdd }: { onAdd: (photo: Photo) => void }) {
                       ) : (
                         <div className="text-center p-8">
                           <p className="font-mono-custom text-sm mb-2" style={{ color: "oklch(0.52 0.04 65)" }}>Click to upload</p>
-                          <p className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>JPG or PNG · Max 8MB</p>
+                          <p className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>JPG, PNG, or WebP · Max 8MB</p>
                         </div>
                       )}
                       <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleFile} />
@@ -345,27 +339,51 @@ function UploadForm({ onAdd }: { onAdd: (photo: Photo) => void }) {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.72 0.14 65)" }}>Your Name *</label>
-                      <input type="text" className={inputClass} style={inputStyle} placeholder="First name + last initial" value={form.rider} onChange={(e) => setForm((f) => ({ ...f, rider: e.target.value }))} />
+                      <input
+                        type="text"
+                        className={inputClass}
+                        style={inputStyle}
+                        placeholder="First name + last initial"
+                        value={form.riderName}
+                        onChange={(e) => setForm((f) => ({ ...f, riderName: e.target.value }))}
+                      />
                     </div>
                     <div>
                       <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.72 0.14 65)" }}>Territory *</label>
-                      <select className={inputClass} style={{ ...inputStyle, appearance: "none" as const }} value={form.territory} onChange={(e) => setForm({ ...form, territory: e.target.value })}>
+                      <select
+                        className={inputClass}
+                        style={{ ...inputStyle, appearance: "none" as const }}
+                        value={form.territory}
+                        onChange={(e) => setForm({ ...form, territory: e.target.value as "TX" | "OK" | "AR" | "" })}
+                      >
                         <option value="">Select state...</option>
-                        <option value="tx">Texas (TX)</option>
-                        <option value="ar">Arkansas (AR)</option>
-                        <option value="ok">Oklahoma (OK)</option>
+                        <option value="TX">Texas (TX)</option>
+                        <option value="AR">Arkansas (AR)</option>
+                        <option value="OK">Oklahoma (OK)</option>
                       </select>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.72 0.14 65)" }}>City / Location</label>
-                      <input type="text" className={inputClass} style={inputStyle} placeholder="Bentonville, Austin, OKC..." value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
+                      <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.72 0.14 65)" }}>City / Location *</label>
+                      <input
+                        type="text"
+                        className={inputClass}
+                        style={inputStyle}
+                        placeholder="Bentonville, Austin, OKC..."
+                        value={form.location}
+                        onChange={(e) => setForm({ ...form, location: e.target.value })}
+                      />
                     </div>
                     <div>
                       <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.72 0.14 65)" }}>Moots Model</label>
-                      <select className={inputClass} style={{ ...inputStyle, appearance: "none" as const }} value={form.model} onChange={(e) => setForm({ ...form, model: e.target.value })}>
+                      <select
+                        className={inputClass}
+                        style={{ ...inputStyle, appearance: "none" as const }}
+                        value={form.mootsModel}
+                        onChange={(e) => setForm({ ...form, mootsModel: e.target.value })}
+                      >
                         <option value="">Select model...</option>
                         <option value="Routt RSL">Routt RSL</option>
                         <option value="Routt 45">Routt 45</option>
@@ -380,7 +398,14 @@ function UploadForm({ onAdd }: { onAdd: (photo: Photo) => void }) {
 
                   <div>
                     <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.72 0.14 65)" }}>Coffee Shop / Venue / Trail</label>
-                    <input type="text" className={inputClass} style={inputStyle} placeholder="Airship Coffee, Flat Track, Lake Hefner..." value={form.venue} onChange={(e) => setForm({ ...form, venue: e.target.value })} />
+                    <input
+                      type="text"
+                      className={inputClass}
+                      style={inputStyle}
+                      placeholder="Airship Coffee, Flat Track, Lake Hefner..."
+                      value={form.venue}
+                      onChange={(e) => setForm({ ...form, venue: e.target.value })}
+                    />
                   </div>
 
                   <div>
@@ -396,10 +421,20 @@ function UploadForm({ onAdd }: { onAdd: (photo: Photo) => void }) {
                   </div>
 
                   <div className="flex items-center gap-6 pt-2">
-                    <button type="submit" className="font-label text-sm tracking-[0.2em] uppercase px-10 py-3.5 transition-all hover:opacity-80" style={{ background: "oklch(0.72 0.14 65)", color: "oklch(0.22 0.01 60)" }}>
-                      Add to Gallery
+                    <button
+                      type="submit"
+                      disabled={uploadMutation.isPending}
+                      className="font-label text-sm tracking-[0.2em] uppercase px-10 py-3.5 transition-all hover:opacity-80 disabled:opacity-40"
+                      style={{ background: "oklch(0.72 0.14 65)", color: "oklch(0.22 0.01 60)" }}
+                    >
+                      {uploadMutation.isPending ? "Uploading..." : "Add to Gallery"}
                     </button>
-                    <button type="button" onClick={() => setOpen(false)} className="font-mono-custom text-xs hover:underline" style={{ color: "oklch(0.52 0.04 65)" }}>
+                    <button
+                      type="button"
+                      onClick={() => setOpen(false)}
+                      className="font-mono-custom text-xs hover:underline"
+                      style={{ color: "oklch(0.52 0.04 65)" }}
+                    >
                       Cancel
                     </button>
                   </div>
@@ -415,18 +450,28 @@ function UploadForm({ onAdd }: { onAdd: (photo: Photo) => void }) {
 
 // ─── Community Page ────────────────────────────────────────────────────────────
 export default function Community() {
-  const [photos, setPhotos] = useState<Photo[]>(SEED_PHOTOS);
-  const [filter, setFilter] = useState("all");
-  const [lightbox, setLightbox] = useState<Photo | null>(null);
+  const [filter, setFilter] = useState<"ALL" | "TX" | "OK" | "AR">("ALL");
+  const [lightbox, setLightbox] = useState<CommunityPhoto | null>(null);
 
-  const filtered = filter === "all" ? photos : photos.filter((p) => p.territory === filter);
+  const utils = trpc.useUtils();
 
-  const filters = [
-    { id: "all", label: "All States" },
-    { id: "tx", label: "Texas" },
-    { id: "ar", label: "Arkansas" },
-    { id: "ok", label: "Oklahoma" },
+  const { data: photos, isLoading, isError } = trpc.community.list.useQuery(
+    { territory: filter },
+    { refetchOnWindowFocus: false }
+  );
+
+  const handleUploadSuccess = () => {
+    utils.community.list.invalidate();
+  };
+
+  const filters: { id: "ALL" | "TX" | "OK" | "AR"; label: string }[] = [
+    { id: "ALL", label: "All States" },
+    { id: "TX", label: "Texas" },
+    { id: "AR", label: "Arkansas" },
+    { id: "OK", label: "Oklahoma" },
   ];
+
+  const displayPhotos = photos ?? [];
 
   return (
     <div className="min-h-screen" style={{ background: "oklch(0.18 0.008 60)" }}>
@@ -447,7 +492,7 @@ export default function Community() {
             <p className="font-mono-custom text-sm md:text-base leading-loose mb-10" style={{ color: "oklch(0.78 0.03 70)" }}>
               Real riders. Real Moots bikes. Real coffee shops, trailheads, and post-ride porches across Texas, Arkansas, and Oklahoma. If you own a Moots in this territory, this wall is yours.
             </p>
-            <UploadForm onAdd={(photo) => setPhotos((prev) => [photo, ...prev])} />
+            <UploadForm onSuccess={handleUploadSuccess} />
           </div>
         </div>
       </section>
@@ -468,21 +513,51 @@ export default function Community() {
                   border: `1px solid ${filter === f.id ? "oklch(0.72 0.14 65)" : "oklch(0.38 0.015 60)"}`,
                 }}
               >
-                {f.label} {filter === f.id && `(${filtered.length})`}
+                {f.label} {filter === f.id && displayPhotos.length > 0 ? `(${displayPhotos.length})` : ""}
               </button>
             ))}
           </div>
 
-          {/* Masonry-style grid */}
-          <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px" style={{ background: "oklch(0.28 0.01 60)" }}>
-            <AnimatePresence mode="popLayout">
-              {filtered.map((photo) => (
-                <PhotoCard key={photo.id} photo={photo} onClick={() => setLightbox(photo)} />
-              ))}
-            </AnimatePresence>
-          </motion.div>
+          {/* Loading state */}
+          {isLoading && (
+            <div className="py-24 flex justify-center">
+              <div
+                className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin"
+                style={{ borderColor: "oklch(0.72 0.14 65)", borderTopColor: "transparent" }}
+              />
+            </div>
+          )}
 
-          {filtered.length === 0 && (
+          {/* Error state */}
+          {isError && (
+            <div className="py-24 text-center">
+              <p className="font-mono-custom text-sm" style={{ color: "oklch(0.52 0.04 65)" }}>
+                Could not load photos. Please refresh and try again.
+              </p>
+            </div>
+          )}
+
+          {/* Masonry-style grid */}
+          {!isLoading && !isError && (
+            <motion.div
+              layout
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px"
+              style={{ background: "oklch(0.28 0.01 60)" }}
+            >
+              <AnimatePresence mode="popLayout">
+                {displayPhotos.map((photo) => (
+                  <PhotoCard
+                    key={photo.id}
+                    photo={photo}
+                    onClick={() => setLightbox(photo)}
+                  />
+                ))}
+              </AnimatePresence>
+            </motion.div>
+          )}
+
+          {/* Empty state */}
+          {!isLoading && !isError && displayPhotos.length === 0 && (
             <div className="py-24 text-center">
               <p className="font-mono-custom text-sm" style={{ color: "oklch(0.52 0.04 65)" }}>
                 No photos yet for this territory. Be the first to share yours.
@@ -495,7 +570,7 @@ export default function Community() {
             <p className="font-mono-custom text-sm mb-6" style={{ color: "oklch(0.52 0.04 65)" }}>
               Own a Moots in TX, AR, or OK? This wall is yours.
             </p>
-            <UploadForm onAdd={(photo) => setPhotos((prev) => [photo, ...prev])} />
+            <UploadForm onSuccess={handleUploadSuccess} />
           </div>
         </div>
       </section>
