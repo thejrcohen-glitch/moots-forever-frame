@@ -278,17 +278,31 @@ function Nav() {
             The Forever Frame
           </span>
         </div>
-        <div className="flex items-center gap-4 md:gap-6">
+        <div className="flex items-center gap-3 md:gap-5 flex-wrap">
           {["Territories", "The Vibe", "Order", "Calendar", "Book a Pop-Up"].map((item) => (
             <a
               key={item}
               href={item === "Calendar" ? "#ride-calendar" : `#${item.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z-]/g, "")}`}
-              className="font-label text-xs md:text-sm tracking-widest uppercase transition-opacity hover:opacity-70"
+              className="font-label text-xs tracking-widest uppercase transition-opacity hover:opacity-70"
               style={{ color: scrolled ? "oklch(0.38 0.015 60)" : "oklch(0.945 0.018 78)" }}
             >
               {item}
             </a>
           ))}
+          <a
+            href="/engineering"
+            className="font-label text-xs tracking-widest uppercase transition-opacity hover:opacity-70"
+            style={{ color: scrolled ? "oklch(0.52 0.12 45)" : "oklch(0.72 0.14 65)" }}
+          >
+            Engineering
+          </a>
+          <a
+            href="/community"
+            className="font-label text-xs tracking-widest uppercase transition-opacity hover:opacity-70"
+            style={{ color: scrolled ? "oklch(0.52 0.12 45)" : "oklch(0.72 0.14 65)" }}
+          >
+            Community
+          </a>
         </div>
       </div>
     </nav>
