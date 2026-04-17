@@ -15,6 +15,13 @@
       "when": 1776429679654,
       "tag": "0001_round_invisible_woman",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1776464484546,
+      "tag": "0002_slim_phil_sheldon",
+      "breakpoints": true
     }
   ]
 }

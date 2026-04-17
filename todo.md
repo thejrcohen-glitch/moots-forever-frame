@@ -33,6 +33,47 @@
 - [x] Empty state for no photos in territory
 - [x] Error state for failed fetch
 
-## Optional Follow-ups
-- [ ] Wire booking form to send email notifications to Ian (notifyOwner helper)
-- [ ] Add Dealer Map section using Google Maps component with 50 CRM shop pins
+## Feature Batch 2
+
+### Booking Notifications
+- [x] bookingRouter.ts — submit procedure calling notifyOwner
+- [x] Register bookingRouter in server/routers.ts
+- [x] Update BookingForm in Home.tsx to use trpc.booking.submit.useMutation()
+- [x] Map territory values (bentonville→AR, austin→TX, okc→OK) before sending
+- [x] Show loading state on submit button
+
+### Dealer Map
+- [x] Create /dealers route in App.tsx
+- [x] Create client/src/pages/Dealers.tsx with Google Maps + 51 CRM shop pins
+- [x] Territory color coding (TX=sienna, AR=green, OK=charcoal)
+- [x] Filterable by territory
+- [x] Pin click shows shop name, city, and website link
+- [x] Sidebar list with territory filter and selected dealer detail
+
+### Database Schema Updates
+- [x] Add event_rsvps table to drizzle/schema.ts
+- [x] Change community_photos default approved to 'pending' (moderation flow)
+- [x] Run pnpm db:push to apply migrations
+
+### Photo Moderation Panel
+- [x] Create /admin route in App.tsx (protected — admin role only)
+- [x] Create client/src/pages/Admin.tsx with photo approval queue
+- [x] moderationRouter.ts — list all, approve, reject, delete procedures
+- [x] Register moderationRouter in server/routers.ts
+- [x] Community Wall only shows approved photos
+
+### Build Configurator
+- [x] Create /build route in App.tsx
+- [x] Create client/src/pages/BuildConfigurator.tsx — multi-step flow
+- [x] Steps: use case → terrain → budget → territory → recommendation
+- [x] Lead capture form at end (name, email, territory, notes)
+- [x] configuratorRouter.ts — submitLead procedure calling notifyOwner
+- [x] Build a Moots link in BuildConfigurator nav
+
+### Event RSVP System
+- [x] rsvpRouter.ts — submit (dedup by email+eventId), count, counts procedures
+- [x] Register rsvpRouter in server/routers.ts
+- [x] Update RideCalendar in Home.tsx to show RSVP button per event
+- [x] RSVP modal: name + email + notes input, stores in event_rsvps table
+- [x] Ian notified via notifyOwner on each new RSVP
+- [x] Show live RSVP count per event (from DB)

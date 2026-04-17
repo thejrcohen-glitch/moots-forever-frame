@@ -1,4 +1,4 @@
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { communityPhotos } from "../drizzle/schema";
 import { storagePut } from "./storage";
@@ -17,13 +17,17 @@ export const communityRouter = router({
       const db = await getDb();
       if (!db) return [];
 
+      // Only return approved photos on the public wall
       const rows = await db
         .select()
         .from(communityPhotos)
         .where(
           input.territory === "ALL"
-            ? undefined
-            : eq(communityPhotos.territory, input.territory)
+            ? eq(communityPhotos.approved, "approved")
+            : and(
+                eq(communityPhotos.territory, input.territory),
+                eq(communityPhotos.approved, "approved")
+              )
         )
         .orderBy(desc(communityPhotos.createdAt))
         .limit(100);
@@ -75,7 +79,7 @@ export const communityRouter = router({
         caption: input.caption ?? null,
         imageUrl: url,
         imageKey: key,
-        approved: "approved",
+        approved: "pending", // Requires admin moderation before appearing on the wall
       });
 
       return { success: true, url };

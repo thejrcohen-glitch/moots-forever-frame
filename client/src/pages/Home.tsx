@@ -6,6 +6,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { trpc } from "@/lib/trpc";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
@@ -302,6 +303,20 @@ function Nav() {
             style={{ color: scrolled ? "oklch(0.52 0.12 45)" : "oklch(0.72 0.14 65)" }}
           >
             Community
+          </a>
+          <a
+            href="/dealers"
+            className="font-label text-xs tracking-widest uppercase transition-opacity hover:opacity-70"
+            style={{ color: scrolled ? "oklch(0.52 0.12 45)" : "oklch(0.72 0.14 65)" }}
+          >
+            Dealers
+          </a>
+          <a
+            href="/build"
+            className="font-label text-xs tracking-widest uppercase px-4 py-1.5 transition-all hover:opacity-80"
+            style={{ background: scrolled ? "oklch(0.52 0.12 45)" : "oklch(0.72 0.14 65)", color: scrolled ? "oklch(0.945 0.018 78)" : "oklch(0.22 0.01 60)" }}
+          >
+            Build a Moots
           </a>
         </div>
       </div>
@@ -902,11 +917,114 @@ const CALENDAR_EVENTS = [
   { id: 12, territory: "okc", territoryName: "Oklahoma City, OK", type: "event", title: "Flint Hills Gravel", date: "2026-10-17", time: "All Day", location: "Emporia, KS (near OKC)", description: "Classic Flint Hills gravel riding. The landscape that inspired the campaign.", contact: null },
 ];
 
+// ─── RSVP Modal ───────────────────────────────────────────────────────────────
+interface RsvpModalProps {
+  event: typeof CALENDAR_EVENTS[number];
+  onClose: () => void;
+}
+
+function RsvpModal({ event, onClose }: RsvpModalProps) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [notes, setNotes] = useState("");
+  const [done, setDone] = useState(false);
+
+  // Map territory id to enum
+  const territoryEnum = event.territory === "bentonville" ? "AR" : event.territory === "austin" ? "TX" : "OK";
+
+  const rsvpMutation = trpc.rsvp.submit.useMutation({
+    onSuccess: (data) => {
+      if (data.alreadyRegistered) {
+        toast.info("You're already registered for this event.");
+        onClose();
+      } else {
+        setDone(true);
+      }
+    },
+    onError: (err) => toast.error(err.message || "Failed to submit RSVP."),
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name || !email) { toast.error("Name and email are required."); return; }
+    rsvpMutation.mutate({
+      eventId: event.id,
+      eventTitle: event.title,
+      eventDate: event.date,
+      territory: territoryEnum as "TX" | "OK" | "AR",
+      riderName: name,
+      email,
+      notes: notes || undefined,
+    });
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "oklch(0.08 0.005 60 / 0.85)" }} onClick={onClose}>
+      <div
+        className="w-full max-w-md relative"
+        style={{ background: "oklch(0.28 0.01 60)", border: "1px solid oklch(0.52 0.12 45 / 0.6)" }}
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="px-6 pt-6 pb-4" style={{ borderBottom: "1px solid oklch(0.38 0.015 60 / 0.5)" }}>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="font-label text-xs tracking-[0.25em] uppercase mb-1" style={{ color: event.type === "popup" ? "oklch(0.72 0.14 65)" : "oklch(0.52 0.12 45)" }}>
+                {event.type === "popup" ? "Moots Pop-Up" : "Gravel Event"} · {event.territoryName}
+              </p>
+              <h3 className="font-display text-xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>{event.title}</h3>
+              <p className="font-mono-custom text-xs mt-1" style={{ color: "oklch(0.52 0.04 65)" }}>{event.time} · {event.location}</p>
+            </div>
+            <button onClick={onClose} className="flex-shrink-0 font-mono-custom text-lg leading-none hover:opacity-60" style={{ color: "oklch(0.52 0.04 65)" }}>✕</button>
+          </div>
+        </div>
+
+        {/* Body */}
+        <div className="px-6 py-6">
+          {done ? (
+            <div className="text-center py-6">
+              <div className="w-12 h-12 mb-4 mx-auto flex items-center justify-center" style={{ border: "1px solid oklch(0.52 0.12 45)" }}>
+                <span className="font-display text-xl" style={{ color: "oklch(0.52 0.12 45)" }}>✓</span>
+              </div>
+              <p className="font-display text-xl font-bold mb-2" style={{ color: "oklch(0.945 0.018 78)" }}>You're in.</p>
+              <p className="font-mono-custom text-sm" style={{ color: "oklch(0.52 0.04 65)" }}>Ian will have your name on the list.</p>
+              <button onClick={onClose} className="mt-6 font-label text-xs tracking-[0.2em] uppercase px-8 py-3 hover:opacity-80" style={{ background: "oklch(0.52 0.12 45)", color: "oklch(0.945 0.018 78)" }}>Close</button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div>
+                <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>Your Name *</label>
+                <input type="text" className="w-full font-mono-custom text-sm px-4 py-3 border-0 border-b-2 bg-transparent outline-none" style={{ borderBottomColor: "oklch(0.38 0.015 60)", color: "oklch(0.945 0.018 78)" }} placeholder="First Last" value={name} onChange={e => setName(e.target.value)} />
+              </div>
+              <div>
+                <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>Email *</label>
+                <input type="email" className="w-full font-mono-custom text-sm px-4 py-3 border-0 border-b-2 bg-transparent outline-none" style={{ borderBottomColor: "oklch(0.38 0.015 60)", color: "oklch(0.945 0.018 78)" }} placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} />
+              </div>
+              <div>
+                <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>Notes (optional)</label>
+                <textarea rows={2} className="w-full font-mono-custom text-sm px-4 py-3 border-0 border-b-2 bg-transparent outline-none" style={{ borderBottomColor: "oklch(0.38 0.015 60)", color: "oklch(0.945 0.018 78)", resize: "none" }} placeholder="Anything Ian should know..." value={notes} onChange={e => setNotes(e.target.value)} />
+              </div>
+              <button type="submit" disabled={rsvpMutation.isPending} className="w-full font-label text-sm tracking-[0.2em] uppercase py-3.5 transition-all hover:opacity-80 disabled:opacity-40" style={{ background: "oklch(0.52 0.12 45)", color: "oklch(0.945 0.018 78)" }}>
+                {rsvpMutation.isPending ? "Submitting..." : "Reserve My Spot →"}
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Ride Calendar ─────────────────────────────────────────────────────────────
 function RideCalendar() {
   const [activeTerritory, setActiveTerritory] = useState<string>("all");
   const [activeType, setActiveType] = useState<string>("all");
   const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [rsvpEvent, setRsvpEvent] = useState<typeof CALENDAR_EVENTS[number] | null>(null);
+
+  // Fetch RSVP counts for all events
+  const eventIds = CALENDAR_EVENTS.map(e => e.id);
+  const { data: rsvpCounts = {} } = trpc.rsvp.counts.useQuery({ eventIds });
 
   const filtered = CALENDAR_EVENTS.filter((e) => {
     const tMatch = activeTerritory === "all" || e.territory === activeTerritory;
@@ -935,6 +1053,7 @@ function RideCalendar() {
   ];
 
   return (
+    <>
     <section id="ride-calendar" className="py-24 relative overflow-hidden" style={{ background: "oklch(0.22 0.01 60)" }}>
       <GrainOverlay opacity={0.1} />
       <div className="container relative z-20">
@@ -1083,17 +1202,22 @@ function RideCalendar() {
                         <p className="font-mono-custom text-sm leading-loose flex-1" style={{ color: "oklch(0.78 0.03 70)" }}>
                           {event.description}
                         </p>
-                        {event.contact && (
-                          <a
-                            href="https://ianzskrocki.com"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex-shrink-0 font-label text-xs tracking-[0.2em] uppercase px-6 py-2.5 transition-all hover:opacity-80"
-                            style={{ background: "oklch(0.72 0.14 65)", color: "oklch(0.22 0.01 60)" }}
-                          >
-                            RSVP via ianzskrocki.com →
-                          </a>
-                        )}
+                        <div className="flex flex-col gap-3 flex-shrink-0">
+                          {event.contact && (
+                            <button
+                              onClick={(e) => { e.stopPropagation(); setRsvpEvent(event); }}
+                              className="font-label text-xs tracking-[0.2em] uppercase px-6 py-2.5 transition-all hover:opacity-80"
+                              style={{ background: "oklch(0.72 0.14 65)", color: "oklch(0.22 0.01 60)" }}
+                            >
+                              RSVP Now →
+                            </button>
+                          )}
+                          {(rsvpCounts as Record<number, number>)[event.id] > 0 && (
+                            <p className="font-mono-custom text-xs text-center" style={{ color: "oklch(0.52 0.04 65)" }}>
+                              {(rsvpCounts as Record<number, number>)[event.id]} rider{(rsvpCounts as Record<number, number>)[event.id] !== 1 ? 's' : ''} registered
+                            </p>
+                          )}
+                        </div>
                       </div>
                     </motion.div>
                   )}
@@ -1115,7 +1239,12 @@ function RideCalendar() {
         </p>
       </div>
     </section>
-  );
+
+    {/* RSVP Modal */}
+    {rsvpEvent && (
+      <RsvpModal event={rsvpEvent} onClose={() => setRsvpEvent(null)} />
+    )}
+  </>);
 }
 
 // ─── Order Section ─────────────────────────────────────────────────────────────
@@ -1219,19 +1348,54 @@ function OrderSection() {
   );
 }
 
+// Territory ID → DB enum mapping
+const TERRITORY_MAP: Record<string, "TX" | "OK" | "AR"> = {
+  bentonville: "AR",
+  austin: "TX",
+  okc: "OK",
+};
+
 // ─── Booking Form ──────────────────────────────────────────────────────────────
 function BookingForm() {
   const [form, setForm] = useState({ name: "", email: "", shop: "", territory: "", date: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
 
+  const submitMutation = trpc.booking.submit.useMutation({
+    onSuccess: () => {
+      setSubmitted(true);
+      toast.success("Your request has been received. Ian will be in touch.");
+    },
+    onError: (err) => {
+      toast.error(err.message || "Submission failed. Please try again.");
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.territory) {
-      toast.error("Please fill in all required fields.");
+    if (!form.name || !form.email || !form.territory || form.territory === "other") {
+      toast.error("Please fill in all required fields and select a territory.");
       return;
     }
-    setSubmitted(true);
-    toast.success("Your request has been received. Ian will be in touch.");
+    const mappedTerritory = TERRITORY_MAP[form.territory];
+    if (!mappedTerritory) {
+      toast.error("Please select a valid territory.");
+      return;
+    }
+    const cityMap: Record<string, string> = {
+      bentonville: "Bentonville, AR",
+      austin: "Austin, TX",
+      okc: "Oklahoma City, OK",
+    };
+    submitMutation.mutate({
+      name: form.name,
+      email: form.email,
+      territory: mappedTerritory,
+      city: cityMap[form.territory] ?? form.territory,
+      venue: form.shop || undefined,
+      preferredDate: form.date || undefined,
+      message: form.message || undefined,
+      eventType: "pop-up-espresso",
+    });
   };
 
   const inputClass = "w-full font-mono-custom text-sm px-4 py-3 border-0 border-b-2 bg-transparent outline-none transition-colors duration-200";
@@ -1334,8 +1498,8 @@ function BookingForm() {
                       <textarea rows={4} className={inputClass} style={{ ...inputStyle, resize: "none" as const }} placeholder="Tell us about your shop, expected turnout, or any special requests..." value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} />
                     </div>
                     <div className="flex items-center gap-6 pt-2">
-                      <button type="submit" className="font-label text-sm tracking-[0.2em] uppercase px-10 py-3.5 transition-all duration-300 hover:opacity-80" style={{ background: "oklch(0.22 0.01 60)", color: "oklch(0.945 0.018 78)" }}>
-                        Request Pop-Up
+                      <button type="submit" disabled={submitMutation.isPending} className="font-label text-sm tracking-[0.2em] uppercase px-10 py-3.5 transition-all duration-300 hover:opacity-80 disabled:opacity-40" style={{ background: "oklch(0.22 0.01 60)", color: "oklch(0.945 0.018 78)" }}>
+                        {submitMutation.isPending ? "Sending..." : "Request Pop-Up"}
                       </button>
                       <a href="https://ianzskrocki.com" target="_blank" rel="noopener noreferrer" className="font-mono-custom text-xs hover:underline" style={{ color: "oklch(0.52 0.04 65)" }}>
                         or visit ianzskrocki.com →

@@ -7,6 +7,9 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Community from "@/pages/Community";
 import Engineering from "@/pages/Engineering";
+import Dealers from "@/pages/Dealers";
+import BuildConfigurator from "@/pages/BuildConfigurator";
+import Admin from "@/pages/Admin";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -14,6 +17,9 @@ function Router() {
       <Route path={"/"} component={Home} />
       <Route path={"/community"} component={Community} />
       <Route path={"/engineering"} component={Engineering} />
+      <Route path={"/dealers"} component={Dealers} />
+      <Route path={"/build"} component={BuildConfigurator} />
+      <Route path={"/admin"} component={Admin} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

@@ -37,9 +37,24 @@ export const communityPhotos = mysqlTable("community_photos", {
   caption: text("caption"),
   imageUrl: text("imageUrl").notNull(),
   imageKey: text("imageKey").notNull(),
-  approved: mysqlEnum("approved", ["pending", "approved", "rejected"]).default("approved").notNull(),
+  approved: mysqlEnum("approved", ["pending", "approved", "rejected"]).default("pending").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
 export type CommunityPhoto = typeof communityPhotos.$inferSelect;
 export type InsertCommunityPhoto = typeof communityPhotos.$inferInsert;
+
+export const eventRsvps = mysqlTable("event_rsvps", {
+  id: int("id").autoincrement().primaryKey(),
+  eventId: int("eventId").notNull(),
+  eventTitle: varchar("eventTitle", { length: 256 }).notNull(),
+  eventDate: varchar("eventDate", { length: 32 }).notNull(),
+  territory: mysqlEnum("territory", ["TX", "OK", "AR"]).notNull(),
+  riderName: varchar("riderName", { length: 128 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type EventRsvp = typeof eventRsvps.$inferSelect;
+export type InsertEventRsvp = typeof eventRsvps.$inferInsert;
