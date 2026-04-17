@@ -279,10 +279,10 @@ function Nav() {
           </span>
         </div>
         <div className="flex items-center gap-4 md:gap-6">
-          {["Territories", "The Vibe", "Order", "Book a Pop-Up"].map((item) => (
+          {["Territories", "The Vibe", "Order", "Calendar", "Book a Pop-Up"].map((item) => (
             <a
               key={item}
-              href={`#${item.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z-]/g, "")}`}
+              href={item === "Calendar" ? "#ride-calendar" : `#${item.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z-]/g, "")}`}
               className="font-label text-xs md:text-sm tracking-widest uppercase transition-opacity hover:opacity-70"
               style={{ color: scrolled ? "oklch(0.38 0.015 60)" : "oklch(0.945 0.018 78)" }}
             >
@@ -658,6 +658,452 @@ function TheVibe() {
   );
 }
 
+// ─── Model Comparison Data ────────────────────────────────────────────────────
+const MODELS = [
+  {
+    name: "Routt 45",
+    subtitle: "The All-Day Gravel Bike",
+    useCase: "Mixed-surface adventure riding. Flint hills, forest roads, loaded bikepacking. The workhorse.",
+    geometry: "Relaxed endurance geometry. Longer wheelbase, more trail. Stable at speed on loose terrain.",
+    clearance: "Up to 45mm tire",
+    priceTier: "$$$",
+    priceNote: "Entry to the titanium life",
+    bestFor: ["Gravel racing", "Bikepacking", "Mixed-surface endurance", "First titanium build"],
+    territory: "Bentonville, AR",
+    highlight: false,
+  },
+  {
+    name: "Routt RSL",
+    subtitle: "The Race-Ready Gravel Machine",
+    useCase: "Fast gravel. Events like Unbound, Gravel Worlds, or any day you want to go hard on dirt.",
+    geometry: "Aggressive race geometry. Snappier handling, stiffer feel, more responsive under power.",
+    clearance: "Up to 45mm tire",
+    priceTier: "$$$$",
+    priceNote: "The flagship gravel frame",
+    bestFor: ["Gravel racing", "Fast group rides", "Competitive events", "Riders upgrading from carbon"],
+    territory: "Oklahoma City, OK",
+    highlight: true,
+  },
+  {
+    name: "Vamoots RSL",
+    subtitle: "The Road Purist's Frame",
+    useCase: "Pure road riding. Century rides, fast group training, or the smoothest pavement you can find in ATX.",
+    geometry: "Classic road race geometry. Responsive, efficient, built for tarmac.",
+    clearance: "Up to 32mm tire",
+    priceTier: "$$$$",
+    priceNote: "The definitive titanium road frame",
+    bestFor: ["Road racing", "Century rides", "Fast group training", "Riders retiring their carbon road bike"],
+    territory: "Austin, TX",
+    highlight: false,
+  },
+];
+
+// ─── Model Comparison Table ────────────────────────────────────────────────────
+function ModelComparison() {
+  const [selected, setSelected] = useState<string | null>(null);
+
+  const rows = [
+    { label: "Best For", key: "useCase" },
+    { label: "Geometry", key: "geometry" },
+    { label: "Tire Clearance", key: "clearance" },
+    { label: "Territory", key: "territory" },
+    { label: "Price Tier", key: "priceTier" },
+  ];
+
+  return (
+    <div className="mt-16">
+      <div className="text-center mb-8">
+        <p className="font-label text-xs tracking-[0.3em] uppercase mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>Self-Qualify</p>
+        <h3 className="font-display text-3xl md:text-4xl font-bold" style={{ color: "oklch(0.22 0.01 60)" }}>
+          Which Moots is yours?
+        </h3>
+        <p className="font-mono-custom text-xs mt-3" style={{ color: "oklch(0.52 0.04 65)" }}>
+          Three frames. One metal. Different riders.
+        </p>
+      </div>
+
+      {/* Mobile: stacked cards */}
+      <div className="md:hidden space-y-4">
+        {MODELS.map((m) => (
+          <motion.div
+            key={m.name}
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="p-6"
+            style={{
+              background: m.highlight ? "oklch(0.22 0.01 60)" : "oklch(0.945 0.018 78)",
+              border: m.highlight ? "1px solid oklch(0.72 0.14 65)" : "1px solid oklch(0.78 0.03 70)",
+            }}
+          >
+            <div className="flex items-start justify-between mb-3">
+              <div>
+                <p className="font-display text-xl font-bold" style={{ color: m.highlight ? "oklch(0.945 0.018 78)" : "oklch(0.22 0.01 60)" }}>{m.name}</p>
+                <p className="font-mono-custom text-xs mt-0.5" style={{ color: m.highlight ? "oklch(0.72 0.14 65)" : "oklch(0.52 0.12 45)" }}>{m.subtitle}</p>
+              </div>
+              <span className="font-label text-sm font-bold" style={{ color: "oklch(0.72 0.14 65)" }}>{m.priceTier}</span>
+            </div>
+            <p className="font-mono-custom text-xs leading-relaxed mb-3" style={{ color: m.highlight ? "oklch(0.78 0.03 70)" : "oklch(0.52 0.04 65)" }}>{m.useCase}</p>
+            <div className="space-y-1">
+              {m.bestFor.map((b) => (
+                <div key={b} className="flex items-center gap-2 font-mono-custom text-xs" style={{ color: m.highlight ? "oklch(0.88 0.025 75)" : "oklch(0.38 0.015 60)" }}>
+                  <span style={{ color: "oklch(0.72 0.14 65)" }}>—</span>{b}
+                </div>
+              ))}
+            </div>
+            <a
+              href="https://ianzskrocki.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block mt-4 font-label text-xs tracking-[0.2em] uppercase px-5 py-2 transition-all hover:opacity-80"
+              style={{
+                background: m.highlight ? "oklch(0.72 0.14 65)" : "oklch(0.22 0.01 60)",
+                color: m.highlight ? "oklch(0.22 0.01 60)" : "oklch(0.945 0.018 78)",
+              }}
+            >
+              Order This Frame →
+            </a>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Desktop: comparison table */}
+      <div className="hidden md:block overflow-x-auto">
+        <table className="w-full" style={{ borderCollapse: "collapse" }}>
+          <thead>
+            <tr>
+              <th className="text-left p-4 w-32" style={{ borderBottom: "1px solid oklch(0.78 0.03 70)" }}>
+                <span className="font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>Model</span>
+              </th>
+              {MODELS.map((m) => (
+                <th
+                  key={m.name}
+                  className="p-5 text-left"
+                  style={{
+                    background: m.highlight ? "oklch(0.22 0.01 60)" : "oklch(0.945 0.018 78)",
+                    borderBottom: m.highlight ? "2px solid oklch(0.72 0.14 65)" : "1px solid oklch(0.78 0.03 70)",
+                    borderLeft: "1px solid oklch(0.78 0.03 70 / 0.4)",
+                  }}
+                >
+                  {m.highlight && (
+                    <span className="font-label text-xs tracking-widest uppercase block mb-1" style={{ color: "oklch(0.72 0.14 65)" }}>Most Popular</span>
+                  )}
+                  <span className="font-display text-2xl font-bold block" style={{ color: m.highlight ? "oklch(0.945 0.018 78)" : "oklch(0.22 0.01 60)" }}>{m.name}</span>
+                  <span className="font-mono-custom text-xs block mt-0.5" style={{ color: m.highlight ? "oklch(0.72 0.14 65)" : "oklch(0.52 0.12 45)" }}>{m.subtitle}</span>
+                  <span className="font-label text-lg font-bold block mt-2" style={{ color: "oklch(0.72 0.14 65)" }}>{m.priceTier}</span>
+                  <span className="font-mono-custom text-xs" style={{ color: m.highlight ? "oklch(0.52 0.04 65)" : "oklch(0.52 0.04 65)" }}>{m.priceNote}</span>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              { label: "Use Case", render: (m: typeof MODELS[0]) => m.useCase },
+              { label: "Geometry", render: (m: typeof MODELS[0]) => m.geometry },
+              { label: "Tire Clearance", render: (m: typeof MODELS[0]) => m.clearance },
+              { label: "Territory", render: (m: typeof MODELS[0]) => m.territory },
+              { label: "Best For", render: (m: typeof MODELS[0]) => (
+                <ul className="space-y-1">
+                  {m.bestFor.map((b) => (
+                    <li key={b} className="flex items-center gap-2 font-mono-custom text-xs" style={{ color: m.highlight ? "oklch(0.88 0.025 75)" : "oklch(0.38 0.015 60)" }}>
+                      <span style={{ color: "oklch(0.72 0.14 65)" }}>—</span>{b}
+                    </li>
+                  ))}
+                </ul>
+              )},
+            ].map((row, ri) => (
+              <tr key={row.label}>
+                <td
+                  className="p-4 font-label text-xs tracking-widest uppercase align-top"
+                  style={{
+                    color: "oklch(0.52 0.12 45)",
+                    borderBottom: "1px solid oklch(0.78 0.03 70 / 0.5)",
+                    background: ri % 2 === 0 ? "oklch(0.88 0.025 75 / 0.3)" : "transparent",
+                  }}
+                >
+                  {row.label}
+                </td>
+                {MODELS.map((m) => (
+                  <td
+                    key={m.name}
+                    className="p-5 align-top font-mono-custom text-xs leading-relaxed"
+                    style={{
+                      background: m.highlight
+                        ? ri % 2 === 0 ? "oklch(0.25 0.01 60)" : "oklch(0.22 0.01 60)"
+                        : ri % 2 === 0 ? "oklch(0.88 0.025 75 / 0.3)" : "oklch(0.945 0.018 78)",
+                      color: m.highlight ? "oklch(0.78 0.03 70)" : "oklch(0.38 0.015 60)",
+                      borderBottom: "1px solid oklch(0.78 0.03 70 / 0.3)",
+                      borderLeft: "1px solid oklch(0.78 0.03 70 / 0.2)",
+                    }}
+                  >
+                    {row.render(m)}
+                  </td>
+                ))}
+              </tr>
+            ))}
+            {/* CTA row */}
+            <tr>
+              <td className="p-4" style={{ background: "transparent" }} />
+              {MODELS.map((m) => (
+                <td key={m.name} className="p-5" style={{ background: m.highlight ? "oklch(0.22 0.01 60)" : "oklch(0.945 0.018 78)", borderLeft: "1px solid oklch(0.78 0.03 70 / 0.2)" }}>
+                  <a
+                    href="https://ianzskrocki.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block font-label text-xs tracking-[0.2em] uppercase px-5 py-2.5 transition-all hover:opacity-80"
+                    style={{
+                      background: m.highlight ? "oklch(0.72 0.14 65)" : "oklch(0.22 0.01 60)",
+                      color: m.highlight ? "oklch(0.22 0.01 60)" : "oklch(0.945 0.018 78)",
+                    }}
+                  >
+                    Order This Frame →
+                  </a>
+                </td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+// ─── Ride Calendar Data ────────────────────────────────────────────────────────
+const CALENDAR_EVENTS = [
+  // Bentonville
+  { id: 1, territory: "bentonville", territoryName: "Bentonville, AR", type: "popup", title: "Moots Pop-Up: Airship Coffee at Coler", date: "2026-04-25", time: "7:00 AM – 10:00 AM", location: "Airship Coffee, Coler Preserve", description: "Demo fleet on-site. Espresso flowing. Bring your gravel bike or test ride a Routt 45.", contact: "ianzskrocki.com" },
+  { id: 2, territory: "bentonville", territoryName: "Bentonville, AR", type: "event", title: "Oz Trails Off-Road", date: "2026-05-02", time: "All Day", location: "Bentonville, AR", description: "One of the premier mountain bike events in the Ozarks. Moots will be in the mix.", contact: null },
+  { id: 3, territory: "bentonville", territoryName: "Bentonville, AR", type: "popup", title: "Moots Pop-Up: Bike Rack Brewing", date: "2026-05-16", time: "4:00 PM – 7:00 PM", location: "Bike Rack Brewing Co., Bentonville", description: "Post-ride pints and titanium. Demo bikes available. No hard sell — just good beer and better bikes.", contact: "ianzskrocki.com" },
+  { id: 4, territory: "bentonville", territoryName: "Bentonville, AR", type: "event", title: "Slaughter Pen Jam", date: "2026-10-10", time: "All Day", location: "Slaughter Pen Trail, Bentonville", description: "Annual gravel and MTB gathering in the Ozarks. Prime demo opportunity.", contact: null },
+  // Austin
+  { id: 5, territory: "austin", territoryName: "Austin, TX", type: "popup", title: "Moots Pop-Up: Flat Track Coffee", date: "2026-04-19", time: "7:30 AM – 10:30 AM", location: "Flat Track Coffee, East Austin", description: "Vamoots RSL demo fleet. Cortados, titanium, and no carbon in sight.", contact: "ianzskrocki.com" },
+  { id: 6, territory: "austin", territoryName: "Austin, TX", type: "event", title: "Gravel Locos", date: "2026-05-09", time: "All Day", location: "Hico, TX (near Austin)", description: "Texas gravel racing staple. 100 miles of Hill Country dirt. Moots territory.", contact: null },
+  { id: 7, territory: "austin", territoryName: "Austin, TX", type: "popup", title: "Moots Pop-Up: Cosmic Coffee", date: "2026-06-06", time: "8:00 AM – 11:00 AM", location: "Cosmic Coffee + Beer Garden, Austin", description: "Morning espresso pop-up in the garden. Vamoots RSL and Routt RSL on display.", contact: "ianzskrocki.com" },
+  { id: 8, territory: "austin", territoryName: "Austin, TX", type: "event", title: "Hotter 'N Hell Hundred", date: "2026-08-29", time: "All Day", location: "Wichita Falls, TX", description: "100-mile road century. The Vamoots RSL was built for days like this.", contact: null },
+  // OKC
+  { id: 9, territory: "okc", territoryName: "Oklahoma City, OK", type: "popup", title: "Moots Pop-Up: Elemental Coffee", date: "2026-04-26", time: "8:00 AM – 11:00 AM", location: "Elemental Coffee Roasters, Midtown OKC", description: "Routt RSL demo fleet. Single-origin espresso. The kind of morning that earns a forever bike.", contact: "ianzskrocki.com" },
+  { id: 10, territory: "okc", territoryName: "Oklahoma City, OK", type: "event", title: "Red Dirt Gravel Grinder", date: "2026-05-23", time: "All Day", location: "Lake Hefner, Oklahoma City", description: "OKC's signature gravel event. Flat, fast, and relentless. Routt RSL weather.", contact: null },
+  { id: 11, territory: "okc", territoryName: "Oklahoma City, OK", type: "popup", title: "Moots Pop-Up: Stonecloud Brewing", date: "2026-06-13", time: "3:00 PM – 6:00 PM", location: "Stonecloud Brewing, OKC", description: "Post-ride taproom takeover. Demo bikes outside, cold pints inside.", contact: "ianzskrocki.com" },
+  { id: 12, territory: "okc", territoryName: "Oklahoma City, OK", type: "event", title: "Flint Hills Gravel", date: "2026-10-17", time: "All Day", location: "Emporia, KS (near OKC)", description: "Classic Flint Hills gravel riding. The landscape that inspired the campaign.", contact: null },
+];
+
+// ─── Ride Calendar ─────────────────────────────────────────────────────────────
+function RideCalendar() {
+  const [activeTerritory, setActiveTerritory] = useState<string>("all");
+  const [activeType, setActiveType] = useState<string>("all");
+  const [expandedId, setExpandedId] = useState<number | null>(null);
+
+  const filtered = CALENDAR_EVENTS.filter((e) => {
+    const tMatch = activeTerritory === "all" || e.territory === activeTerritory;
+    const typeMatch = activeType === "all" || e.type === activeType;
+    return tMatch && typeMatch;
+  }).sort((a, b) => a.date.localeCompare(b.date));
+
+  const formatDate = (dateStr: string) => {
+    const d = new Date(dateStr + "T12:00:00");
+    return d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" });
+  };
+
+  const isUpcoming = (dateStr: string) => new Date(dateStr + "T12:00:00") >= new Date();
+
+  const filters = [
+    { id: "all", label: "All Territories" },
+    { id: "bentonville", label: "Bentonville, AR" },
+    { id: "austin", label: "Austin, TX" },
+    { id: "okc", label: "Oklahoma City, OK" },
+  ];
+
+  const typeFilters = [
+    { id: "all", label: "All Events" },
+    { id: "popup", label: "Pop-Ups" },
+    { id: "event", label: "Gravel Events" },
+  ];
+
+  return (
+    <section id="ride-calendar" className="py-24 relative overflow-hidden" style={{ background: "oklch(0.22 0.01 60)" }}>
+      <GrainOverlay opacity={0.1} />
+      <div className="container relative z-20">
+        <div className="mb-12">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+              <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: "oklch(0.72 0.14 65)" }}>Upcoming</p>
+              <h2 className="font-display text-4xl md:text-5xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>
+                Ride Calendar.
+              </h2>
+              <p className="font-mono-custom text-sm mt-3" style={{ color: "oklch(0.78 0.03 70)" }}>
+                Pop-ups, gravel events, and demo days across TX · OK · AR
+              </p>
+            </div>
+            <a
+              href="#book-a-pop-up"
+              className="font-label text-xs tracking-[0.2em] uppercase px-6 py-2.5 transition-all hover:opacity-80 self-start md:self-auto"
+              style={{ background: "oklch(0.72 0.14 65)", color: "oklch(0.22 0.01 60)" }}
+            >
+              Request a Date →
+            </a>
+          </div>
+
+          {/* Filter pills */}
+          <div className="flex flex-wrap gap-2 mt-8">
+            {filters.map((f) => (
+              <button
+                key={f.id}
+                onClick={() => setActiveTerritory(f.id)}
+                className="font-label text-xs tracking-widest uppercase px-4 py-2 transition-all duration-200"
+                style={{
+                  background: activeTerritory === f.id ? "oklch(0.72 0.14 65)" : "transparent",
+                  color: activeTerritory === f.id ? "oklch(0.22 0.01 60)" : "oklch(0.52 0.04 65)",
+                  border: `1px solid ${activeTerritory === f.id ? "oklch(0.72 0.14 65)" : "oklch(0.38 0.015 60)"}`,
+                }}
+              >
+                {f.label}
+              </button>
+            ))}
+            <div className="w-px mx-1" style={{ background: "oklch(0.38 0.015 60)" }} />
+            {typeFilters.map((f) => (
+              <button
+                key={f.id}
+                onClick={() => setActiveType(f.id)}
+                className="font-label text-xs tracking-widest uppercase px-4 py-2 transition-all duration-200"
+                style={{
+                  background: activeType === f.id ? "oklch(0.52 0.12 45)" : "transparent",
+                  color: activeType === f.id ? "oklch(0.945 0.018 78)" : "oklch(0.52 0.04 65)",
+                  border: `1px solid ${activeType === f.id ? "oklch(0.52 0.12 45)" : "oklch(0.38 0.015 60)"}`,
+                }}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Event list */}
+        <div className="space-y-px">
+          <AnimatePresence mode="popLayout">
+            {filtered.map((event) => (
+              <motion.div
+                key={event.id}
+                layout
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.3 }}
+              >
+                <button
+                  className="w-full text-left"
+                  onClick={() => setExpandedId(expandedId === event.id ? null : event.id)}
+                >
+                  <div
+                    className="flex items-start gap-4 md:gap-8 p-5 md:p-6 transition-all duration-200 group"
+                    style={{
+                      background: expandedId === event.id ? "oklch(0.28 0.01 60)" : "oklch(0.25 0.008 60)",
+                      borderLeft: `3px solid ${event.type === "popup" ? "oklch(0.72 0.14 65)" : "oklch(0.52 0.12 45)"}`,
+                    }}
+                  >
+                    {/* Date block */}
+                    <div className="flex-shrink-0 w-16 text-center">
+                      <p className="font-display text-2xl font-bold leading-none" style={{ color: event.type === "popup" ? "oklch(0.72 0.14 65)" : "oklch(0.52 0.12 45)" }}>
+                        {new Date(event.date + "T12:00:00").getDate()}
+                      </p>
+                      <p className="font-label text-xs tracking-widest uppercase mt-0.5" style={{ color: "oklch(0.52 0.04 65)" }}>
+                        {new Date(event.date + "T12:00:00").toLocaleDateString("en-US", { month: "short" })}
+                      </p>
+                      <p className="font-mono-custom text-xs mt-0.5" style={{ color: "oklch(0.38 0.015 60)" }}>
+                        {new Date(event.date + "T12:00:00").getFullYear()}
+                      </p>
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-3 mb-1 flex-wrap">
+                        <span
+                          className="font-label text-xs tracking-widest uppercase px-2 py-0.5"
+                          style={{
+                            background: event.type === "popup" ? "oklch(0.72 0.14 65 / 0.15)" : "oklch(0.52 0.12 45 / 0.15)",
+                            color: event.type === "popup" ? "oklch(0.72 0.14 65)" : "oklch(0.52 0.12 45)",
+                          }}
+                        >
+                          {event.type === "popup" ? "Moots Pop-Up" : "Gravel Event"}
+                        </span>
+                        <span className="font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.38 0.015 60)" }}>
+                          {event.territoryName}
+                        </span>
+                        {!isUpcoming(event.date) && (
+                          <span className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>Past</span>
+                        )}
+                      </div>
+                      <p className="font-display text-lg font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>{event.title}</p>
+                      <p className="font-mono-custom text-xs mt-1" style={{ color: "oklch(0.52 0.04 65)" }}>
+                        {event.time} · {event.location}
+                      </p>
+                    </div>
+
+                    {/* Expand arrow */}
+                    <div
+                      className="flex-shrink-0 font-mono-custom text-xs transition-transform duration-300"
+                      style={{
+                        color: "oklch(0.52 0.04 65)",
+                        transform: expandedId === event.id ? "rotate(90deg)" : "rotate(0deg)",
+                      }}
+                    >
+                      →
+                    </div>
+                  </div>
+                </button>
+
+                {/* Expanded detail */}
+                <AnimatePresence>
+                  {expandedId === event.id && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      style={{ overflow: "hidden" }}
+                    >
+                      <div
+                        className="px-6 py-5 flex flex-col md:flex-row gap-6 items-start"
+                        style={{ background: "oklch(0.28 0.01 60)", borderLeft: `3px solid ${event.type === "popup" ? "oklch(0.72 0.14 65)" : "oklch(0.52 0.12 45)"}` }}
+                      >
+                        <p className="font-mono-custom text-sm leading-loose flex-1" style={{ color: "oklch(0.78 0.03 70)" }}>
+                          {event.description}
+                        </p>
+                        {event.contact && (
+                          <a
+                            href="https://ianzskrocki.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-shrink-0 font-label text-xs tracking-[0.2em] uppercase px-6 py-2.5 transition-all hover:opacity-80"
+                            style={{ background: "oklch(0.72 0.14 65)", color: "oklch(0.22 0.01 60)" }}
+                          >
+                            RSVP via ianzskrocki.com →
+                          </a>
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+
+          {filtered.length === 0 && (
+            <div className="py-16 text-center">
+              <p className="font-mono-custom text-sm" style={{ color: "oklch(0.52 0.04 65)" }}>No events match this filter. Check back soon — or request a pop-up.</p>
+            </div>
+          )}
+        </div>
+
+        <p className="font-mono-custom text-xs mt-8 text-center" style={{ color: "oklch(0.38 0.015 60)" }}>
+          Want to add your event or host a pop-up? Contact Ian at{" "}
+          <a href="https://ianzskrocki.com" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "oklch(0.52 0.12 45)" }}>ianzskrocki.com</a>
+        </p>
+      </div>
+    </section>
+  );
+}
+
 // ─── Order Section ─────────────────────────────────────────────────────────────
 function OrderSection() {
   return (
@@ -752,6 +1198,8 @@ function OrderSection() {
             ianzskrocki.com
           </a>
         </p>
+
+        <ModelComparison />
       </div>
     </section>
   );
@@ -928,6 +1376,7 @@ export default function Home() {
       <Territories />
       <TheVibe />
       <OrderSection />
+      <RideCalendar />
       <BookingForm />
       <Footer />
     </div>
