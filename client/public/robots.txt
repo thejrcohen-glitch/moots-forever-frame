@@ -1,0 +1,19 @@
+# Moots — The Forever Frame
+# Territory: Texas · Arkansas · Oklahoma
+# Rep: Ian Zakrocki — ianzskrocki.manus.space
+
+User-agent: *
+Allow: /
+Allow: /engineering
+Allow: /community
+
+# Block any future admin or private paths
+Disallow: /admin
+Disallow: /api
+Disallow: /*.json$
+
+# Sitemap location
+Sitemap: https://ianzskrocki.manus.space/sitemap.xml
+
+# Crawl-delay for polite bots
+Crawl-delay: 10
