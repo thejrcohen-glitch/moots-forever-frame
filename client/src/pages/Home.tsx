@@ -1,11 +1,11 @@
 /*
  * DESIGN: Analog Film / Western Americana
- * Palette: bone (#F2EDE4), sienna, amber, flint, charcoal
+ * Palette: bone, sienna, amber, flint, charcoal
  * Fonts: Playfair Display (headings), IBM Plex Mono (body/data), Barlow Condensed (labels)
  * Aesthetic: Grain over gloss. Lo-fi. Cinematic scroll.
  */
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
@@ -21,6 +21,8 @@ const TERRITORIES = [
     caption: "No carbon expiration dates. Just the sound of tires on flint and the promise of a cold one at the finish. Built in Colorado, proven in the Ozarks.",
     hashtags: "#Moots #Titanium #Gravel",
     coords: "36.3729° N, 94.2088° W",
+    lat: 36.3729,
+    lon: -94.2088,
     img: "https://d2xsxph8kpxj0f.cloudfront.net/310519663557843772/QUvoVjeKdQzxhUCD9R3yK5/territory-bentonville-iRc4P2FMuTMdoGFoZkMzdq.webp",
     coffee: { name: "Airship Coffee at Coler", address: "1300 Applegate Trail, Bentonville, AR", url: "https://airshipcoffee.com", vibe: "Open-air concrete café inside the Coler Mountain Bike Preserve. No front door, no Wi-Fi, just swings, espresso, and trail access." },
     brewery: { name: "Bike Rack Brewing Co.", address: "801 SE 8th St, Bentonville, AR", url: "https://bikerackbrewing.com", vibe: "Bentonville's go-to taproom for trail-ready craft beer, deeply embedded in the local cycling community." },
@@ -34,6 +36,8 @@ const TERRITORIES = [
     caption: "Some things are built to last. Your frame should be one of them. Hand-welded in Steamboat, right at home in ATX.",
     hashtags: "#Moots #ForeverBike #AustinCycling",
     coords: "30.2672° N, 97.7431° W",
+    lat: 30.2672,
+    lon: -97.7431,
     img: "https://d2xsxph8kpxj0f.cloudfront.net/310519663557843772/QUvoVjeKdQzxhUCD9R3yK5/territory-austin-XyH5opWd6pBGv7sRuNWxEr.webp",
     coffee: { name: "Flat Track Coffee", address: "1619 E Cesar Chavez St, Austin, TX", url: "https://flattrackcoffee.com", vibe: "Shares space with Cycleast bike shop. The absolute core of Austin's coffee meets chain grease culture." },
     brewery: { name: "Cosmic Coffee + Beer Garden", address: "121 Pickle Rd, Austin, TX", url: "https://cosmichospitalitygroup.com/south-austin/", vibe: "Massive outdoor garden with food trucks, waterfalls, and a mix of coffee and craft beer. Perfect for a post-ride gathering." },
@@ -47,6 +51,8 @@ const TERRITORIES = [
     caption: "Miles fade. Titanium doesn't. Outlasting the light in OKC.",
     hashtags: "#Moots #GravelGrinder #Titanium",
     coords: "35.4676° N, 97.5164° W",
+    lat: 35.4676,
+    lon: -97.5164,
     img: "https://d2xsxph8kpxj0f.cloudfront.net/310519663557843772/QUvoVjeKdQzxhUCD9R3yK5/territory-okc-UNC9ch2ArK2NfhctY2yUxW.webp",
     coffee: { name: "Elemental Coffee Roasters", address: "815 N Hudson Ave, Oklahoma City, OK", url: "https://elementalcoffee.com", vibe: "A staple of Midtown OKC, known for excellent roasts and a strong connection to the local cycling community." },
     brewery: { name: "Stonecloud Brewing Company", address: "1012 NW 1st St, Oklahoma City, OK", url: "https://stonecloudbrewing.com", vibe: "Housed in a historic renovated laundry building, a short ride from downtown trails." },
@@ -54,6 +60,182 @@ const TERRITORIES = [
     color: "oklch(0.38 0.015 60)",
   },
 ];
+
+// ─── Weather helpers ───────────────────────────────────────────────────────────
+interface WeatherDay {
+  date: string;
+  tempMax: number;
+  tempMin: number;
+  weatherCode: number;
+  precipitation: number;
+}
+
+function weatherCodeToLabel(code: number): string {
+  if (code === 0) return "Clear";
+  if (code <= 3) return "Partly Cloudy";
+  if (code <= 48) return "Fog";
+  if (code <= 67) return "Rain";
+  if (code <= 77) return "Snow";
+  if (code <= 82) return "Showers";
+  if (code <= 99) return "Thunderstorm";
+  return "Unknown";
+}
+
+function weatherCodeToIcon(code: number): string {
+  if (code === 0) return "☀️";
+  if (code <= 3) return "⛅";
+  if (code <= 48) return "🌫️";
+  if (code <= 67) return "🌧️";
+  if (code <= 77) return "❄️";
+  if (code <= 82) return "🌦️";
+  if (code <= 99) return "⛈️";
+  return "🌡️";
+}
+
+function tempScore(maxF: number): { label: string; color: string; score: number } {
+  const diff = Math.abs(maxF - 72);
+  if (diff <= 5) return { label: "Perfect ride day", color: "oklch(0.45 0.15 145)", score: 100 };
+  if (diff <= 12) return { label: "Great conditions", color: "oklch(0.55 0.13 145)", score: 80 };
+  if (diff <= 20) return { label: "Rideable", color: "oklch(0.72 0.14 65)", score: 55 };
+  return { label: "Not ideal", color: "oklch(0.52 0.12 45)", score: 25 };
+}
+
+// ─── Weather Widget ────────────────────────────────────────────────────────────
+function WeatherWidget({ territoryId, selectedDate }: { territoryId: string; selectedDate: string }) {
+  const [forecast, setForecast] = useState<WeatherDay[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  const territory = TERRITORIES.find((t) => t.id === territoryId);
+
+  useEffect(() => {
+    if (!territory) return;
+    setLoading(true);
+    setError(false);
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${territory.lat}&longitude=${territory.lon}&daily=temperature_2m_max,temperature_2m_min,weathercode,precipitation_sum&temperature_unit=fahrenheit&precipitation_unit=inch&forecast_days=14&timezone=America%2FChicago`;
+    fetch(url)
+      .then((r) => r.json())
+      .then((data) => {
+        const days: WeatherDay[] = data.daily.time.map((date: string, i: number) => ({
+          date,
+          tempMax: Math.round(data.daily.temperature_2m_max[i]),
+          tempMin: Math.round(data.daily.temperature_2m_min[i]),
+          weatherCode: data.daily.weathercode[i],
+          precipitation: data.daily.precipitation_sum[i],
+        }));
+        setForecast(days);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError(true);
+        setLoading(false);
+      });
+  }, [territory?.id]);
+
+  if (!territory) return null;
+
+  // Find selected date in forecast
+  const selectedDay = selectedDate ? forecast.find((d) => d.date === selectedDate) : null;
+  const nearDays = selectedDate
+    ? forecast.filter((d) => {
+        const diff = Math.abs(new Date(d.date).getTime() - new Date(selectedDate).getTime());
+        return diff <= 3 * 86400000 && diff > 0;
+      })
+    : [];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="mt-4 p-5 relative overflow-hidden"
+      style={{ background: "oklch(0.22 0.01 60)", border: "1px solid oklch(0.38 0.015 60 / 0.5)" }}
+    >
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <p className="font-label text-xs tracking-[0.25em] uppercase" style={{ color: "oklch(0.72 0.14 65)" }}>
+            Live Forecast · {territory.name}
+          </p>
+          <p className="font-mono-custom text-xs mt-0.5" style={{ color: "oklch(0.52 0.04 65)" }}>
+            Ideal ride temp: 72°F
+          </p>
+        </div>
+        {loading && (
+          <div className="w-4 h-4 border border-t-transparent rounded-full animate-spin" style={{ borderColor: "oklch(0.72 0.14 65)", borderTopColor: "transparent" }} />
+        )}
+      </div>
+
+      {error && (
+        <p className="font-mono-custom text-xs" style={{ color: "oklch(0.52 0.04 65)" }}>
+          Forecast unavailable. Check back later.
+        </p>
+      )}
+
+      {/* Selected date highlight */}
+      {selectedDay && (
+        <div className="mb-4 p-4" style={{ background: "oklch(0.28 0.01 60)", border: `1px solid ${tempScore(selectedDay.tempMax).color}` }}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-label text-xs tracking-widest uppercase mb-1" style={{ color: tempScore(selectedDay.tempMax).color }}>
+                {tempScore(selectedDay.tempMax).label}
+              </p>
+              <p className="font-display text-3xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>
+                {selectedDay.tempMax}°F
+              </p>
+              <p className="font-mono-custom text-xs mt-1" style={{ color: "oklch(0.52 0.04 65)" }}>
+                Low {selectedDay.tempMin}°F · {weatherCodeToLabel(selectedDay.weatherCode)} · {selectedDay.precipitation}" precip
+              </p>
+            </div>
+            <div className="text-4xl">{weatherCodeToIcon(selectedDay.weatherCode)}</div>
+          </div>
+          {/* Score bar */}
+          <div className="mt-3 h-1 w-full rounded-full" style={{ background: "oklch(0.38 0.015 60)" }}>
+            <div
+              className="h-1 rounded-full transition-all duration-700"
+              style={{ width: `${tempScore(selectedDay.tempMax).score}%`, background: tempScore(selectedDay.tempMax).color }}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* 14-day strip */}
+      {forecast.length > 0 && !loading && (
+        <div className="overflow-x-auto">
+          <div className="flex gap-2 pb-1" style={{ minWidth: "max-content" }}>
+            {forecast.map((day) => {
+              const score = tempScore(day.tempMax);
+              const isSelected = day.date === selectedDate;
+              return (
+                <div
+                  key={day.date}
+                  className="flex flex-col items-center gap-1 px-2 py-2 transition-all duration-200"
+                  style={{
+                    background: isSelected ? "oklch(0.32 0.01 60)" : "transparent",
+                    border: isSelected ? `1px solid ${score.color}` : "1px solid transparent",
+                    minWidth: "44px",
+                  }}
+                >
+                  <span className="font-mono-custom text-xs" style={{ color: "oklch(0.52 0.04 65)" }}>
+                    {new Date(day.date + "T12:00:00").toLocaleDateString("en-US", { weekday: "short" })}
+                  </span>
+                  <span className="text-sm">{weatherCodeToIcon(day.weatherCode)}</span>
+                  <span className="font-mono-custom text-xs font-medium" style={{ color: score.color }}>
+                    {day.tempMax}°
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {!selectedDate && !loading && (
+        <p className="font-mono-custom text-xs mt-2" style={{ color: "oklch(0.52 0.04 65)" }}>
+          ← Select a preferred date above to see ride conditions
+        </p>
+      )}
+    </motion.div>
+  );
+}
 
 // ─── Grain overlay component ───────────────────────────────────────────────────
 function GrainOverlay({ opacity = 0.18 }: { opacity?: number }) {
@@ -89,25 +271,19 @@ function Nav() {
     >
       <div className="container flex items-center justify-between py-4">
         <div className="flex flex-col">
-          <span
-            className="font-display text-xl font-bold tracking-tight"
-            style={{ color: scrolled ? "oklch(0.22 0.01 60)" : "oklch(0.945 0.018 78)" }}
-          >
+          <span className="font-display text-xl font-bold tracking-tight" style={{ color: scrolled ? "oklch(0.22 0.01 60)" : "oklch(0.945 0.018 78)" }}>
             Moots
           </span>
-          <span
-            className="font-label text-xs tracking-[0.2em] uppercase"
-            style={{ color: scrolled ? "oklch(0.52 0.12 45)" : "oklch(0.88 0.025 75 / 0.8)" }}
-          >
+          <span className="font-label text-xs tracking-[0.2em] uppercase" style={{ color: scrolled ? "oklch(0.52 0.12 45)" : "oklch(0.88 0.025 75 / 0.8)" }}>
             The Forever Frame
           </span>
         </div>
-        <div className="flex items-center gap-6">
-          {["Territories", "The Vibe", "Book a Pop-Up"].map((item) => (
+        <div className="flex items-center gap-4 md:gap-6">
+          {["Territories", "The Vibe", "Order", "Book a Pop-Up"].map((item) => (
             <a
               key={item}
               href={`#${item.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z-]/g, "")}`}
-              className="font-label text-sm tracking-widest uppercase transition-opacity hover:opacity-70"
+              className="font-label text-xs md:text-sm tracking-widest uppercase transition-opacity hover:opacity-70"
               style={{ color: scrolled ? "oklch(0.38 0.015 60)" : "oklch(0.945 0.018 78)" }}
             >
               {item}
@@ -129,76 +305,36 @@ function Hero() {
   return (
     <section ref={ref} className="relative h-screen overflow-hidden" style={{ background: "oklch(0.22 0.01 60)" }}>
       <motion.div className="absolute inset-0" style={{ y }}>
-        <img
-          src={HERO_IMG}
-          alt="Moots titanium gravel bike at a trailhead"
-          className="w-full h-full object-cover"
-          style={{ filter: "saturate(0.85) contrast(1.05)" }}
-        />
+        <img src={HERO_IMG} alt="Moots titanium gravel bike at a trailhead" className="w-full h-full object-cover" style={{ filter: "saturate(0.85) contrast(1.05)" }} />
         <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, oklch(0.22 0.01 60 / 0.2) 0%, oklch(0.22 0.01 60 / 0.5) 60%, oklch(0.22 0.01 60 / 0.85) 100%)" }} />
         <GrainOverlay opacity={0.25} />
       </motion.div>
-
-      <motion.div
-        className="absolute inset-0 flex flex-col justify-end pb-20 px-8 md:px-16 lg:px-24"
-        style={{ opacity }}
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <p
-            className="font-label text-xs tracking-[0.35em] uppercase mb-4"
-            style={{ color: "oklch(0.72 0.14 65)" }}
-          >
+      <motion.div className="absolute inset-0 flex flex-col justify-end pb-20 px-8 md:px-16 lg:px-24" style={{ opacity }}>
+        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}>
+          <p className="font-label text-xs tracking-[0.35em] uppercase mb-4" style={{ color: "oklch(0.72 0.14 65)" }}>
             Handbuilt in Steamboat Springs, Colorado · Est. 1981
           </p>
-          <h1
-            className="font-display text-5xl md:text-7xl lg:text-8xl font-bold leading-[0.95] mb-6"
-            style={{ color: "oklch(0.945 0.018 78)" }}
-          >
+          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold leading-[0.95] mb-6" style={{ color: "oklch(0.945 0.018 78)" }}>
             The Forever<br />
             <em className="italic" style={{ color: "oklch(0.72 0.14 65)" }}>Frame.</em>
           </h1>
-          <p
-            className="font-mono-custom text-sm md:text-base max-w-xl leading-relaxed mb-8"
-            style={{ color: "oklch(0.88 0.025 75 / 0.8)" }}
-          >
+          <p className="font-mono-custom text-sm md:text-base max-w-xl leading-relaxed mb-8" style={{ color: "oklch(0.88 0.025 75 / 0.8)" }}>
             No carbon expiration dates. Just the sound of tires on flint and the promise of a cold one at the finish.
           </p>
-          <div className="flex items-center gap-8">
-            <a
-              href="#territories"
-              className="font-label text-sm tracking-[0.2em] uppercase px-8 py-3 transition-all duration-300 hover:opacity-80"
-              style={{
-                background: "oklch(0.72 0.14 65)",
-                color: "oklch(0.22 0.01 60)",
-              }}
-            >
+          <div className="flex flex-wrap items-center gap-4">
+            <a href="#territories" className="font-label text-sm tracking-[0.2em] uppercase px-8 py-3 transition-all duration-300 hover:opacity-80" style={{ background: "oklch(0.72 0.14 65)", color: "oklch(0.22 0.01 60)" }}>
               Explore Territories
             </a>
-            <a
-              href="#book-a-pop-up"
-              className="font-label text-sm tracking-[0.2em] uppercase px-8 py-3 border transition-all duration-300 hover:opacity-80"
-              style={{
-                borderColor: "oklch(0.945 0.018 78 / 0.4)",
-                color: "oklch(0.945 0.018 78)",
-              }}
-            >
+            <a href="#order" className="font-label text-sm tracking-[0.2em] uppercase px-8 py-3 border transition-all duration-300 hover:opacity-80" style={{ borderColor: "oklch(0.945 0.018 78 / 0.4)", color: "oklch(0.945 0.018 78)" }}>
+              Order a Moots
+            </a>
+            <a href="#book-a-pop-up" className="font-label text-sm tracking-[0.2em] uppercase px-8 py-3 transition-all duration-300 hover:opacity-80" style={{ borderColor: "oklch(0.945 0.018 78 / 0.2)", color: "oklch(0.88 0.025 75 / 0.7)", border: "1px solid oklch(0.945 0.018 78 / 0.2)" }}>
               Book a Pop-Up
             </a>
           </div>
         </motion.div>
       </motion.div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        className="absolute bottom-8 right-8 flex flex-col items-center gap-2"
-        style={{ opacity }}
-        animate={{ y: [0, 8, 0] }}
-        transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-      >
+      <motion.div className="absolute bottom-8 right-8 flex flex-col items-center gap-2" style={{ opacity }} animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}>
         <span className="font-mono-custom text-xs tracking-widest" style={{ color: "oklch(0.88 0.025 75 / 0.5)" }}>scroll</span>
         <div className="w-px h-12" style={{ background: "linear-gradient(to bottom, oklch(0.88 0.025 75 / 0.5), transparent)" }} />
       </motion.div>
@@ -209,50 +345,29 @@ function Hero() {
 // ─── Manifesto ─────────────────────────────────────────────────────────────────
 function Manifesto() {
   return (
-    <section
-      className="relative py-24 md:py-36 overflow-hidden"
-      style={{ background: "oklch(0.22 0.01 60)" }}
-    >
+    <section className="relative py-24 md:py-36 overflow-hidden" style={{ background: "oklch(0.22 0.01 60)" }}>
       <GrainOverlay opacity={0.12} />
       <div className="container relative z-20">
         <div className="max-w-3xl mx-auto text-center">
-          <p className="font-label text-xs tracking-[0.35em] uppercase mb-8" style={{ color: "oklch(0.72 0.14 65)" }}>
-            The Campaign
-          </p>
+          <p className="font-label text-xs tracking-[0.35em] uppercase mb-8" style={{ color: "oklch(0.72 0.14 65)" }}>The Campaign</p>
           <h2 className="font-display text-4xl md:text-5xl font-bold italic leading-tight mb-8" style={{ color: "oklch(0.945 0.018 78)" }}>
             "Arkansas Dust &<br />Post-Ride Lonestar"
           </h2>
           <div className="w-16 h-px mx-auto mb-8" style={{ background: "oklch(0.52 0.12 45)" }} />
           <p className="font-mono-custom text-sm md:text-base leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
-            Three territories. Three vibes. One frame that outlasts all of them.
-            We're not selling specs. We're selling the feeling of a sunrise gravel ride in the Ozarks,
-            the grit of East Austin asphalt, and the endless Oklahoma horizon.
-            If you know, you know.
+            Three territories. Three vibes. One frame that outlasts all of them. We're not selling specs. We're selling the feeling of a sunrise gravel ride in the Ozarks, the grit of East Austin asphalt, and the endless Oklahoma horizon. If you know, you know.
           </p>
         </div>
-
-        {/* Badge detail */}
         <div className="mt-20 flex flex-col md:flex-row items-center gap-12 max-w-4xl mx-auto">
           <div className="relative w-48 h-48 flex-shrink-0">
-            <img
-              src={BADGE_IMG}
-              alt="Moots titanium badge detail"
-              className="w-full h-full object-cover"
-              style={{ filter: "saturate(0.9)" }}
-            />
+            <img src={BADGE_IMG} alt="Moots titanium badge detail" className="w-full h-full object-cover" style={{ filter: "saturate(0.9)" }} />
             <GrainOverlay opacity={0.2} />
           </div>
           <div>
-            <p className="font-label text-xs tracking-[0.3em] uppercase mb-3" style={{ color: "oklch(0.72 0.14 65)" }}>
-              The Metal
-            </p>
-            <h3 className="font-display text-2xl md:text-3xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>
-              Titanium doesn't expire.
-            </h3>
+            <p className="font-label text-xs tracking-[0.3em] uppercase mb-3" style={{ color: "oklch(0.72 0.14 65)" }}>The Metal</p>
+            <h3 className="font-display text-2xl md:text-3xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>Titanium doesn't expire.</h3>
             <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
-              Every Moots frame is hand-welded in Steamboat Springs, Colorado.
-              Not assembled. Not outsourced. Welded by hand, one at a time,
-              by people who ride the same trails you do.
+              Every Moots frame is hand-welded in Steamboat Springs, Colorado. Not assembled. Not outsourced. Welded by hand, one at a time, by people who ride the same trails you do.
             </p>
           </div>
         </div>
@@ -263,9 +378,7 @@ function Manifesto() {
 
 // ─── Territory Card ────────────────────────────────────────────────────────────
 function TerritoryCard({ territory, index }: { territory: typeof TERRITORIES[0]; index: number }) {
-  const [flipped, setFlipped] = useState(false);
   const isEven = index % 2 === 0;
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -275,94 +388,40 @@ function TerritoryCard({ territory, index }: { territory: typeof TERRITORIES[0];
       className={`flex flex-col ${isEven ? "md:flex-row" : "md:flex-row-reverse"} gap-0 overflow-hidden`}
       style={{ border: "1px solid oklch(0.78 0.03 70 / 0.3)" }}
     >
-      {/* Image panel */}
       <div className="relative w-full md:w-1/2 aspect-[4/3] overflow-hidden">
-        <motion.img
-          src={territory.img}
-          alt={territory.name}
-          className="w-full h-full object-cover"
-          style={{ filter: "saturate(0.8) contrast(1.05)" }}
-          whileHover={{ scale: 1.03 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{ background: "linear-gradient(135deg, oklch(0.22 0.01 60 / 0.3) 0%, transparent 60%)" }}
-        />
+        <motion.img src={territory.img} alt={territory.name} className="w-full h-full object-cover" style={{ filter: "saturate(0.8) contrast(1.05)" }} whileHover={{ scale: 1.03 }} transition={{ duration: 0.6, ease: "easeOut" }} />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, oklch(0.22 0.01 60 / 0.3) 0%, transparent 60%)" }} />
         <GrainOverlay opacity={0.2} />
-        {/* Coordinate tag */}
-        <div
-          className="absolute bottom-4 left-4 font-mono-custom text-xs px-3 py-1"
-          style={{ background: "oklch(0.22 0.01 60 / 0.75)", color: "oklch(0.72 0.14 65)", backdropFilter: "blur(4px)" }}
-        >
+        <div className="absolute bottom-4 left-4 font-mono-custom text-xs px-3 py-1" style={{ background: "oklch(0.22 0.01 60 / 0.75)", color: "oklch(0.72 0.14 65)", backdropFilter: "blur(4px)" }}>
           {territory.coords}
         </div>
       </div>
-
-      {/* Content panel */}
-      <div
-        className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-between"
-        style={{ background: "oklch(0.945 0.018 78)" }}
-      >
+      <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-between" style={{ background: "oklch(0.945 0.018 78)" }}>
         <div>
-          <p className="font-label text-xs tracking-[0.3em] uppercase mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>
-            {territory.tagline}
-          </p>
-          <h3 className="font-display text-3xl md:text-4xl font-bold mb-1" style={{ color: "oklch(0.22 0.01 60)" }}>
-            {territory.name}
-          </h3>
-          <p className="font-label text-xs tracking-widest uppercase mb-6" style={{ color: "oklch(0.72 0.14 65)" }}>
-            Featured Model: {territory.model}
-          </p>
-          <blockquote
-            className="font-display text-lg italic leading-relaxed mb-4 pl-4"
-            style={{ borderLeft: "2px solid oklch(0.52 0.12 45)", color: "oklch(0.38 0.015 60)" }}
-          >
+          <p className="font-label text-xs tracking-[0.3em] uppercase mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>{territory.tagline}</p>
+          <h3 className="font-display text-3xl md:text-4xl font-bold mb-1" style={{ color: "oklch(0.22 0.01 60)" }}>{territory.name}</h3>
+          <p className="font-label text-xs tracking-widest uppercase mb-6" style={{ color: "oklch(0.72 0.14 65)" }}>Featured Model: {territory.model}</p>
+          <blockquote className="font-display text-lg italic leading-relaxed mb-4 pl-4" style={{ borderLeft: "2px solid oklch(0.52 0.12 45)", color: "oklch(0.38 0.015 60)" }}>
             "{territory.caption}"
           </blockquote>
-          <p className="font-mono-custom text-xs" style={{ color: "oklch(0.72 0.14 65)" }}>
-            {territory.hashtags}
-          </p>
+          <p className="font-mono-custom text-xs" style={{ color: "oklch(0.72 0.14 65)" }}>{territory.hashtags}</p>
         </div>
-
-        {/* Partners */}
         <div className="mt-8 space-y-4">
           <div className="h-px" style={{ background: "oklch(0.78 0.03 70)" }} />
-          <p className="font-label text-xs tracking-[0.25em] uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>
-            Pop-Up Partners
-          </p>
-          {[
-            { icon: "☕", label: "Coffee", partner: territory.coffee },
-            { icon: "🍺", label: "Brewery", partner: territory.brewery },
-          ].map(({ icon, label, partner }) => (
+          <p className="font-label text-xs tracking-[0.25em] uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>Pop-Up Partners</p>
+          {[{ icon: "☕", label: "Coffee", partner: territory.coffee }, { icon: "🍺", label: "Brewery", partner: territory.brewery }].map(({ icon, label, partner }) => (
             <div key={label}>
               <div className="flex items-start gap-3">
                 <span className="text-sm mt-0.5">{icon}</span>
                 <div>
-                  <a
-                    href={partner.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-label text-sm font-semibold tracking-wide hover:underline"
-                    style={{ color: "oklch(0.38 0.015 60)" }}
-                  >
-                    {partner.name}
-                  </a>
-                  <p className="font-mono-custom text-xs mt-0.5" style={{ color: "oklch(0.52 0.04 65)" }}>
-                    {partner.address}
-                  </p>
-                  <p className="font-mono-custom text-xs mt-1 leading-relaxed" style={{ color: "oklch(0.52 0.04 65)" }}>
-                    {partner.vibe}
-                  </p>
+                  <a href={partner.url} target="_blank" rel="noopener noreferrer" className="font-label text-sm font-semibold tracking-wide hover:underline" style={{ color: "oklch(0.38 0.015 60)" }}>{partner.name}</a>
+                  <p className="font-mono-custom text-xs mt-0.5" style={{ color: "oklch(0.52 0.04 65)" }}>{partner.address}</p>
+                  <p className="font-mono-custom text-xs mt-1 leading-relaxed" style={{ color: "oklch(0.52 0.04 65)" }}>{partner.vibe}</p>
                 </div>
               </div>
             </div>
           ))}
-          <a
-            href="#book-a-pop-up"
-            className="inline-block mt-4 font-label text-xs tracking-[0.2em] uppercase px-6 py-2.5 transition-all duration-300 hover:opacity-80"
-            style={{ background: "oklch(0.22 0.01 60)", color: "oklch(0.945 0.018 78)" }}
-          >
+          <a href="#book-a-pop-up" className="inline-block mt-4 font-label text-xs tracking-[0.2em] uppercase px-6 py-2.5 transition-all duration-300 hover:opacity-80" style={{ background: "oklch(0.22 0.01 60)", color: "oklch(0.945 0.018 78)" }}>
             Book This Territory →
           </a>
         </div>
@@ -378,72 +437,147 @@ function Territories() {
       <div className="container mb-12">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <p className="font-label text-xs tracking-[0.35em] uppercase mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>
-              The Territory Map
-            </p>
+            <p className="font-label text-xs tracking-[0.35em] uppercase mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>The Territory Map</p>
             <h2 className="font-display text-4xl md:text-5xl font-bold" style={{ color: "oklch(0.22 0.01 60)" }}>
-              Three Territories.<br />
-              <em className="italic">One Vibe.</em>
+              Three Territories.<br /><em className="italic">One Vibe.</em>
             </h2>
           </div>
           <p className="font-mono-custom text-xs max-w-xs leading-relaxed" style={{ color: "oklch(0.52 0.04 65)" }}>
-            Each territory has its own character, its own coffee, its own post-ride reward.
-            All of them deserve a titanium frame.
+            Each territory has its own character, its own coffee, its own post-ride reward. All of them deserve a titanium frame.
           </p>
         </div>
       </div>
       <div className="space-y-0">
-        {TERRITORIES.map((t, i) => (
-          <TerritoryCard key={t.id} territory={t} index={i} />
-        ))}
+        {TERRITORIES.map((t, i) => <TerritoryCard key={t.id} territory={t} index={i} />)}
       </div>
     </section>
   );
 }
 
-// ─── The Vibe Section ──────────────────────────────────────────────────────────
+// ─── The Vibe / Share the Vibe ─────────────────────────────────────────────────
 function TheVibe() {
+  const [shareTerritory, setShareTerritory] = useState<typeof TERRITORIES[0] | null>(null);
+  const [shareCaption, setShareCaption] = useState(0);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [generating, setGenerating] = useState(false);
+
   const captions = [
-    {
-      post: "01",
-      location: "Coler Preserve, Bentonville AR",
-      text: "No carbon expiration dates. Just the sound of tires on flint and the promise of a cold one at the finish. Built in Colorado, proven in the Ozarks.",
-      tags: "#Moots #Titanium #Gravel",
-    },
-    {
-      post: "02",
-      location: "Flat Track Coffee, Austin TX",
-      text: "Some things are built to last. Your frame should be one of them. Hand-welded in Steamboat, right at home in ATX.",
-      tags: "#Moots #ForeverBike #AustinCycling",
-    },
-    {
-      post: "03",
-      location: "Lake Hefner, Oklahoma City OK",
-      text: "Miles fade. Titanium doesn't. Outlasting the light in OKC.",
-      tags: "#Moots #GravelGrinder #Titanium",
-    },
-    {
-      post: "04",
-      location: "Post-ride, any trailhead",
-      text: "Earned the dust. Earned the pour. The ride doesn't end at the trailhead.",
-      tags: "#Moots #PostRide #CraftBeer",
-    },
+    { post: "01", location: "Coler Preserve, Bentonville AR", text: "No carbon expiration dates. Just the sound of tires on flint and the promise of a cold one at the finish. Built in Colorado, proven in the Ozarks.", tags: "#Moots #Titanium #Gravel", territory: TERRITORIES[0] },
+    { post: "02", location: "Flat Track Coffee, Austin TX", text: "Some things are built to last. Your frame should be one of them. Hand-welded in Steamboat, right at home in ATX.", tags: "#Moots #ForeverBike #AustinCycling", territory: TERRITORIES[1] },
+    { post: "03", location: "Lake Hefner, Oklahoma City OK", text: "Miles fade. Titanium doesn't. Outlasting the light in OKC.", tags: "#Moots #GravelGrinder #Titanium", territory: TERRITORIES[2] },
+    { post: "04", location: "Post-ride, any trailhead", text: "Earned the dust. Earned the pour. The ride doesn't end at the trailhead.", tags: "#Moots #PostRide #CraftBeer", territory: TERRITORIES[0] },
   ];
+
+  const generateCard = useCallback(async (captionIndex: number) => {
+    const c = captions[captionIndex];
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    setGenerating(true);
+
+    const W = 1080;
+    const H = 1920;
+    canvas.width = W;
+    canvas.height = H;
+    const ctx = canvas.getContext("2d")!;
+
+    // Load territory image
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = c.territory.img;
+    await new Promise((res) => { img.onload = res; img.onerror = res; });
+
+    // Draw background image
+    ctx.drawImage(img, 0, 0, W, H);
+
+    // Dark overlay
+    const grad = ctx.createLinearGradient(0, 0, 0, H);
+    grad.addColorStop(0, "rgba(28,22,16,0.3)");
+    grad.addColorStop(0.4, "rgba(28,22,16,0.55)");
+    grad.addColorStop(1, "rgba(28,22,16,0.92)");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    // Grain noise overlay
+    const imageData = ctx.getImageData(0, 0, W, H);
+    const data = imageData.data;
+    for (let i = 0; i < data.length; i += 4) {
+      const noise = (Math.random() - 0.5) * 40;
+      data[i] = Math.min(255, Math.max(0, data[i] + noise));
+      data[i + 1] = Math.min(255, Math.max(0, data[i + 1] + noise));
+      data[i + 2] = Math.min(255, Math.max(0, data[i + 2] + noise));
+    }
+    ctx.putImageData(imageData, 0, 0);
+
+    // Amber accent line top
+    ctx.fillStyle = "rgba(184, 115, 51, 0.8)";
+    ctx.fillRect(80, 120, 60, 3);
+
+    // Post number
+    ctx.font = "300 80px 'IBM Plex Mono', monospace";
+    ctx.fillStyle = "rgba(184,115,51,0.35)";
+    ctx.fillText(c.post, 80, 230);
+
+    // Location label
+    ctx.font = "400 28px 'IBM Plex Mono', monospace";
+    ctx.fillStyle = "rgba(210,185,155,0.7)";
+    ctx.fillText(c.location.toUpperCase(), 80, 290);
+
+    // Main quote — word wrap
+    ctx.font = "italic 700 68px Georgia, serif";
+    ctx.fillStyle = "#F2EDE4";
+    const words = `"${c.text}"`.split(" ");
+    let line = "";
+    let y = H - 520;
+    const maxW = W - 160;
+    for (const word of words) {
+      const test = line + word + " ";
+      if (ctx.measureText(test).width > maxW && line) {
+        ctx.fillText(line.trim(), 80, y);
+        line = word + " ";
+        y += 80;
+      } else {
+        line = test;
+      }
+    }
+    ctx.fillText(line.trim(), 80, y);
+
+    // Divider
+    ctx.fillStyle = "rgba(184,115,51,0.5)";
+    ctx.fillRect(80, y + 30, 120, 2);
+
+    // Tags
+    ctx.font = "400 32px 'IBM Plex Mono', monospace";
+    ctx.fillStyle = "rgba(184,115,51,0.85)";
+    ctx.fillText(c.tags, 80, y + 80);
+
+    // Moots wordmark bottom right
+    ctx.font = "bold 36px Georgia, serif";
+    ctx.fillStyle = "rgba(242,237,228,0.5)";
+    ctx.textAlign = "right";
+    ctx.fillText("Moots · The Forever Frame", W - 80, H - 80);
+    ctx.textAlign = "left";
+
+    setGenerating(false);
+  }, []);
+
+  const downloadCard = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const link = document.createElement("a");
+    link.download = `moots-forever-frame-${captions[shareCaption].post}.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+    toast.success("Caption card downloaded — ready for Instagram Stories.");
+  };
 
   return (
     <section id="the-vibe" className="py-24 relative overflow-hidden" style={{ background: "oklch(0.22 0.01 60)" }}>
       <GrainOverlay opacity={0.1} />
       <div className="container relative z-20">
         <div className="mb-16 text-center">
-          <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: "oklch(0.72 0.14 65)" }}>
-            Campaign Captions
-          </p>
-          <h2 className="font-display text-4xl md:text-5xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>
-            The Vibe.
-          </h2>
-          <p className="font-mono-custom text-sm mt-4" style={{ color: "oklch(0.78 0.03 70)" }}>
-            Ready-to-post. Lo-fi aesthetic. No studio lighting required.
-          </p>
+          <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: "oklch(0.72 0.14 65)" }}>Campaign Captions</p>
+          <h2 className="font-display text-4xl md:text-5xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>The Vibe.</h2>
+          <p className="font-mono-custom text-sm mt-4" style={{ color: "oklch(0.78 0.03 70)" }}>Ready-to-post. Lo-fi aesthetic. No studio lighting required.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.3)" }}>
@@ -458,35 +592,166 @@ function TheVibe() {
               style={{ background: "oklch(0.22 0.01 60)" }}
             >
               <div className="flex items-start justify-between mb-6">
-                <span
-                  className="font-mono-custom text-5xl font-light leading-none"
-                  style={{ color: "oklch(0.38 0.015 60)" }}
-                >
-                  {c.post}
-                </span>
-                <span
-                  className="font-mono-custom text-xs"
-                  style={{ color: "oklch(0.52 0.04 65)" }}
-                >
-                  {c.location}
-                </span>
+                <span className="font-mono-custom text-5xl font-light leading-none" style={{ color: "oklch(0.38 0.015 60)" }}>{c.post}</span>
+                <span className="font-mono-custom text-xs" style={{ color: "oklch(0.52 0.04 65)" }}>{c.location}</span>
               </div>
-              <blockquote
-                className="font-display text-xl md:text-2xl italic leading-snug mb-6"
-                style={{ color: "oklch(0.945 0.018 78)" }}
-              >
+              <blockquote className="font-display text-xl md:text-2xl italic leading-snug mb-6" style={{ color: "oklch(0.945 0.018 78)" }}>
                 "{c.text}"
               </blockquote>
-              <p className="font-mono-custom text-xs" style={{ color: "oklch(0.72 0.14 65)" }}>
-                {c.tags}
-              </p>
-              <div
-                className="absolute bottom-0 left-0 h-0.5 w-0 group-hover:w-full transition-all duration-500"
-                style={{ background: "oklch(0.72 0.14 65)" }}
-              />
+              <p className="font-mono-custom text-xs mb-4" style={{ color: "oklch(0.72 0.14 65)" }}>{c.tags}</p>
+              {/* Share button */}
+              <button
+                onClick={async () => {
+                  setShareCaption(i);
+                  await generateCard(i);
+                }}
+                className="font-label text-xs tracking-[0.2em] uppercase px-5 py-2 transition-all duration-300 hover:opacity-80"
+                style={{ background: "oklch(0.38 0.015 60)", color: "oklch(0.88 0.025 75)", border: "1px solid oklch(0.52 0.04 65 / 0.4)" }}
+              >
+                Generate Story Card →
+              </button>
+              <div className="absolute bottom-0 left-0 h-0.5 w-0 group-hover:w-full transition-all duration-500" style={{ background: "oklch(0.72 0.14 65)" }} />
             </motion.div>
           ))}
         </div>
+
+        {/* Share the Vibe Preview */}
+        <AnimatePresence>
+          {canvasRef.current && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="mt-12 flex flex-col md:flex-row items-start gap-8"
+            >
+              <div className="flex-shrink-0">
+                <p className="font-label text-xs tracking-[0.25em] uppercase mb-3" style={{ color: "oklch(0.72 0.14 65)" }}>
+                  Share the Vibe · Instagram Story Preview
+                </p>
+                <canvas
+                  ref={canvasRef}
+                  className="w-48 h-auto border"
+                  style={{ borderColor: "oklch(0.38 0.015 60)", display: "block" }}
+                />
+              </div>
+              <div className="flex flex-col justify-end gap-4 pt-8">
+                <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+                  Your lo-fi story card is ready. 1080×1920px, grain overlay applied, Moots wordmark embedded. Drop it straight into Instagram Stories.
+                </p>
+                <button
+                  onClick={downloadCard}
+                  disabled={generating}
+                  className="font-label text-sm tracking-[0.2em] uppercase px-8 py-3 transition-all duration-300 hover:opacity-80 disabled:opacity-40"
+                  style={{ background: "oklch(0.72 0.14 65)", color: "oklch(0.22 0.01 60)" }}
+                >
+                  {generating ? "Generating..." : "Download Story Card"}
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Hidden canvas always in DOM */}
+        <canvas ref={canvasRef} className="hidden" />
+      </div>
+    </section>
+  );
+}
+
+// ─── Order Section ─────────────────────────────────────────────────────────────
+function OrderSection() {
+  return (
+    <section id="order" className="py-24 relative overflow-hidden" style={{ background: "oklch(0.88 0.025 75)" }}>
+      <GrainOverlay opacity={0.08} />
+      <div className="container relative z-20">
+        <div className="text-center mb-14">
+          <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: "oklch(0.52 0.12 45)" }}>
+            Ready to Ride Titanium
+          </p>
+          <h2 className="font-display text-4xl md:text-5xl font-bold" style={{ color: "oklch(0.22 0.01 60)" }}>
+            Order a Moots.
+          </h2>
+          <p className="font-mono-custom text-sm mt-4 max-w-lg mx-auto leading-loose" style={{ color: "oklch(0.52 0.04 65)" }}>
+            Whether you're a shop stocking the finest titanium in your region or a rider ready to commit to a forever bike — Ian Zakrocki is your contact for TX, OK, and AR.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-px max-w-4xl mx-auto" style={{ background: "oklch(0.78 0.03 70)" }}>
+          {/* Dealer */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="p-10 flex flex-col gap-6"
+            style={{ background: "oklch(0.22 0.01 60)" }}
+          >
+            <div>
+              <p className="font-label text-xs tracking-[0.3em] uppercase mb-2" style={{ color: "oklch(0.72 0.14 65)" }}>For Shops & Dealers</p>
+              <h3 className="font-display text-3xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>Carry Moots.</h3>
+              <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+                Moots is a hand-built, made-in-Colorado titanium brand with zero carbon expiration dates and a loyal customer base that buys once and buys forever. Contact Ian to discuss dealer pricing, demo fleet programs, and territory exclusivity.
+              </p>
+            </div>
+            <ul className="space-y-2">
+              {["Dealer pricing & margins", "Demo fleet program", "Co-branded pop-up events", "Territory support (TX · OK · AR)"].map((item) => (
+                <li key={item} className="flex items-center gap-3 font-mono-custom text-xs" style={{ color: "oklch(0.88 0.025 75)" }}>
+                  <span style={{ color: "oklch(0.72 0.14 65)" }}>—</span> {item}
+                </li>
+              ))}
+            </ul>
+            <a
+              href="https://ianzskrocki.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block font-label text-sm tracking-[0.2em] uppercase px-8 py-3.5 transition-all duration-300 hover:opacity-80 text-center"
+              style={{ background: "oklch(0.72 0.14 65)", color: "oklch(0.22 0.01 60)" }}
+            >
+              Contact Ian — Dealer Inquiry →
+            </a>
+          </motion.div>
+
+          {/* Individual */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="p-10 flex flex-col gap-6"
+            style={{ background: "oklch(0.945 0.018 78)" }}
+          >
+            <div>
+              <p className="font-label text-xs tracking-[0.3em] uppercase mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>For Individual Riders</p>
+              <h3 className="font-display text-3xl font-bold mb-4" style={{ color: "oklch(0.22 0.01 60)" }}>Buy Your Forever Bike.</h3>
+              <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.52 0.04 65)" }}>
+                A Moots is not an impulse buy. It's a decision you make once. Ian will walk you through geometry, build options, and the right model for your riding — whether that's gravel in the Ozarks or road miles in Austin.
+              </p>
+            </div>
+            <ul className="space-y-2">
+              {["Routt 45 · Routt RSL · Routt 60", "Vamoots RSL · Vamoots DR", "Psychlo X RSL · Mooto X RSL", "Custom geometry consultation"].map((item) => (
+                <li key={item} className="flex items-center gap-3 font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>
+                  <span style={{ color: "oklch(0.52 0.12 45)" }}>—</span> {item}
+                </li>
+              ))}
+            </ul>
+            <a
+              href="https://ianzskrocki.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block font-label text-sm tracking-[0.2em] uppercase px-8 py-3.5 transition-all duration-300 hover:opacity-80 text-center"
+              style={{ background: "oklch(0.22 0.01 60)", color: "oklch(0.945 0.018 78)" }}
+            >
+              Contact Ian — Order Your Moots →
+            </a>
+          </motion.div>
+        </div>
+
+        <p className="text-center font-mono-custom text-xs mt-8" style={{ color: "oklch(0.52 0.04 65)" }}>
+          All orders and dealer inquiries for TX · OK · AR are handled directly by Ian Zakrocki at{" "}
+          <a href="https://ianzskrocki.com" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "oklch(0.52 0.12 45)" }}>
+            ianzskrocki.com
+          </a>
+        </p>
       </div>
     </section>
   );
@@ -494,14 +759,7 @@ function TheVibe() {
 
 // ─── Booking Form ──────────────────────────────────────────────────────────────
 function BookingForm() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    shop: "",
-    territory: "",
-    date: "",
-    message: "",
-  });
+  const [form, setForm] = useState({ name: "", email: "", shop: "", territory: "", date: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -514,48 +772,38 @@ function BookingForm() {
     toast.success("Your request has been received. Ian will be in touch.");
   };
 
-  const inputClass = "w-full font-mono-custom text-sm px-4 py-3 border-0 border-b-2 bg-transparent outline-none transition-colors duration-200 focus:border-b-amber-600";
-  const inputStyle = {
-    borderBottomColor: "oklch(0.78 0.03 70)",
-    color: "oklch(0.22 0.01 60)",
-  };
+  const inputClass = "w-full font-mono-custom text-sm px-4 py-3 border-0 border-b-2 bg-transparent outline-none transition-colors duration-200";
+  const inputStyle = { borderBottomColor: "oklch(0.78 0.03 70)", color: "oklch(0.22 0.01 60)" };
+
+  const showWeather = !!form.territory && form.territory !== "other";
 
   return (
     <section id="book-a-pop-up" className="py-24 relative" style={{ background: "oklch(0.945 0.018 78)" }}>
       <div className="container">
         <div className="max-w-5xl mx-auto">
           <div className="flex flex-col md:flex-row gap-16">
-            {/* Left: Info */}
+            {/* Left */}
             <div className="md:w-2/5">
-              <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: "oklch(0.52 0.12 45)" }}>
-                Pop-Up Espresso & Dirt
-              </p>
+              <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: "oklch(0.52 0.12 45)" }}>Pop-Up Espresso & Dirt</p>
               <h2 className="font-display text-4xl md:text-5xl font-bold leading-tight mb-6" style={{ color: "oklch(0.22 0.01 60)" }}>
-                Book a<br />
-                <em className="italic" style={{ color: "oklch(0.52 0.12 45)" }}>Pop-Up.</em>
+                Book a<br /><em className="italic" style={{ color: "oklch(0.52 0.12 45)" }}>Pop-Up.</em>
               </h2>
               <div className="h-px mb-6" style={{ background: "oklch(0.78 0.03 70)" }} />
               <p className="font-mono-custom text-sm leading-loose mb-8" style={{ color: "oklch(0.52 0.04 65)" }}>
-                Bring a Moots demo fleet to your local coffee shop or trailhead.
-                No massive banners. No hard sell. Just bikes, good espresso,
-                and conversations about titanium welds and tire clearance.
+                Bring a Moots demo fleet to your local coffee shop or trailhead. No massive banners. No hard sell. Just bikes, good espresso, and conversations about titanium welds and tire clearance.
               </p>
               <div className="space-y-4">
                 {[
-                  { label: "Ideal Temperature", value: "72°F, clear skies" },
+                  { label: "Ideal Temp", value: "72°F, clear skies" },
                   { label: "Best Windows", value: "Mid-Oct or Early April" },
                   { label: "Demo Fleet", value: "Routt 45 · Routt RSL · Vamoots RSL" },
                   { label: "Contact", value: "ianzskrocki.com" },
                 ].map(({ label, value }) => (
                   <div key={label} className="flex gap-4">
-                    <span className="font-label text-xs tracking-widest uppercase w-32 flex-shrink-0 pt-0.5" style={{ color: "oklch(0.52 0.12 45)" }}>
-                      {label}
-                    </span>
+                    <span className="font-label text-xs tracking-widest uppercase w-28 flex-shrink-0 pt-0.5" style={{ color: "oklch(0.52 0.12 45)" }}>{label}</span>
                     <span className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>
                       {label === "Contact" ? (
-                        <a href="https://ianzskrocki.com" target="_blank" rel="noopener noreferrer" className="hover:underline">
-                          {value}
-                        </a>
+                        <a href="https://ianzskrocki.com" target="_blank" rel="noopener noreferrer" className="hover:underline">{value}</a>
                       ) : value}
                     </span>
                   </div>
@@ -563,93 +811,40 @@ function BookingForm() {
               </div>
             </div>
 
-            {/* Right: Form */}
+            {/* Right */}
             <div className="md:w-3/5">
               <AnimatePresence mode="wait">
                 {submitted ? (
-                  <motion.div
-                    key="success"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex flex-col items-center justify-center h-full py-20 text-center"
-                  >
+                  <motion.div key="success" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center justify-center h-full py-20 text-center">
                     <div className="w-16 h-16 mb-6 flex items-center justify-center" style={{ border: "1px solid oklch(0.52 0.12 45)" }}>
                       <span className="font-display text-2xl" style={{ color: "oklch(0.52 0.12 45)" }}>✓</span>
                     </div>
-                    <h3 className="font-display text-3xl font-bold mb-4" style={{ color: "oklch(0.22 0.01 60)" }}>
-                      Request Received.
-                    </h3>
-                    <p className="font-mono-custom text-sm" style={{ color: "oklch(0.52 0.04 65)" }}>
-                      Ian will be in touch to confirm your pop-up details.
-                    </p>
-                    <a
-                      href="https://ianzskrocki.com"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-6 font-label text-xs tracking-[0.2em] uppercase hover:underline"
-                      style={{ color: "oklch(0.52 0.12 45)" }}
-                    >
+                    <h3 className="font-display text-3xl font-bold mb-4" style={{ color: "oklch(0.22 0.01 60)" }}>Request Received.</h3>
+                    <p className="font-mono-custom text-sm" style={{ color: "oklch(0.52 0.04 65)" }}>Ian will be in touch to confirm your pop-up details.</p>
+                    <a href="https://ianzskrocki.com" target="_blank" rel="noopener noreferrer" className="mt-6 font-label text-xs tracking-[0.2em] uppercase hover:underline" style={{ color: "oklch(0.52 0.12 45)" }}>
                       Visit ianzskrocki.com →
                     </a>
                   </motion.div>
                 ) : (
-                  <motion.form
-                    key="form"
-                    onSubmit={handleSubmit}
-                    className="space-y-6"
-                  >
+                  <motion.form key="form" onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>
-                          Your Name *
-                        </label>
-                        <input
-                          type="text"
-                          className={inputClass}
-                          style={inputStyle}
-                          placeholder="First Last"
-                          value={form.name}
-                          onChange={(e) => setForm({ ...form, name: e.target.value })}
-                        />
+                        <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>Your Name *</label>
+                        <input type="text" className={inputClass} style={inputStyle} placeholder="First Last" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
                       </div>
                       <div>
-                        <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>
-                          Email *
-                        </label>
-                        <input
-                          type="email"
-                          className={inputClass}
-                          style={inputStyle}
-                          placeholder="you@example.com"
-                          value={form.email}
-                          onChange={(e) => setForm({ ...form, email: e.target.value })}
-                        />
+                        <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>Email *</label>
+                        <input type="email" className={inputClass} style={inputStyle} placeholder="you@example.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
                       </div>
                     </div>
                     <div>
-                      <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>
-                        Shop / Venue Name
-                      </label>
-                      <input
-                        type="text"
-                        className={inputClass}
-                        style={inputStyle}
-                        placeholder="Airship Coffee, Flat Track Coffee, etc."
-                        value={form.shop}
-                        onChange={(e) => setForm({ ...form, shop: e.target.value })}
-                      />
+                      <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>Shop / Venue Name</label>
+                      <input type="text" className={inputClass} style={inputStyle} placeholder="Airship Coffee, Flat Track Coffee, etc." value={form.shop} onChange={(e) => setForm({ ...form, shop: e.target.value })} />
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>
-                          Territory *
-                        </label>
-                        <select
-                          className={inputClass}
-                          style={{ ...inputStyle, appearance: "none" }}
-                          value={form.territory}
-                          onChange={(e) => setForm({ ...form, territory: e.target.value })}
-                        >
+                        <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>Territory *</label>
+                        <select className={inputClass} style={{ ...inputStyle, appearance: "none" as const }} value={form.territory} onChange={(e) => setForm({ ...form, territory: e.target.value })}>
                           <option value="">Select territory...</option>
                           <option value="bentonville">Bentonville, AR — The Ozarks</option>
                           <option value="austin">Austin, TX — The East Side</option>
@@ -658,46 +853,29 @@ function BookingForm() {
                         </select>
                       </div>
                       <div>
-                        <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>
-                          Preferred Date
-                        </label>
-                        <input
-                          type="date"
-                          className={inputClass}
-                          style={inputStyle}
-                          value={form.date}
-                          onChange={(e) => setForm({ ...form, date: e.target.value })}
-                        />
+                        <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>Preferred Date</label>
+                        <input type="date" className={inputClass} style={inputStyle} value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
                       </div>
                     </div>
+
+                    {/* Weather Widget */}
+                    <AnimatePresence>
+                      {showWeather && (
+                        <motion.div key={form.territory} initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.4 }}>
+                          <WeatherWidget territoryId={form.territory} selectedDate={form.date} />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
                     <div>
-                      <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>
-                        Notes
-                      </label>
-                      <textarea
-                        rows={4}
-                        className={inputClass}
-                        style={{ ...inputStyle, resize: "none" }}
-                        placeholder="Tell us about your shop, expected turnout, or any special requests..."
-                        value={form.message}
-                        onChange={(e) => setForm({ ...form, message: e.target.value })}
-                      />
+                      <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>Notes</label>
+                      <textarea rows={4} className={inputClass} style={{ ...inputStyle, resize: "none" as const }} placeholder="Tell us about your shop, expected turnout, or any special requests..." value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} />
                     </div>
                     <div className="flex items-center gap-6 pt-2">
-                      <button
-                        type="submit"
-                        className="font-label text-sm tracking-[0.2em] uppercase px-10 py-3.5 transition-all duration-300 hover:opacity-80"
-                        style={{ background: "oklch(0.22 0.01 60)", color: "oklch(0.945 0.018 78)" }}
-                      >
+                      <button type="submit" className="font-label text-sm tracking-[0.2em] uppercase px-10 py-3.5 transition-all duration-300 hover:opacity-80" style={{ background: "oklch(0.22 0.01 60)", color: "oklch(0.945 0.018 78)" }}>
                         Request Pop-Up
                       </button>
-                      <a
-                        href="https://ianzskrocki.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-mono-custom text-xs hover:underline"
-                        style={{ color: "oklch(0.52 0.04 65)" }}
-                      >
+                      <a href="https://ianzskrocki.com" target="_blank" rel="noopener noreferrer" className="font-mono-custom text-xs hover:underline" style={{ color: "oklch(0.52 0.04 65)" }}>
                         or visit ianzskrocki.com →
                       </a>
                     </div>
@@ -715,46 +893,25 @@ function BookingForm() {
 // ─── Footer ────────────────────────────────────────────────────────────────────
 function Footer() {
   return (
-    <footer
-      className="py-12 relative overflow-hidden"
-      style={{ background: "oklch(0.18 0.008 60)" }}
-    >
+    <footer className="py-12 relative overflow-hidden" style={{ background: "oklch(0.18 0.008 60)" }}>
       <GrainOverlay opacity={0.15} />
       <div className="container relative z-20">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
           <div>
-            <p className="font-display text-2xl font-bold mb-1" style={{ color: "oklch(0.945 0.018 78)" }}>
-              Moots
-            </p>
-            <p className="font-mono-custom text-xs" style={{ color: "oklch(0.52 0.04 65)" }}>
-              Handbuilt in Steamboat Springs, CO since 1981
-            </p>
+            <p className="font-display text-2xl font-bold mb-1" style={{ color: "oklch(0.945 0.018 78)" }}>Moots</p>
+            <p className="font-mono-custom text-xs" style={{ color: "oklch(0.52 0.04 65)" }}>Handbuilt in Steamboat Springs, CO since 1981</p>
           </div>
           <div className="flex flex-col gap-1 text-right">
-            <p className="font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>
-              Territory Rep
-            </p>
-            <a
-              href="https://ianzskrocki.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-mono-custom text-sm hover:underline"
-              style={{ color: "oklch(0.88 0.025 75)" }}
-            >
+            <p className="font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>Territory Rep · TX · OK · AR</p>
+            <a href="https://ianzskrocki.com" target="_blank" rel="noopener noreferrer" className="font-mono-custom text-sm hover:underline" style={{ color: "oklch(0.88 0.025 75)" }}>
               ianzskrocki.com
             </a>
-            <p className="font-mono-custom text-xs" style={{ color: "oklch(0.52 0.04 65)" }}>
-              TX · OK · AR
-            </p>
+            <p className="font-mono-custom text-xs" style={{ color: "oklch(0.52 0.04 65)" }}>Ian Zakrocki — Dealer & Individual Orders</p>
           </div>
         </div>
         <div className="mt-8 pt-8 border-t flex flex-col md:flex-row items-center justify-between gap-4" style={{ borderColor: "oklch(0.38 0.015 60 / 0.4)" }}>
-          <p className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>
-            © 2026 Moots Bicycle. The Forever Frame Campaign.
-          </p>
-          <p className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>
-            Built in Colorado. Proven in the Ozarks.
-          </p>
+          <p className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>© 2026 Moots Bicycle. The Forever Frame Campaign.</p>
+          <p className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>Built in Colorado. Proven in the Ozarks.</p>
         </div>
       </div>
     </footer>
@@ -770,6 +927,7 @@ export default function Home() {
       <Manifesto />
       <Territories />
       <TheVibe />
+      <OrderSection />
       <BookingForm />
       <Footer />
     </div>
