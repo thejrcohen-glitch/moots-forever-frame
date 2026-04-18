@@ -32,49 +32,74 @@ function GrainOverlay({ opacity = 0.18 }: { opacity?: number }) {
 // ─── Nav ───────────────────────────────────────────────────────────────────────
 function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
   useState(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   });
 
+  const close = () => setMenuOpen(false);
+  const navLinks = [
+    { label: "← Home", href: "/" },
+    { label: "Engineering", href: "/engineering" },
+    { label: "Dealers", href: "/dealers" },
+    { label: "Build a Moots", href: "/build" },
+  ];
+
   return (
-    <nav
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
-      style={{
-        background: scrolled ? "oklch(0.945 0.018 78 / 0.95)" : "oklch(0.18 0.008 60 / 0.9)",
-        backdropFilter: "blur(8px)",
-        borderBottom: scrolled ? "1px solid oklch(0.78 0.03 70)" : "1px solid oklch(0.38 0.015 60 / 0.3)",
-      }}
-    >
-      <div className="container flex items-center justify-between py-4">
-        <Link href="/">
-          <div className="flex flex-col cursor-pointer">
-            <span className="font-display text-xl font-bold tracking-tight" style={{ color: scrolled ? "oklch(0.22 0.01 60)" : "oklch(0.945 0.018 78)" }}>
-              Moots
-            </span>
-            <span className="font-label text-xs tracking-[0.2em] uppercase" style={{ color: scrolled ? "oklch(0.52 0.12 45)" : "oklch(0.72 0.14 65)" }}>
-              The Forever Frame
-            </span>
+    <>
+      <nav
+        className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
+        style={{
+          background: scrolled || menuOpen ? "oklch(0.945 0.018 78 / 0.97)" : "oklch(0.18 0.008 60 / 0.9)",
+          backdropFilter: "blur(8px)",
+          borderBottom: scrolled || menuOpen ? "1px solid oklch(0.78 0.03 70)" : "1px solid oklch(0.38 0.015 60 / 0.3)",
+        }}
+      >
+        <div className="container flex items-center justify-between py-4">
+          <Link href="/" onClick={close}>
+            <div className="flex flex-col cursor-pointer">
+              <span className="font-display text-xl font-bold tracking-tight" style={{ color: scrolled || menuOpen ? "oklch(0.22 0.01 60)" : "oklch(0.945 0.018 78)" }}>Moots</span>
+              <span className="font-label text-xs tracking-[0.2em] uppercase" style={{ color: scrolled || menuOpen ? "oklch(0.52 0.12 45)" : "oklch(0.72 0.14 65)" }}>The Forever Frame</span>
+            </div>
+          </Link>
+          {/* Desktop */}
+          <div className="hidden md:flex items-center gap-4 lg:gap-6">
+            {navLinks.map(l => (
+              <Link key={l.label} href={l.href}>
+                <span className="font-label text-xs tracking-widest uppercase transition-opacity hover:opacity-70 cursor-pointer" style={{ color: scrolled ? "oklch(0.38 0.015 60)" : "oklch(0.88 0.025 75)" }}>{l.label}</span>
+              </Link>
+            ))}
+            <a href="https://ianzskrocki.com" target="_blank" rel="noopener noreferrer" className="font-label text-xs tracking-widest uppercase transition-opacity hover:opacity-70" style={{ color: "oklch(0.72 0.14 65)" }}>Order →</a>
           </div>
-        </Link>
-        <div className="flex items-center gap-4 md:gap-6">
-          <Link href="/">
-            <span className="font-label text-xs tracking-widest uppercase transition-opacity hover:opacity-70 cursor-pointer" style={{ color: scrolled ? "oklch(0.38 0.015 60)" : "oklch(0.88 0.025 75)" }}>
-              ← Home
-            </span>
-          </Link>
-          <Link href="/engineering">
-            <span className="font-label text-xs tracking-widest uppercase transition-opacity hover:opacity-70 cursor-pointer" style={{ color: scrolled ? "oklch(0.38 0.015 60)" : "oklch(0.88 0.025 75)" }}>
-              Engineering
-            </span>
-          </Link>
-          <a href="https://ianzskrocki.com" target="_blank" rel="noopener noreferrer" className="font-label text-xs tracking-widest uppercase transition-opacity hover:opacity-70" style={{ color: "oklch(0.72 0.14 65)" }}>
-            Order →
-          </a>
+          {/* Mobile hamburger */}
+          <button className="md:hidden flex flex-col justify-center items-center w-9 h-9 gap-1.5" onClick={() => setMenuOpen(o => !o)} aria-label={menuOpen ? "Close menu" : "Open menu"}>
+            {[0, 1, 2].map(i => (
+              <span key={i} className="block h-0.5 w-6 transition-all duration-300" style={{
+                background: scrolled || menuOpen ? "oklch(0.22 0.01 60)" : "oklch(0.945 0.018 78)",
+                transform: i === 0 && menuOpen ? "translateY(8px) rotate(45deg)" : i === 2 && menuOpen ? "translateY(-8px) rotate(-45deg)" : "none",
+                opacity: i === 1 && menuOpen ? 0 : 1,
+              }} />
+            ))}
+          </button>
         </div>
-      </div>
-    </nav>
+        {/* Mobile drawer */}
+        {menuOpen && (
+          <div className="md:hidden border-t" style={{ background: "oklch(0.945 0.018 78)", borderColor: "oklch(0.78 0.03 70)" }}>
+            <div className="container py-6 flex flex-col gap-5">
+              {navLinks.map(l => (
+                <Link key={l.label} href={l.href} onClick={close}>
+                  <span className="font-label text-sm tracking-widest uppercase hover:opacity-60 cursor-pointer" style={{ color: "oklch(0.22 0.01 60)" }}>{l.label}</span>
+                </Link>
+              ))}
+              <a href="https://ianzskrocki.com" target="_blank" rel="noopener noreferrer" onClick={close} className="font-label text-sm tracking-widest uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>Order →</a>
+            </div>
+          </div>
+        )}
+      </nav>
+    </>
   );
 }
 

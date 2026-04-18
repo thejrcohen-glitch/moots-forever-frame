@@ -114,7 +114,54 @@ function OptionCard({ label, sublabel, selected, onClick }: OptionCardProps) {
   );
 }
 
-// ─── Build Configurator Page ───────────────────────────────────────────────────
+// ─── Mobile-responsive Nav ───────────────────────────────────────────────────────
+function BuildNav() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const close = () => setMenuOpen(false);
+  const navLinks = [
+    { label: "← Home", href: "/" },
+    { label: "Dealers", href: "/dealers" },
+    { label: "Community", href: "/community" },
+    { label: "Engineering", href: "/engineering" },
+  ];
+  return (
+    <nav className="fixed top-0 left-0 right-0 z-50" style={{ background: menuOpen ? "oklch(0.22 0.01 60)" : "oklch(0.22 0.01 60 / 0.95)", backdropFilter: "blur(8px)", borderBottom: "1px solid oklch(0.38 0.015 60 / 0.4)" }}>
+      <div className="container flex items-center justify-between py-4">
+        <Link href="/" onClick={close}>
+          <div className="flex flex-col cursor-pointer">
+            <span className="font-display text-xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>Moots</span>
+            <span className="font-label text-xs tracking-[0.2em] uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>Build Configurator</span>
+          </div>
+        </Link>
+        <div className="hidden md:flex items-center gap-5">
+          {navLinks.map(l => (
+            <Link key={l.label} href={l.href} className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>{l.label}</Link>
+          ))}
+        </div>
+        <button className="md:hidden flex flex-col justify-center items-center w-9 h-9 gap-1.5" onClick={() => setMenuOpen(o => !o)} aria-label={menuOpen ? "Close menu" : "Open menu"}>
+          {[0, 1, 2].map(i => (
+            <span key={i} className="block h-0.5 w-6 transition-all duration-300" style={{
+              background: "oklch(0.945 0.018 78)",
+              transform: i === 0 && menuOpen ? "translateY(8px) rotate(45deg)" : i === 2 && menuOpen ? "translateY(-8px) rotate(-45deg)" : "none",
+              opacity: i === 1 && menuOpen ? 0 : 1,
+            }} />
+          ))}
+        </button>
+      </div>
+      {menuOpen && (
+        <div className="md:hidden border-t" style={{ background: "oklch(0.28 0.01 60)", borderColor: "oklch(0.38 0.015 60 / 0.4)" }}>
+          <div className="container py-6 flex flex-col gap-5">
+            {navLinks.map(l => (
+              <Link key={l.label} href={l.href} onClick={close} className="font-label text-sm tracking-widest uppercase hover:opacity-60" style={{ color: "oklch(0.945 0.018 78)" }}>{l.label}</Link>
+            ))}
+          </div>
+        </div>
+      )}
+    </nav>
+  );
+}
+
+// ─── Build Configurator Page ──────────────────────────────────────────────────────────────────
 export default function BuildConfigurator() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Answers>({ useCase: null, terrain: null, budget: null, territory: null });
@@ -226,21 +273,7 @@ export default function BuildConfigurator() {
   return (
     <div className="min-h-screen" style={{ background: "oklch(0.22 0.01 60)" }}>
       {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50" style={{ background: "oklch(0.22 0.01 60 / 0.95)", backdropFilter: "blur(8px)", borderBottom: "1px solid oklch(0.38 0.015 60 / 0.4)" }}>
-        <div className="container flex items-center justify-between py-4">
-          <Link href="/">
-            <div className="flex flex-col cursor-pointer">
-              <span className="font-display text-xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>Moots</span>
-              <span className="font-label text-xs tracking-[0.2em] uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>Build Configurator</span>
-            </div>
-          </Link>
-          <div className="flex items-center gap-5">
-            <Link href="/" className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>Home</Link>
-            <Link href="/dealers" className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>Dealers</Link>
-            <Link href="/community" className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>Community</Link>
-          </div>
-        </div>
-      </nav>
+      <BuildNav />
 
       <div className="pt-28 pb-20 container">
         <div className="max-w-2xl mx-auto">
