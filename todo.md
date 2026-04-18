@@ -77,3 +77,30 @@
 - [x] RSVP modal: name + email + notes input, stores in event_rsvps table
 - [x] Ian notified via notifyOwner on each new RSVP
 - [x] Show live RSVP count per event (from DB)
+
+## Feature Batch 3 — Gap Fixes
+
+### Mobile Nav
+- [ ] Add hamburger icon (Menu/X toggle) to Home.tsx Nav component
+- [ ] Add slide-down mobile drawer with all nav links
+- [ ] Close drawer on link tap
+- [ ] Apply same mobile nav pattern to Community.tsx, Engineering.tsx, Dealers.tsx, BuildConfigurator.tsx
+
+### RSVP Admin Tab
+- [ ] Add RSVPs tab to Admin.tsx alongside Photos tab
+- [ ] Fetch all RSVPs via trpc.rsvp.listAll (new procedure)
+- [ ] Display grouped by event with name, email, notes, territory, date
+- [ ] Add rsvpRouter.listAll procedure (admin-only)
+
+### Configurator Lead DB Storage
+- [ ] Add configurator_leads table to drizzle/schema.ts
+- [ ] Update configuratorRouter.ts to insert lead before notifyOwner
+- [ ] Run pnpm db:push
+
+### Community Upload Notification
+- [ ] Add notifyOwner call to communityRouter.ts upload procedure
+
+### Sitemap Domain Fix
+- [ ] Update sitemap.xml to use mootsframe-quvovjek.manus.space
+- [ ] Update robots.txt Sitemap line to match
+- [ ] Update index.html og:url and og:image to match

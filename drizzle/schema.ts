@@ -58,3 +58,19 @@ export const eventRsvps = mysqlTable("event_rsvps", {
 
 export type EventRsvp = typeof eventRsvps.$inferSelect;
 export type InsertEventRsvp = typeof eventRsvps.$inferInsert;
+
+export const configuratorLeads = mysqlTable("configurator_leads", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 128 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  territory: mysqlEnum("territory", ["TX", "OK", "AR"]).notNull(),
+  useCase: varchar("useCase", { length: 64 }).notNull(),
+  terrain: varchar("terrain", { length: 64 }).notNull(),
+  budget: varchar("budget", { length: 32 }).notNull(),
+  recommendedModel: varchar("recommendedModel", { length: 128 }).notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ConfiguratorLead = typeof configuratorLeads.$inferSelect;
+export type InsertConfiguratorLead = typeof configuratorLeads.$inferInsert;

@@ -255,72 +255,137 @@ function GrainOverlay({ opacity = 0.18 }: { opacity?: number }) {
 // ─── Nav ───────────────────────────────────────────────────────────────────────
 function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Close menu on ESC
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setMenuOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  const close = () => setMenuOpen(false);
+
+  const navLinks = [
+    { label: "Territories", href: "#territories" },
+    { label: "The Vibe", href: "#the-vibe" },
+    { label: "Order", href: "#order" },
+    { label: "Calendar", href: "#ride-calendar" },
+    { label: "Book a Pop-Up", href: "#book-a-pop-up" },
+    { label: "Engineering", href: "/engineering" },
+    { label: "Community", href: "/community" },
+    { label: "Dealers", href: "/dealers" },
+  ];
+
   return (
-    <nav
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
-      style={{
-        background: scrolled ? "oklch(0.945 0.018 78 / 0.95)" : "transparent",
-        backdropFilter: scrolled ? "blur(8px)" : "none",
-        borderBottom: scrolled ? "1px solid oklch(0.78 0.03 70)" : "none",
-      }}
-    >
-      <div className="container flex items-center justify-between py-4">
-        <div className="flex flex-col">
-          <span className="font-display text-xl font-bold tracking-tight" style={{ color: scrolled ? "oklch(0.22 0.01 60)" : "oklch(0.945 0.018 78)" }}>
-            Moots
-          </span>
-          <span className="font-label text-xs tracking-[0.2em] uppercase" style={{ color: scrolled ? "oklch(0.52 0.12 45)" : "oklch(0.88 0.025 75 / 0.8)" }}>
-            The Forever Frame
-          </span>
-        </div>
-        <div className="flex items-center gap-3 md:gap-5 flex-wrap">
-          {["Territories", "The Vibe", "Order", "Calendar", "Book a Pop-Up"].map((item) => (
+    <>
+      <nav
+        className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
+        style={{
+          background: scrolled || menuOpen ? "oklch(0.945 0.018 78 / 0.97)" : "transparent",
+          backdropFilter: scrolled || menuOpen ? "blur(8px)" : "none",
+          borderBottom: scrolled || menuOpen ? "1px solid oklch(0.78 0.03 70)" : "none",
+        }}
+      >
+        <div className="container flex items-center justify-between py-4">
+          {/* Logo */}
+          <a href="/" className="flex flex-col" onClick={close}>
+            <span className="font-display text-xl font-bold tracking-tight" style={{ color: scrolled || menuOpen ? "oklch(0.22 0.01 60)" : "oklch(0.945 0.018 78)" }}>
+              Moots
+            </span>
+            <span className="font-label text-xs tracking-[0.2em] uppercase" style={{ color: scrolled || menuOpen ? "oklch(0.52 0.12 45)" : "oklch(0.88 0.025 75 / 0.8)" }}>
+              The Forever Frame
+            </span>
+          </a>
+
+          {/* Desktop nav */}
+          <div className="hidden lg:flex items-center gap-3 xl:gap-5">
+            {navLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                className="font-label text-xs tracking-widest uppercase transition-opacity hover:opacity-70"
+                style={{ color: scrolled ? "oklch(0.38 0.015 60)" : "oklch(0.945 0.018 78)" }}
+              >
+                {link.label}
+              </a>
+            ))}
             <a
-              key={item}
-              href={item === "Calendar" ? "#ride-calendar" : `#${item.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z-]/g, "")}`}
-              className="font-label text-xs tracking-widest uppercase transition-opacity hover:opacity-70"
-              style={{ color: scrolled ? "oklch(0.38 0.015 60)" : "oklch(0.945 0.018 78)" }}
+              href="/build"
+              className="font-label text-xs tracking-widest uppercase px-4 py-1.5 transition-all hover:opacity-80"
+              style={{ background: scrolled ? "oklch(0.52 0.12 45)" : "oklch(0.72 0.14 65)", color: scrolled ? "oklch(0.945 0.018 78)" : "oklch(0.22 0.01 60)" }}
             >
-              {item}
+              Build a Moots
             </a>
-          ))}
-          <a
-            href="/engineering"
-            className="font-label text-xs tracking-widest uppercase transition-opacity hover:opacity-70"
-            style={{ color: scrolled ? "oklch(0.52 0.12 45)" : "oklch(0.72 0.14 65)" }}
+          </div>
+
+          {/* Mobile hamburger */}
+          <button
+            className="lg:hidden flex flex-col justify-center items-center w-9 h-9 gap-1.5"
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
           >
-            Engineering
-          </a>
-          <a
-            href="/community"
-            className="font-label text-xs tracking-widest uppercase transition-opacity hover:opacity-70"
-            style={{ color: scrolled ? "oklch(0.52 0.12 45)" : "oklch(0.72 0.14 65)" }}
-          >
-            Community
-          </a>
-          <a
-            href="/dealers"
-            className="font-label text-xs tracking-widest uppercase transition-opacity hover:opacity-70"
-            style={{ color: scrolled ? "oklch(0.52 0.12 45)" : "oklch(0.72 0.14 65)" }}
-          >
-            Dealers
-          </a>
-          <a
-            href="/build"
-            className="font-label text-xs tracking-widest uppercase px-4 py-1.5 transition-all hover:opacity-80"
-            style={{ background: scrolled ? "oklch(0.52 0.12 45)" : "oklch(0.72 0.14 65)", color: scrolled ? "oklch(0.945 0.018 78)" : "oklch(0.22 0.01 60)" }}
-          >
-            Build a Moots
-          </a>
+            <span
+              className="block h-0.5 w-6 transition-all duration-300"
+              style={{
+                background: scrolled || menuOpen ? "oklch(0.22 0.01 60)" : "oklch(0.945 0.018 78)",
+                transform: menuOpen ? "translateY(8px) rotate(45deg)" : "none",
+              }}
+            />
+            <span
+              className="block h-0.5 w-6 transition-all duration-300"
+              style={{
+                background: scrolled || menuOpen ? "oklch(0.22 0.01 60)" : "oklch(0.945 0.018 78)",
+                opacity: menuOpen ? 0 : 1,
+              }}
+            />
+            <span
+              className="block h-0.5 w-6 transition-all duration-300"
+              style={{
+                background: scrolled || menuOpen ? "oklch(0.22 0.01 60)" : "oklch(0.945 0.018 78)",
+                transform: menuOpen ? "translateY(-8px) rotate(-45deg)" : "none",
+              }}
+            />
+          </button>
         </div>
-      </div>
-    </nav>
+
+        {/* Mobile drawer */}
+        {menuOpen && (
+          <div
+            className="lg:hidden border-t"
+            style={{ background: "oklch(0.945 0.018 78)", borderColor: "oklch(0.78 0.03 70)" }}
+          >
+            <div className="container py-6 flex flex-col gap-5">
+              {navLinks.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  onClick={close}
+                  className="font-label text-sm tracking-widest uppercase transition-opacity hover:opacity-60"
+                  style={{ color: "oklch(0.22 0.01 60)" }}
+                >
+                  {link.label}
+                </a>
+              ))}
+              <a
+                href="/build"
+                onClick={close}
+                className="font-label text-sm tracking-widest uppercase px-5 py-3 text-center transition-all hover:opacity-80"
+                style={{ background: "oklch(0.52 0.12 45)", color: "oklch(0.945 0.018 78)" }}
+              >
+                Build a Moots
+              </a>
+            </div>
+          </div>
+        )}
+      </nav>
+    </>
   );
 }
 

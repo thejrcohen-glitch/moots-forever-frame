@@ -4,6 +4,7 @@ import { communityPhotos } from "../drizzle/schema";
 import { storagePut } from "./storage";
 import { getDb } from "./db";
 import { publicProcedure, router } from "./_core/trpc";
+import { notifyOwner } from "./_core/notification";
 
 export const communityRouter = router({
   // List all approved photos, optionally filtered by territory
@@ -81,6 +82,12 @@ export const communityRouter = router({
         imageKey: key,
         approved: "pending", // Requires admin moderation before appearing on the wall
       });
+
+      // Notify Ian that a new photo is waiting for moderation
+      await notifyOwner({
+        title: `📸 New Community Photo — ${input.riderName} (${input.territory})`,
+        content: `${input.riderName} submitted a photo from ${input.location}${input.venue ? ` at ${input.venue}` : ""}${input.mootsModel ? ` riding a ${input.mootsModel}` : ""}. Review at /admin.`,
+      }).catch(() => {/* non-blocking */});
 
       return { success: true, url };
     }),

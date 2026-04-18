@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { and, eq, sql } from "drizzle-orm";
-import { router, publicProcedure } from "./_core/trpc";
+import { and, desc, eq, sql } from "drizzle-orm";
+import { router, publicProcedure, protectedProcedure } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { getDb } from "./db";
 import { eventRsvps } from "../drizzle/schema";
@@ -67,6 +67,21 @@ export const rsvpRouter = router({
       }).catch(() => {/* non-blocking */});
 
       return { success: true, alreadyRegistered: false };
+    }),
+
+  /** List all RSVPs — admin only, for the Admin dashboard */
+  listAll: protectedProcedure
+    .query(async ({ ctx }) => {
+      if (ctx.user.role !== "admin") {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Admin only." });
+      }
+      const db = await getDb();
+      if (!db) return [];
+      return db
+        .select()
+        .from(eventRsvps)
+        .orderBy(desc(eventRsvps.createdAt))
+        .limit(500);
     }),
 
   /** Get RSVP count for a specific event */

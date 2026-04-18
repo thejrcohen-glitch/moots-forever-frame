@@ -6,7 +6,7 @@
 
   <!-- Home — The Forever Frame Campaign -->
   <url>
-    <loc>https://ianzskrocki.manus.space/</loc>
+    <loc>https://mootsframe-quvovjek.manus.space/</loc>
     <lastmod>2026-04-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
@@ -14,7 +14,7 @@
 
   <!-- Engineering — How Moots Titanium Frames Are Built -->
   <url>
-    <loc>https://ianzskrocki.manus.space/engineering</loc>
+    <loc>https://mootsframe-quvovjek.manus.space/engineering</loc>
     <lastmod>2026-04-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -22,10 +22,26 @@
 
   <!-- Community — TX/OK/AR Rider Photo Gallery -->
   <url>
-    <loc>https://ianzskrocki.manus.space/community</loc>
+    <loc>https://mootsframe-quvovjek.manus.space/community</loc>
     <lastmod>2026-04-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+
+  <!-- Dealers — Find a Moots Dealer in TX, OK, AR -->
+  <url>
+    <loc>https://mootsframe-quvovjek.manus.space/dealers</loc>
+    <lastmod>2026-04-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Build Configurator — Find Your Forever Bike -->
+  <url>
+    <loc>https://mootsframe-quvovjek.manus.space/build</loc>
+    <lastmod>2026-04-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
 
 </urlset>

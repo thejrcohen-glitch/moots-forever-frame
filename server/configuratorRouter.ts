@@ -1,9 +1,11 @@
 import { z } from "zod";
 import { router, publicProcedure } from "./_core/trpc";
 import { notifyOwner } from "./_core/notification";
+import { getDb } from "./db";
+import { configuratorLeads } from "../drizzle/schema";
 
 export const configuratorRouter = router({
-  /** Submit a build configurator lead to Ian */
+  /** Submit a build configurator lead — saved to DB then notifies Ian */
   submitLead: publicProcedure
     .input(
       z.object({
@@ -18,6 +20,22 @@ export const configuratorRouter = router({
       })
     )
     .mutation(async ({ input }) => {
+      // 1. Persist to DB first — lead is never lost even if notification fails
+      const db = await getDb();
+      if (db) {
+        await db.insert(configuratorLeads).values({
+          name: input.name,
+          email: input.email,
+          territory: input.territory,
+          useCase: input.useCase,
+          terrain: input.terrain,
+          budget: input.budget,
+          recommendedModel: input.recommendedModel,
+          notes: input.notes ?? null,
+        }).catch(() => {/* non-blocking */});
+      }
+
+      // 2. Notify Ian
       const territoryLabel = { TX: "Texas", OK: "Oklahoma", AR: "Arkansas" }[input.territory];
       const useCaseLabel = { gravel: "Gravel / Adventure", road: "Road Racing", adventure: "Bikepacking / Touring", commute: "Daily Commute + Weekend Rides" }[input.useCase];
       const terrainLabel = { pavement: "Mostly Pavement", mixed: "Mixed Surfaces", dirt: "Mostly Dirt / Gravel", technical: "Technical Off-Road" }[input.terrain];
