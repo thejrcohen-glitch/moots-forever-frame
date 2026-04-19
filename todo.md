@@ -144,3 +144,19 @@
 ## Follow-up Items (Next Session)
 - [ ] Add RESEND_API_KEY secret once user provides the actual key in Manus secrets
 - [ ] Persist booking requests to database and add booking totals to analyticsRouter
+- [ ] Update Comparison.tsx to include frame material, geometry, weight fields
+- [ ] Add explicit 'Remove from Comparison' buttons for each selected model
+- [ ] Implement true difference highlighting across compared models (contrasting styles for differing values)
+
+## Feature Batch 5 — Model Comparison
+
+### Side-by-Side Comparison Page
+- [x] Create client/src/pages/Comparison.tsx with model multi-select
+- [x] Display selected models in side-by-side table format
+- [x] Show specs: tagline, price, use case, terrain, key features
+- [x] Add model selector with up to 4 models
+- [x] Add "Remove from Comparison" via selector toggle
+- [x] Highlight specs with color coding (green checkmarks)
+- [x] Add "Build This Model" CTA button for each column
+- [x] Create /comparison route in App.tsx
+- [x] Add Comparison link to nav on BuildConfigurator page

@@ -10,6 +10,7 @@ import Engineering from "@/pages/Engineering";
 import Dealers from "@/pages/Dealers";
 import BuildConfigurator from "@/pages/BuildConfigurator";
 import Admin from "@/pages/Admin";
+import Comparison from "@/pages/Comparison";
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -20,6 +21,7 @@ function Router() {
       <Route path={"/dealers"} component={Dealers} />
       <Route path={"/build"} component={BuildConfigurator} />
       <Route path={"/admin"} component={Admin} />
+      <Route path={"/comparison"} component={Comparison} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
