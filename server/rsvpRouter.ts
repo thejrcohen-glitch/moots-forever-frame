@@ -5,6 +5,7 @@ import { TRPCError } from "@trpc/server";
 import { getDb } from "./db";
 import { eventRsvps } from "../drizzle/schema";
 import { notifyOwner } from "./_core/notification";
+import { sendEmail, rsvpConfirmationEmail } from "./_core/email";
 
 export const rsvpRouter = router({
   /** Submit an RSVP for a ride calendar event */
@@ -50,9 +51,9 @@ export const rsvpRouter = router({
         notes: input.notes ?? null,
       });
 
-      // Notify Ian
+      // Notify Ian (non-blocking)
       const territoryLabel = { TX: "Texas", OK: "Oklahoma", AR: "Arkansas" }[input.territory];
-      await notifyOwner({
+      notifyOwner({
         title: `🚲 New RSVP — ${input.eventTitle} — ${input.riderName}`,
         content: [
           `New RSVP from ${input.riderName} (${input.email})`,
@@ -64,6 +65,18 @@ export const rsvpRouter = router({
         ]
           .filter(Boolean)
           .join("\n"),
+      }).catch(() => {/* non-blocking */});
+
+      // Send confirmation email to rider (non-blocking)
+      sendEmail({
+        to: input.email,
+        subject: `RSVP Confirmed — ${input.eventTitle}`,
+        html: rsvpConfirmationEmail({
+          name: input.riderName,
+          eventName: input.eventTitle,
+          eventDate: input.eventDate,
+          territory: territoryLabel ?? input.territory,
+        }),
       }).catch(() => {/* non-blocking */});
 
       return { success: true, alreadyRegistered: false };

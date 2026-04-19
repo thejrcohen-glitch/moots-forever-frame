@@ -5,6 +5,7 @@ import { storagePut } from "./storage";
 import { getDb } from "./db";
 import { publicProcedure, router } from "./_core/trpc";
 import { notifyOwner } from "./_core/notification";
+import { sendEmail, communityUploadAcknowledgmentEmail } from "./_core/email";
 
 export const communityRouter = router({
   // List all approved photos, optionally filtered by territory
@@ -46,6 +47,7 @@ export const communityRouter = router({
         venue: z.string().max(256).optional(),
         mootsModel: z.string().max(128).optional(),
         caption: z.string().max(500).optional(),
+        email: z.string().email().optional(), // Optional — for acknowledgment email
         // Base64-encoded image data with data URI prefix
         imageData: z.string().min(1),
         imageMimeType: z.enum(["image/jpeg", "image/png", "image/webp", "image/gif"]),
@@ -88,6 +90,18 @@ export const communityRouter = router({
         title: `📸 New Community Photo — ${input.riderName} (${input.territory})`,
         content: `${input.riderName} submitted a photo from ${input.location}${input.venue ? ` at ${input.venue}` : ""}${input.mootsModel ? ` riding a ${input.mootsModel}` : ""}. Review at /admin.`,
       }).catch(() => {/* non-blocking */});
+
+      // Send acknowledgment email to uploader if they provided an email (non-blocking)
+      if (input.email) {
+        sendEmail({
+          to: input.email,
+          subject: `Photo Submitted — Moots Community Wall`,
+          html: communityUploadAcknowledgmentEmail({
+            riderName: input.riderName,
+            territory: { TX: "Texas", OK: "Oklahoma", AR: "Arkansas" }[input.territory] ?? input.territory,
+          }),
+        }).catch(() => {/* non-blocking */});
+      }
 
       return { success: true, url };
     }),

@@ -15,7 +15,7 @@ import { Link } from "wouter";
 import { getLoginUrl } from "@/const";
 
 type StatusFilter = "pending" | "approved" | "rejected" | "all";
-type AdminTab = "photos" | "rsvps" | "leads";
+type AdminTab = "photos" | "rsvps" | "leads" | "analytics";
 
 const TERRITORY_COLORS: Record<string, string> = {
   TX: "oklch(0.52 0.12 45)",
@@ -35,6 +35,10 @@ export default function Admin() {
 
   const { data: rsvps = [], isLoading: rsvpsLoading } = trpc.rsvp.listAll.useQuery(undefined, {
     enabled: !!user && user.role === "admin",
+  });
+
+  const { data: analytics, isLoading: analyticsLoading } = trpc.analytics.summary.useQuery(undefined, {
+    enabled: !!user && user.role === "admin" && activeTab === "analytics",
   });
 
   const approveMutation = trpc.moderation.approve.useMutation({
@@ -130,6 +134,7 @@ export default function Admin() {
           {([
             { id: "photos" as AdminTab, label: `Photos (${photoCounts.pending} pending)` },
             { id: "rsvps" as AdminTab, label: `RSVPs (${rsvps.length})` },
+            { id: "analytics" as AdminTab, label: "Analytics" },
           ]).map(tab => (
             <button
               key={tab.id}
@@ -265,7 +270,6 @@ export default function Admin() {
                     const first = eventRsvpList[0]!;
                     return (
                       <div key={key}>
-                        {/* Event header */}
                         <div className="flex items-end justify-between mb-4 pb-3" style={{ borderBottom: "1px solid oklch(0.38 0.015 60 / 0.4)" }}>
                           <div>
                             <p className="font-label text-xs tracking-[0.25em] uppercase mb-1" style={{ color: TERRITORY_COLORS[first.territory] ?? "oklch(0.52 0.12 45)" }}>
@@ -277,8 +281,6 @@ export default function Admin() {
                             {eventRsvpList.length} rider{eventRsvpList.length !== 1 ? "s" : ""}
                           </span>
                         </div>
-
-                        {/* RSVP table */}
                         <div className="overflow-x-auto">
                           <table className="w-full text-left">
                             <thead>
@@ -307,6 +309,101 @@ export default function Admin() {
                       </div>
                     );
                   })}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* ── ANALYTICS TAB ── */}
+        {activeTab === "analytics" && (
+          <>
+            {analyticsLoading && (
+              <div className="flex items-center gap-3 py-12">
+                <div className="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: "oklch(0.52 0.12 45)", borderTopColor: "transparent" }} />
+                <span className="font-mono-custom text-sm" style={{ color: "oklch(0.52 0.04 65)" }}>Loading analytics...</span>
+              </div>
+            )}
+            {!analyticsLoading && analytics && (
+              <div className="space-y-10">
+                {/* Summary Cards */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {[
+                    { label: "Total RSVPs", value: analytics.rsvps.total, sub: `${analytics.rsvps.thisMonth} this month`, color: "oklch(0.52 0.12 45)" },
+                    { label: "Build Leads", value: analytics.leads.total, sub: `${analytics.leads.thisMonth} this month`, color: "oklch(0.72 0.14 65)" },
+                    { label: "Photos Submitted", value: analytics.photos.total, sub: `${analytics.photos.pending} pending review`, color: "oklch(0.35 0.06 145)" },
+                    { label: "Photos Approved", value: analytics.photos.approved, sub: `${analytics.photos.rejected} rejected`, color: "oklch(0.55 0.04 145)" },
+                  ].map(card => (
+                    <div key={card.label} className="p-6" style={{ background: "oklch(0.28 0.01 60)", border: `1px solid ${card.color} / 0.4` }}>
+                      <p className="font-label text-xs tracking-[0.25em] uppercase mb-2" style={{ color: "oklch(0.52 0.04 65)" }}>{card.label}</p>
+                      <p className="font-display text-4xl font-bold mb-1" style={{ color: card.color }}>{card.value}</p>
+                      <p className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>{card.sub}</p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Territory breakdown */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="p-6" style={{ background: "oklch(0.28 0.01 60)", border: "1px solid oklch(0.38 0.015 60 / 0.5)" }}>
+                    <p className="font-label text-xs tracking-[0.25em] uppercase mb-6" style={{ color: "oklch(0.52 0.04 65)" }}>RSVPs by Territory</p>
+                    {Object.entries(analytics.rsvps.byTerritory ?? {}).length === 0 ? (
+                      <p className="font-mono-custom text-sm" style={{ color: "oklch(0.38 0.015 60)" }}>No RSVPs yet.</p>
+                    ) : (
+                      <div className="space-y-4">
+                        {Object.entries(analytics.rsvps.byTerritory ?? {})
+                          .sort(([, a], [, b]) => b - a)
+                          .map(([territory, count]) => (
+                            <div key={territory}>
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="font-label text-xs tracking-widest uppercase" style={{ color: TERRITORY_COLORS[territory] ?? "oklch(0.52 0.12 45)" }}>{territory}</span>
+                                <span className="font-mono-custom text-sm" style={{ color: "oklch(0.945 0.018 78)" }}>{count}</span>
+                              </div>
+                              <div className="h-1.5 w-full rounded-full" style={{ background: "oklch(0.38 0.015 60)" }}>
+                                <div className="h-1.5 rounded-full transition-all duration-700"
+                                  style={{ width: `${Math.round((count / analytics.rsvps.total) * 100)}%`, background: TERRITORY_COLORS[territory] ?? "oklch(0.52 0.12 45)" }} />
+                              </div>
+                            </div>
+                          ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="p-6" style={{ background: "oklch(0.28 0.01 60)", border: "1px solid oklch(0.38 0.015 60 / 0.5)" }}>
+                    <p className="font-label text-xs tracking-[0.25em] uppercase mb-6" style={{ color: "oklch(0.52 0.04 65)" }}>Top Events by RSVP</p>
+                    {(analytics.rsvps.topEvents ?? []).length === 0 ? (
+                      <p className="font-mono-custom text-sm" style={{ color: "oklch(0.38 0.015 60)" }}>No RSVPs yet.</p>
+                    ) : (
+                      <div className="space-y-3">
+                        {(analytics.rsvps.topEvents ?? []).map((e, i) => (
+                          <div key={e.title} className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <span className="font-mono-custom text-xs w-5" style={{ color: "oklch(0.38 0.015 60)" }}>#{i + 1}</span>
+                              <span className="font-mono-custom text-sm" style={{ color: "oklch(0.945 0.018 78)" }}>{e.title}</span>
+                            </div>
+                            <span className="font-mono-custom text-sm" style={{ color: "oklch(0.72 0.14 65)" }}>{e.count}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Top models */}
+                <div className="p-6" style={{ background: "oklch(0.28 0.01 60)", border: "1px solid oklch(0.38 0.015 60 / 0.5)" }}>
+                  <p className="font-label text-xs tracking-[0.25em] uppercase mb-6" style={{ color: "oklch(0.52 0.04 65)" }}>Top Models from Build Configurator</p>
+                  {(analytics.leads.topModels ?? []).length === 0 ? (
+                    <p className="font-mono-custom text-sm" style={{ color: "oklch(0.38 0.015 60)" }}>No leads yet.</p>
+                  ) : (
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                      {(analytics.leads.topModels ?? []).map((m, i) => (
+                        <div key={m.model} className="p-4 text-center" style={{ background: "oklch(0.22 0.01 60)", border: "1px solid oklch(0.38 0.015 60 / 0.4)" }}>
+                          <p className="font-mono-custom text-xs mb-1" style={{ color: "oklch(0.38 0.015 60)" }}>#{i + 1}</p>
+                          <p className="font-display text-2xl font-bold mb-1" style={{ color: "oklch(0.72 0.14 65)" }}>{m.count}</p>
+                          <p className="font-mono-custom text-xs" style={{ color: "oklch(0.72 0.04 65)" }}>{m.model}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </>

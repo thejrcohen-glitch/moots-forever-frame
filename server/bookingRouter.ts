@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { publicProcedure, router } from "./_core/trpc";
 import { notifyOwner } from "./_core/notification";
+import { sendEmail, bookingConfirmationEmail } from "./_core/email";
 
 export const bookingRouter = router({
   /**
@@ -59,6 +60,17 @@ export const bookingRouter = router({
         title: `🚲 New Pop-Up Request — ${input.city}, ${input.territory} — ${input.name}`,
         content,
       });
+
+      // Send confirmation email to requester (non-blocking)
+      sendEmail({
+        to: input.email,
+        subject: `Pop-Up Request Received — Moots Forever Frame`,
+        html: bookingConfirmationEmail({
+          name: input.name,
+          territory: territoryLabel ?? input.territory,
+          date: input.preferredDate ? dateStr : undefined,
+        }),
+      }).catch(() => {/* non-blocking */});
 
       return { success: true, notified: sent };
     }),

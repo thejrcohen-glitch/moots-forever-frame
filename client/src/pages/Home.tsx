@@ -1413,6 +1413,116 @@ function OrderSection() {
   );
 }
 
+// ─── Warranty & Trade-Up ──────────────────────────────────────────────────────────────────────────────
+function WarrantyTradeUpSection() {
+  return (
+    <section className="py-24 relative overflow-hidden" style={{ background: "oklch(0.22 0.01 60)" }}>
+      <GrainOverlay opacity={0.12} />
+      <div className="container relative z-20">
+        <div className="text-center mb-16">
+          <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: "oklch(0.72 0.14 65)" }}>
+            The Moots Promise
+          </p>
+          <h2 className="font-display text-4xl md:text-5xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>
+            Built to last. Backed forever.
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          {/* Lifetime Warranty */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="p-10 flex flex-col gap-5"
+            style={{ background: "oklch(0.28 0.01 60)", border: "1px solid oklch(0.38 0.015 60 / 0.5)" }}
+          >
+            <div>
+              <p className="font-label text-xs tracking-[0.3em] uppercase mb-3" style={{ color: "oklch(0.72 0.14 65)" }}>Lifetime Warranty</p>
+              <h3 className="font-display text-2xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>Every MOOTS frame. Forever.</h3>
+              <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+                Moots titanium frames are backed by a Lifetime Warranty for the original owner, covering any manufacturing defects. This is not a marketing claim — it is the natural consequence of building a frame that is meant to outlast everything else in your garage.
+              </p>
+            </div>
+            <ul className="space-y-2 mt-2">
+              {[
+                "Original owner, lifetime coverage",
+                "Manufacturing defects fully covered",
+                "Submit claims to warranty@moots.com",
+                "Component warranties via original manufacturers",
+              ].map((item) => (
+                <li key={item} className="flex items-center gap-3 font-mono-custom text-xs" style={{ color: "oklch(0.88 0.025 75)" }}>
+                  <span style={{ color: "oklch(0.72 0.14 65)" }}>—</span> {item}
+                </li>
+              ))}
+            </ul>
+            <p className="font-mono-custom text-xs mt-2" style={{ color: "oklch(0.52 0.04 65)" }}>
+              Standard builds ship in 6–8 weeks. Custom orders may take longer.
+            </p>
+          </motion.div>
+
+          {/* Trade-Up Program */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.15 }}
+            className="p-10 flex flex-col gap-5"
+            style={{ background: "oklch(0.28 0.01 60)", border: "1px solid oklch(0.52 0.12 45 / 0.4)" }}
+          >
+            <div>
+              <p className="font-label text-xs tracking-[0.3em] uppercase mb-3" style={{ color: "oklch(0.52 0.12 45)" }}>Trade-Up Program</p>
+              <h3 className="font-display text-2xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>Your old Moots is still worth something.</h3>
+              <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+                Moots offers an official Trade-Up Program — trade in your existing Moots frame for credit toward a new one. Titanium holds its value in ways carbon never will. If you’re ready for an upgrade, your current bike is part of the deal.
+              </p>
+            </div>
+            <ul className="space-y-2 mt-2">
+              {[
+                "Trade in any Moots titanium frame",
+                "Credit applied toward new frame purchase",
+                "Available through Ian for TX · OK · AR riders",
+                "No carbon expiration dates — titanium holds value",
+              ].map((item) => (
+                <li key={item} className="flex items-center gap-3 font-mono-custom text-xs" style={{ color: "oklch(0.88 0.025 75)" }}>
+                  <span style={{ color: "oklch(0.52 0.12 45)" }}>—</span> {item}
+                </li>
+              ))}
+            </ul>
+            <a
+              href="https://moots.com/pages/trade-up-program"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block font-label text-xs tracking-[0.2em] uppercase px-6 py-3 transition-all duration-300 hover:opacity-80 text-center mt-2"
+              style={{ background: "oklch(0.52 0.12 45)", color: "oklch(0.945 0.018 78)" }}
+            >
+              View Trade-Up Options →
+            </a>
+          </motion.div>
+        </div>
+
+        {/* Refurbishment note */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="text-center mt-12 max-w-2xl mx-auto"
+        >
+          <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.52 0.04 65)" }}>
+            Moots also offers a{" "}
+            <a href="https://moots.com/pages/refurbish-your-frame" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "oklch(0.72 0.14 65)" }}>
+              Frame Refurbishment service
+            </a>
+            {" "}— if your Moots needs new life, they’ll strip it, re-finish it, and send it back like new. Titanium doesn’t wear out. The finish might.
+          </p>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 // Territory ID → DB enum mapping
 const TERRITORY_MAP: Record<string, "TX" | "OK" | "AR"> = {
   bentonville: "AR",
@@ -1619,6 +1729,7 @@ export default function Home() {
       <Territories />
       <TheVibe />
       <OrderSection />
+      <WarrantyTradeUpSection />
       <RideCalendar />
       <BookingForm />
       <Footer />

@@ -36,26 +36,34 @@ interface ModelRec {
 const MODELS: Record<string, ModelRec> = {
   "Routt 45": {
     name: "Routt 45",
-    tagline: "The Ozarks Workhorse",
-    priceRange: "$4,500 – $7,500 built",
-    description: "45mm tire clearance, relaxed geometry, and titanium compliance that eats gravel for breakfast. The bike for riders who want to go everywhere.",
-    specs: ["45mm tire clearance", "Relaxed endurance geometry", "Threaded BB", "Full fender mounts"],
+    tagline: "One premium gravel bike for any occasion",
+    priceRange: "Frameset $5,999 · Builds from $7,649",
+    description: "From forest tracks to rough gravel to the unpredictable mix of Routt County Road 45, this is the bike built to handle it all. Relaxed geometry, 50c clearance, and titanium compliance for long days on back roads where maps end but you don't.",
+    specs: ["50c tire clearance", "Relaxed endurance geometry", "68mm threaded BB", "3 bottle mounts + fender eyelets", "1x or 2x drivetrain compatible"],
+    img: "https://d2xsxph8kpxj0f.cloudfront.net/310519663557843772/QUvoVjeKdQzxhUCD9R3yK5/hero-main-4D9bn8NjtqknDj4u5Mioxh.webp",
+  },
+  "Routt YBB": {
+    name: "Routt YBB",
+    tagline: "The smoothest ride in gravel",
+    priceRange: "Frameset $6,199 · Builds from $7,849",
+    description: "YBB stands for 'Yeti Boing Boing' — a rear-end compliance system built into the titanium frame that absorbs chatter without sacrificing power transfer. For riders who want to go farther, faster, with less fatigue.",
+    specs: ["50c tire clearance", "YBB rear compliance system", "68mm threaded BB", "3 bottle mounts + fender eyelets", "Gravel-tuned geometry"],
     img: "https://d2xsxph8kpxj0f.cloudfront.net/310519663557843772/QUvoVjeKdQzxhUCD9R3yK5/hero-main-4D9bn8NjtqknDj4u5Mioxh.webp",
   },
   "Routt RSL": {
     name: "Routt RSL",
-    tagline: "Race-Ready Gravel",
-    priceRange: "$6,500 – $11,000 built",
-    description: "RSL-grade titanium tubing, race geometry, and the kind of stiffness-to-weight ratio that makes carbon riders nervous. Built for the front of the gravel pack.",
-    specs: ["RSL-grade titanium", "Race geometry", "35mm tire clearance", "Internal cable routing"],
+    tagline: "Crafted from a decade on gravel",
+    priceRange: "Frameset $7,249 · Builds from $8,899",
+    description: "Named for the rugged roads of Routt County, the RSL is built for riders who seek distance, challenge, and discovery. Large-diameter double-butted RSL titanium tubing balances stiffness and comfort across endless miles of mixed terrain.",
+    specs: ["50c tire clearance", "RSL double-butted tubeset", "3D-printed UDH dropouts", "Carbon MOOTS gravel fork", "3 bottle mounts + fender eyelets"],
     img: "https://d2xsxph8kpxj0f.cloudfront.net/310519663557843772/QUvoVjeKdQzxhUCD9R3yK5/hero-main-4D9bn8NjtqknDj4u5Mioxh.webp",
   },
-  "Vamoots RSL": {
-    name: "Vamoots RSL",
-    tagline: "The Road Weapon",
-    priceRange: "$7,500 – $13,000 built",
-    description: "Pure road performance in titanium. The Vamoots RSL is what happens when you stop compromising between speed and longevity. Built for riders who've outgrown carbon.",
-    specs: ["RSL-grade titanium", "Aggressive road geometry", "28mm tire clearance", "Aero-optimized tubes"],
+  "Vamoots RCS": {
+    name: "Vamoots RCS",
+    tagline: "The performance road bike built to go beyond",
+    priceRange: "Frameset $7,249 · Builds from $11,980",
+    description: "The Vamoots RCS blends road efficiency with the clearance and handling needed for dirt and gravel. RSL double-butted titanium, fastback seat stays, and 3D-printed dropouts deliver a ride that is responsive, smooth, and endlessly versatile.",
+    specs: ["35c tire clearance", "RSL double-butted tubeset", "Carbon MOOTS allroad fork", "Fastback seat stays", "Road + light gravel geometry"],
     img: "https://d2xsxph8kpxj0f.cloudfront.net/310519663557843772/QUvoVjeKdQzxhUCD9R3yK5/hero-main-4D9bn8NjtqknDj4u5Mioxh.webp",
   },
 };
@@ -65,12 +73,13 @@ function getRecommendation(answers: Answers): string {
 
   // Road-focused
   if (useCase === "road" || (terrain === "pavement" && useCase !== "gravel")) {
-    if (budget === "under-5k") return "Routt 45";
-    return "Vamoots RSL";
+    if (budget === "under-5k" || budget === "5k-8k") return "Routt 45";
+    return "Vamoots RCS";
   }
 
-  // Adventure / bikepacking
+  // Adventure / bikepacking on technical terrain — needs max clearance and compliance
   if (useCase === "adventure" || terrain === "technical") {
+    if (budget === "8k-12k" || budget === "12k-plus") return "Routt YBB";
     return "Routt 45";
   }
 
@@ -79,14 +88,17 @@ function getRecommendation(answers: Answers): string {
     return "Routt 45";
   }
 
-  // Gravel
+  // Gravel — mixed or dirt terrain
   if (terrain === "dirt" || terrain === "mixed") {
     if (budget === "under-5k" || budget === "5k-8k") return "Routt 45";
+    if (budget === "8k-12k") return "Routt YBB";
     return "Routt RSL";
   }
 
-  // Default
-  if (budget === "12k-plus" || budget === "8k-12k") return "Routt RSL";
+  // Default gravel
+  if (budget === "12k-plus") return "Routt RSL";
+  if (budget === "8k-12k") return "Routt YBB";
+  if (budget === "5k-8k") return "Routt 45";
   return "Routt 45";
 }
 
@@ -210,10 +222,10 @@ export default function BuildConfigurator() {
       question: "What's your complete build budget?",
       sublabel: "Frame + components + build. Be realistic — a forever bike is worth it.",
       options: [
-        { value: "under-5k", label: "Under $5,000", sublabel: "Entry-level components, solid build" },
-        { value: "5k-8k", label: "$5,000 – $8,000", sublabel: "Mid-range groupset, quality wheels" },
-        { value: "8k-12k", label: "$8,000 – $12,000", sublabel: "High-end groupset, premium wheels" },
-        { value: "12k-plus", label: "$12,000+", sublabel: "Top-spec everything. No compromises." },
+        { value: "under-5k", label: "Under $6,000", sublabel: "Frameset only or entry build — bring your own components" },
+        { value: "5k-8k", label: "$6,000 – $9,000", sublabel: "Frameset + SRAM Rival XPLR or Force build" },
+        { value: "8k-12k", label: "$9,000 – $12,000", sublabel: "SRAM Force or Red XPLR — high-end complete build" },
+        { value: "12k-plus", label: "$12,000+", sublabel: "SRAM Red XPLR or Red AXS — top-spec, no compromises" },
       ] as { value: Budget; label: string; sublabel: string }[],
       key: "budget" as keyof Answers,
     },

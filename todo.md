@@ -84,7 +84,7 @@
 - [x] Add hamburger icon (Menu/X toggle) to Home.tsx Nav component
 - [x] Add slide-down mobile drawer with all nav links
 - [x] Close drawer on link tap
-- [ ] Apply same mobile nav pattern to Community.tsx, Engineering.tsx, Dealers.tsx, BuildConfigurator.tsx
+- [x] Apply same mobile nav pattern to Community.tsx, Engineering.tsx, Dealers.tsx, BuildConfigurator.tsx
 
 ### RSVP Admin Tab
 - [x] Add RSVPs tab to Admin.tsx alongside Photos tab
@@ -104,3 +104,43 @@
 - [x] Update sitemap.xml to use mootsframe-quvovjek.manus.space
 - [x] Update robots.txt Sitemap line to match
 - [x] Update index.html og:url and og:image to match
+
+## Feature Batch 4 — Configurator, Warranty, Email, Engineering, Admin Analytics
+
+### Build Configurator Updates
+- [x] Update price ranges to match verified moots.com pricing
+- [x] Add Routt YBB as a 5th model option in the configurator
+- [x] Update model descriptions to use official moots.com copy
+- [x] Fix budget step labels to reflect verified price tiers
+
+### Homepage Additions
+- [x] Add Lifetime Warranty section to homepage (official Moots language)
+- [x] Add Trade-Up Program section to homepage with CTA
+- [x] Add build time note (6–8 weeks standard) to order section
+
+### Engineering Page
+- [x] Add CWSR titanium deep-dive section with official Why Ti copy
+- [x] Include aircraft-grade standards note
+- [x] Add tube mill partnership note (15+ years, Washington mill)
+- [x] Add 35+ tube sizes / tuning philosophy section
+
+### Email Confirmations (Resend)
+- [x] Install resend npm package
+- [x] Add RESEND_API_KEY secret (awaiting user API key)
+- [x] Create server/_core/email.ts helper
+- [x] Wire RSVP confirmation email to rider
+- [x] Wire booking confirmation email to rider
+- [x] Wire community upload acknowledgment email
+
+### Admin Analytics Dashboard
+- [x] Add Analytics tab to Admin.tsx
+- [x] Show RSVPs this month + all time
+- [x] Show configurator leads this month + all time
+- [x] Show community photos by status (pending/approved/rejected)
+- [x] Show territory breakdown with progress bars
+- [x] Add analyticsRouter.ts with summary procedure (admin-only)
+- [x] Register analyticsRouter in server/routers.ts
+
+## Follow-up Items (Next Session)
+- [ ] Add RESEND_API_KEY secret once user provides the actual key in Manus secrets
+- [ ] Persist booking requests to database and add booking totals to analyticsRouter
