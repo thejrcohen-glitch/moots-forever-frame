@@ -19,6 +19,9 @@ interface ModelRec {
   category: "gravel" | "road";
   useCase: string;
   terrain: string;
+  frameMaterial: string;
+  geometry: string;
+  weight: string;
 }
 
 const MODELS: Record<string, ModelRec> = {
@@ -32,6 +35,9 @@ const MODELS: Record<string, ModelRec> = {
     category: "gravel",
     useCase: "Gravel, Adventure, Commute",
     terrain: "Mixed, Dirt, Pavement",
+    frameMaterial: "Titanium (3/2.5 tubing)",
+    geometry: "Relaxed endurance (71.5° HTA, 74° STA)",
+    weight: "~1,050g frameset",
   },
   "Routt YBB": {
     name: "Routt YBB",
@@ -43,6 +49,9 @@ const MODELS: Record<string, ModelRec> = {
     category: "gravel",
     useCase: "Gravel, Adventure, Technical",
     terrain: "Mixed, Dirt, Technical",
+    frameMaterial: "Titanium (3/2.5 tubing + YBB)",
+    geometry: "Gravel-tuned (71° HTA, 73.5° STA)",
+    weight: "~1,150g frameset",
   },
   "Routt RSL": {
     name: "Routt RSL",
@@ -54,6 +63,9 @@ const MODELS: Record<string, ModelRec> = {
     category: "gravel",
     useCase: "Gravel, Adventure, Distance",
     terrain: "Mixed, Dirt, Technical",
+    frameMaterial: "Titanium RSL (double-butted)",
+    geometry: "Aggressive gravel (71° HTA, 73° STA)",
+    weight: "~950g frameset",
   },
   "Vamoots RCS": {
     name: "Vamoots RCS",
@@ -65,6 +77,9 @@ const MODELS: Record<string, ModelRec> = {
     category: "road",
     useCase: "Road, Allroad",
     terrain: "Pavement, Light Gravel",
+    frameMaterial: "Titanium RSL (double-butted)",
+    geometry: "Road-biased allroad (73° HTA, 74° STA)",
+    weight: "~900g frameset",
   },
 };
 
@@ -81,166 +96,212 @@ function ComparisonNav() {
             <span className="font-label text-xs tracking-[0.2em] uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>Compare Models</span>
           </div>
         </Link>
-        <div className="hidden md:flex items-center gap-8">
-          <Link href="/build" className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>Build a Moots</Link>
+        <div className="hidden md:flex items-center gap-5">
+          <Link href="/" className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>← Home</Link>
+          <Link href="/build" className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>Build</Link>
           <Link href="/community" className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>Community</Link>
-          <Link href="/dealers" className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>Dealers</Link>
         </div>
-        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden p-2" style={{ color: "oklch(0.945 0.018 78)" }}>
-          {isMenuOpen ? "✕" : "☰"}
+        <button className="md:hidden flex flex-col justify-center items-center w-9 h-9 gap-1.5" onClick={() => setIsMenuOpen(o => !o)} aria-label={isMenuOpen ? "Close menu" : "Open menu"}>
+          {[0, 1, 2].map(i => (
+            <span key={i} className="block h-0.5 w-6 transition-all duration-300" style={{
+              background: "oklch(0.945 0.018 78)",
+              transform: i === 0 && isMenuOpen ? "translateY(8px) rotate(45deg)" : i === 2 && isMenuOpen ? "translateY(-8px) rotate(-45deg)" : "none",
+              opacity: i === 1 && isMenuOpen ? 0 : 1,
+            }} />
+          ))}
         </button>
       </div>
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} style={{ background: "oklch(0.22 0.01 60 / 0.98)", borderBottom: "1px solid oklch(0.38 0.015 60 / 0.4)" }}>
-            <div className="container py-4 space-y-3">
-              {[{ href: "/build", label: "Build a Moots" }, { href: "/community", label: "Community" }, { href: "/dealers", label: "Dealers" }].map(link => (
-                <Link key={link.href} href={link.href}>
-                  <button onClick={() => setIsMenuOpen(false)} className="w-full text-left font-label text-xs tracking-widest uppercase py-2 hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>
-                    {link.label}
-                  </button>
-                </Link>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {isMenuOpen && (
+        <div className="md:hidden border-t" style={{ background: "oklch(0.28 0.01 60)", borderColor: "oklch(0.38 0.015 60 / 0.4)" }}>
+          <div className="container py-6 flex flex-col gap-5">
+            <Link href="/" onClick={() => setIsMenuOpen(false)} className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>← Home</Link>
+            <Link href="/build" onClick={() => setIsMenuOpen(false)} className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>Build</Link>
+            <Link href="/community" onClick={() => setIsMenuOpen(false)} className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>Community</Link>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
 
-// ─── Main Component ────────────────────────────────────────────────────────────
+// ─── Comparison Page ───────────────────────────────────────────────────────────
 export default function Comparison() {
-  const [selectedModels, setSelectedModels] = useState<string[]>(["Routt 45", "Routt RSL"]);
+  const [selected, setSelected] = useState<string[]>(["Routt 45", "Routt RSL"]);
 
-  const toggleModel = (modelName: string) => {
-    if (selectedModels.includes(modelName)) {
-      setSelectedModels(selectedModels.filter(m => m !== modelName));
-    } else if (selectedModels.length < 4) {
-      setSelectedModels([...selectedModels, modelName]);
+  const toggleModel = (name: string) => {
+    if (selected.includes(name)) {
+      setSelected(selected.filter(m => m !== name));
+    } else if (selected.length < 4) {
+      setSelected([...selected, name]);
     }
   };
 
-  const selected = selectedModels.map(name => MODELS[name]).filter(Boolean);
+  const selectedModels = selected.map(name => MODELS[name]).filter(Boolean);
+
+  // Helper: detect if a value differs across selected models
+  const isDifferent = (key: keyof ModelRec) => {
+    if (selectedModels.length < 2) return false;
+    const values = selectedModels.map(m => m[key]);
+    return values.some(v => v !== values[0]);
+  };
 
   return (
-    <div className="min-h-screen" style={{ background: "oklch(0.22 0.01 60)" }}>
+    <div style={{ background: "oklch(0.22 0.01 60)" }}>
       <ComparisonNav />
-
-      <div className="pt-28 pb-20 container">
-        {/* Header */}
+      <div className="container pt-24 pb-16">
         <div className="mb-12">
-          <p className="font-label text-xs tracking-[0.35em] uppercase mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>Comparison</p>
-          <h1 className="font-display text-4xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>Find Your Forever Frame</h1>
-          <p className="font-mono-custom text-sm max-w-2xl" style={{ color: "oklch(0.52 0.04 65)" }}>
-            Compare specs, pricing, and features across our complete lineup. Select up to 4 models to see side-by-side details.
-          </p>
+          <h1 className="font-display text-5xl font-bold mb-2" style={{ color: "oklch(0.945 0.018 78)" }}>Compare Models</h1>
+          <p className="font-mono-custom text-sm" style={{ color: "oklch(0.52 0.04 65)" }}>Select up to 4 models to see side-by-side specs, pricing, and features.</p>
         </div>
 
-        {/* Model Selector */}
-        <div className="mb-12">
-          <p className="font-label text-xs tracking-[0.25em] uppercase mb-4" style={{ color: "oklch(0.52 0.04 65)" }}>Select Models ({selectedModels.length} / 4)</p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {Object.entries(MODELS).map(([key, model]) => (
-              <button
-                key={key}
-                onClick={() => toggleModel(key)}
-                className="p-4 transition-all duration-200 text-left"
-                style={{
-                  background: selectedModels.includes(key) ? "oklch(0.35 0.06 145)" : "oklch(0.28 0.01 60)",
-                  border: selectedModels.includes(key) ? "2px solid oklch(0.35 0.06 145)" : "1px solid oklch(0.38 0.015 60)",
-                }}
-              >
-                <p className="font-display text-sm font-bold mb-1" style={{ color: "oklch(0.945 0.018 78)" }}>{model.name}</p>
-                <p className="font-mono-custom text-xs" style={{ color: "oklch(0.52 0.04 65)" }}>{model.tagline}</p>
-              </button>
-            ))}
-          </div>
+        {/* Model Selector Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+          {Object.entries(MODELS).map(([key, model]) => (
+            <motion.button
+              key={key}
+              onClick={() => toggleModel(key)}
+              className="p-4 text-left transition-all duration-200 rounded-lg"
+              style={{
+                background: selected.includes(key) ? "oklch(0.52 0.12 45 / 0.15)" : "oklch(0.28 0.01 60)",
+                border: `1px solid ${selected.includes(key) ? "oklch(0.52 0.12 45)" : "oklch(0.38 0.015 60 / 0.6)"}`,
+              }}
+              whileHover={{ scale: 1.02 }}
+            >
+              <p className="font-label text-xs tracking-widest uppercase mb-1" style={{ color: selected.includes(key) ? "oklch(0.72 0.14 65)" : "oklch(0.52 0.04 65)" }}>
+                {selected.includes(key) ? "✓" : "○"} {model.name}
+              </p>
+              <p className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>{model.tagline}</p>
+            </motion.button>
+          ))}
         </div>
 
         {/* Comparison Table */}
-        {selected.length > 0 && (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left" style={{ minWidth: `${selected.length * 280}px` }}>
+        {selectedModels.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="overflow-x-auto">
+            <table className="w-full border-collapse">
               <thead>
-                <tr style={{ borderBottom: "1px solid oklch(0.38 0.015 60 / 0.4)" }}>
-                  <th className="font-label text-xs tracking-[0.2em] uppercase pb-4 pr-6 sticky left-0" style={{ background: "oklch(0.22 0.01 60)", color: "oklch(0.52 0.04 65)", minWidth: "200px" }}>
-                    Spec
-                  </th>
-                  {selected.map(model => (
-                    <th key={model.name} className="font-label text-xs tracking-[0.2em] uppercase pb-4 pr-6" style={{ color: "oklch(0.52 0.04 65)", minWidth: "260px" }}>
+                <tr style={{ borderBottom: "2px solid oklch(0.38 0.015 60 / 0.5)" }}>
+                  <th className="text-left p-4 font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.52 0.04 65)" }}>Spec</th>
+                  {selectedModels.map(model => (
+                    <th key={model.name} className="text-left p-4 font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.72 0.14 65)" }}>
                       {model.name}
+                      <button
+                        onClick={() => toggleModel(model.name)}
+                        className="block mt-1 text-xs font-mono-custom text-red-500 hover:opacity-70"
+                        style={{ color: "oklch(0.52 0.12 45)" }}
+                      >
+                        ✕ Remove
+                      </button>
                     </th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {/* Tagline */}
-                <tr style={{ borderBottom: "1px solid oklch(0.38 0.015 60 / 0.2)" }}>
-                  <td className="font-label text-xs tracking-[0.15em] uppercase py-4 pr-6 sticky left-0" style={{ background: "oklch(0.22 0.01 60)", color: "oklch(0.52 0.04 65)" }}>Tagline</td>
-                  {selected.map(model => (
-                    <td key={model.name} className="font-mono-custom text-sm py-4 pr-6" style={{ color: "oklch(0.72 0.14 65)" }}>
-                      {model.tagline}
-                    </td>
-                  ))}
-                </tr>
-
                 {/* Price */}
-                <tr style={{ borderBottom: "1px solid oklch(0.38 0.015 60 / 0.2)" }}>
-                  <td className="font-label text-xs tracking-[0.15em] uppercase py-4 pr-6 sticky left-0" style={{ background: "oklch(0.22 0.01 60)", color: "oklch(0.52 0.04 65)" }}>Price</td>
-                  {selected.map(model => (
-                    <td key={model.name} className="font-mono-custom text-sm py-4 pr-6 font-bold" style={{ color: "oklch(0.52 0.12 45)" }}>
+                <tr style={{ borderBottom: "1px solid oklch(0.38 0.015 60 / 0.3)" }}>
+                  <td className="p-4 font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.52 0.04 65)" }}>Price</td>
+                  {selectedModels.map(model => (
+                    <td key={model.name} className="p-4 font-mono-custom text-sm" style={{
+                      color: isDifferent("priceRange") ? "oklch(0.72 0.14 65)" : "oklch(0.945 0.018 78)",
+                      background: isDifferent("priceRange") ? "oklch(0.52 0.12 45 / 0.1)" : "transparent",
+                    }}>
                       {model.priceRange}
                     </td>
                   ))}
                 </tr>
 
+                {/* Frame Material */}
+                <tr style={{ borderBottom: "1px solid oklch(0.38 0.015 60 / 0.3)" }}>
+                  <td className="p-4 font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.52 0.04 65)" }}>Frame Material</td>
+                  {selectedModels.map(model => (
+                    <td key={model.name} className="p-4 font-mono-custom text-sm" style={{
+                      color: isDifferent("frameMaterial") ? "oklch(0.72 0.14 65)" : "oklch(0.945 0.018 78)",
+                      background: isDifferent("frameMaterial") ? "oklch(0.52 0.12 45 / 0.1)" : "transparent",
+                    }}>
+                      {model.frameMaterial}
+                    </td>
+                  ))}
+                </tr>
+
+                {/* Geometry */}
+                <tr style={{ borderBottom: "1px solid oklch(0.38 0.015 60 / 0.3)" }}>
+                  <td className="p-4 font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.52 0.04 65)" }}>Geometry</td>
+                  {selectedModels.map(model => (
+                    <td key={model.name} className="p-4 font-mono-custom text-sm" style={{
+                      color: isDifferent("geometry") ? "oklch(0.72 0.14 65)" : "oklch(0.945 0.018 78)",
+                      background: isDifferent("geometry") ? "oklch(0.52 0.12 45 / 0.1)" : "transparent",
+                    }}>
+                      {model.geometry}
+                    </td>
+                  ))}
+                </tr>
+
+                {/* Weight */}
+                <tr style={{ borderBottom: "1px solid oklch(0.38 0.015 60 / 0.3)" }}>
+                  <td className="p-4 font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.52 0.04 65)" }}>Weight</td>
+                  {selectedModels.map(model => (
+                    <td key={model.name} className="p-4 font-mono-custom text-sm" style={{
+                      color: isDifferent("weight") ? "oklch(0.72 0.14 65)" : "oklch(0.945 0.018 78)",
+                      background: isDifferent("weight") ? "oklch(0.52 0.12 45 / 0.1)" : "transparent",
+                    }}>
+                      {model.weight}
+                    </td>
+                  ))}
+                </tr>
+
                 {/* Use Case */}
-                <tr style={{ borderBottom: "1px solid oklch(0.38 0.015 60 / 0.2)" }}>
-                  <td className="font-label text-xs tracking-[0.15em] uppercase py-4 pr-6 sticky left-0" style={{ background: "oklch(0.22 0.01 60)", color: "oklch(0.52 0.04 65)" }}>Best For</td>
-                  {selected.map(model => (
-                    <td key={model.name} className="font-mono-custom text-sm py-4 pr-6" style={{ color: "oklch(0.945 0.018 78)" }}>
+                <tr style={{ borderBottom: "1px solid oklch(0.38 0.015 60 / 0.3)" }}>
+                  <td className="p-4 font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.52 0.04 65)" }}>Use Case</td>
+                  {selectedModels.map(model => (
+                    <td key={model.name} className="p-4 font-mono-custom text-sm" style={{
+                      color: isDifferent("useCase") ? "oklch(0.72 0.14 65)" : "oklch(0.945 0.018 78)",
+                      background: isDifferent("useCase") ? "oklch(0.52 0.12 45 / 0.1)" : "transparent",
+                    }}>
                       {model.useCase}
                     </td>
                   ))}
                 </tr>
 
                 {/* Terrain */}
-                <tr style={{ borderBottom: "1px solid oklch(0.38 0.015 60 / 0.2)" }}>
-                  <td className="font-label text-xs tracking-[0.15em] uppercase py-4 pr-6 sticky left-0" style={{ background: "oklch(0.22 0.01 60)", color: "oklch(0.52 0.04 65)" }}>Terrain</td>
-                  {selected.map(model => (
-                    <td key={model.name} className="font-mono-custom text-sm py-4 pr-6" style={{ color: "oklch(0.72 0.14 65)" }}>
+                <tr style={{ borderBottom: "1px solid oklch(0.38 0.015 60 / 0.3)" }}>
+                  <td className="p-4 font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.52 0.04 65)" }}>Terrain</td>
+                  {selectedModels.map(model => (
+                    <td key={model.name} className="p-4 font-mono-custom text-sm" style={{
+                      color: isDifferent("terrain") ? "oklch(0.72 0.14 65)" : "oklch(0.945 0.018 78)",
+                      background: isDifferent("terrain") ? "oklch(0.52 0.12 45 / 0.1)" : "transparent",
+                    }}>
                       {model.terrain}
                     </td>
                   ))}
                 </tr>
 
-                {/* Specs */}
-                {[0, 1, 2, 3, 4].map(specIndex => (
-                  <tr key={`spec-${specIndex}`} style={{ borderBottom: "1px solid oklch(0.38 0.015 60 / 0.2)" }}>
-                    <td className="font-label text-xs tracking-[0.15em] uppercase py-4 pr-6 sticky left-0" style={{ background: "oklch(0.22 0.01 60)", color: "oklch(0.52 0.04 65)" }}>
-                      {specIndex === 0 ? "Key Features" : ""}
+                {/* Key Features */}
+                <tr style={{ borderBottom: "1px solid oklch(0.38 0.015 60 / 0.3)" }}>
+                  <td className="p-4 font-label text-xs tracking-widest uppercase align-top" style={{ color: "oklch(0.52 0.04 65)" }}>Key Features</td>
+                  {selectedModels.map(model => (
+                    <td key={model.name} className="p-4">
+                      <ul className="space-y-1">
+                        {model.specs.map((spec, i) => (
+                          <li key={i} className="font-mono-custom text-xs flex items-start gap-2" style={{ color: "oklch(0.72 0.14 65)" }}>
+                            <span>✓</span>
+                            <span>{spec}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </td>
-                    {selected.map(model => (
-                      <td key={model.name} className="font-mono-custom text-xs py-4 pr-6" style={{ color: "oklch(0.52 0.04 65)" }}>
-                        {model.specs[specIndex] && (
-                          <div className="flex items-start gap-2">
-                            <span style={{ color: "oklch(0.35 0.06 145)" }}>✓</span>
-                            <span>{model.specs[specIndex]}</span>
-                          </div>
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
+                  ))}
+                </tr>
 
-                {/* Build CTA */}
+                {/* CTA */}
                 <tr>
-                  <td className="font-label text-xs tracking-[0.15em] uppercase py-6 pr-6 sticky left-0" style={{ background: "oklch(0.22 0.01 60)" }}></td>
-                  {selected.map(model => (
-                    <td key={model.name} className="py-6 pr-6">
+                  <td className="p-4"></td>
+                  {selectedModels.map(model => (
+                    <td key={model.name} className="p-4">
                       <Link href="/build">
-                        <button className="w-full font-label text-xs tracking-[0.15em] uppercase py-3 transition-all hover:opacity-80" style={{ background: "oklch(0.52 0.12 45)", color: "oklch(0.945 0.018 78)" }}>
+                        <button className="w-full py-2 px-3 font-label text-xs tracking-widest uppercase transition-all duration-200" style={{
+                          background: "oklch(0.52 0.12 45)",
+                          color: "oklch(0.945 0.018 78)",
+                        }} onMouseEnter={(e) => e.currentTarget.style.opacity = "0.8"} onMouseLeave={(e) => e.currentTarget.style.opacity = "1"}>
                           Build {model.name}
                         </button>
                       </Link>
@@ -249,14 +310,12 @@ export default function Comparison() {
                 </tr>
               </tbody>
             </table>
-          </div>
+          </motion.div>
         )}
 
-        {/* Empty State */}
-        {selected.length === 0 && (
-          <div className="py-20 text-center">
-            <p className="font-display text-2xl font-bold mb-2" style={{ color: "oklch(0.945 0.018 78)" }}>Select models to compare</p>
-            <p className="font-mono-custom text-sm" style={{ color: "oklch(0.52 0.04 65)" }}>Choose up to 4 models above to see their specs side-by-side.</p>
+        {selectedModels.length === 0 && (
+          <div className="text-center py-12">
+            <p className="font-mono-custom text-sm" style={{ color: "oklch(0.52 0.04 65)" }}>Select at least one model to begin comparing.</p>
           </div>
         )}
       </div>

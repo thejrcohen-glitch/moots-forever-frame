@@ -2,6 +2,8 @@ import { z } from "zod";
 import { publicProcedure, router } from "./_core/trpc";
 import { notifyOwner } from "./_core/notification";
 import { sendEmail, bookingConfirmationEmail } from "./_core/email";
+import { getDb } from "./db";
+import { bookings } from "../drizzle/schema";
 
 export const bookingRouter = router({
   /**
@@ -55,6 +57,18 @@ export const bookingRouter = router({
       ]
         .filter(Boolean)
         .join("\n");
+
+      // Persist booking to database
+      const db = await getDb();
+      if (db) {
+        await db.insert(bookings).values({
+          riderName: input.name,
+          email: input.email,
+          territory: input.territory,
+          popUpDate: input.preferredDate || "TBD",
+          notes: input.message || null,
+        });
+      }
 
       const sent = await notifyOwner({
         title: `🚲 New Pop-Up Request — ${input.city}, ${input.territory} — ${input.name}`,

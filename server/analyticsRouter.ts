@@ -9,7 +9,7 @@ import { sql } from "drizzle-orm";
 import { router, protectedProcedure } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { getDb } from "./db";
-import { eventRsvps, configuratorLeads, communityPhotos } from "../drizzle/schema";
+import { eventRsvps, configuratorLeads, communityPhotos, bookings } from "../drizzle/schema";
 
 export const analyticsRouter = router({
   /** Return aggregate stats for the admin analytics tab */
@@ -24,6 +24,7 @@ export const analyticsRouter = router({
         rsvps: { total: 0, thisMonth: 0 },
         leads: { total: 0, thisMonth: 0 },
         photos: { total: 0, pending: 0, approved: 0, rejected: 0 },
+        bookings: { total: 0, thisMonth: 0 },
       };
     }
 
@@ -97,7 +98,7 @@ export const analyticsRouter = router({
       .orderBy(sql`count(*) desc`)
       .limit(5);
 
-    // ── Top models from configurator leads ────────────────────────────────────
+    // ── Top models from configurator leads ────────────────────────────────
     const topModels = await db
       .select({
         model: configuratorLeads.recommendedModel,
@@ -107,6 +108,16 @@ export const analyticsRouter = router({
       .groupBy(configuratorLeads.recommendedModel)
       .orderBy(sql`count(*) desc`)
       .limit(5);
+
+    // ── Bookings ──────────────────────────────────────────────────────────────
+    const [bookingTotal] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(bookings);
+
+    const [bookingMonth] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(bookings)
+      .where(sql`${bookings.createdAt} >= ${monthStartMs}`);
 
     return {
       rsvps: {
@@ -125,6 +136,10 @@ export const analyticsRouter = router({
         pending: Number(photoPending?.count ?? 0),
         approved: Number(photoApproved?.count ?? 0),
         rejected: Number(photoRejected?.count ?? 0),
+      },
+      bookings: {
+        total: Number(bookingTotal?.count ?? 0),
+        thisMonth: Number(bookingMonth?.count ?? 0),
       },
     };
   }),

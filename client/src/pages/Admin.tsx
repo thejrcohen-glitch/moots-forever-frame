@@ -326,10 +326,11 @@ export default function Admin() {
             {!analyticsLoading && analytics && (
               <div className="space-y-10">
                 {/* Summary Cards */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                   {[
                     { label: "Total RSVPs", value: analytics.rsvps.total, sub: `${analytics.rsvps.thisMonth} this month`, color: "oklch(0.52 0.12 45)" },
                     { label: "Build Leads", value: analytics.leads.total, sub: `${analytics.leads.thisMonth} this month`, color: "oklch(0.72 0.14 65)" },
+                    { label: "Pop-Up Bookings", value: analytics.bookings.total, sub: `${analytics.bookings.thisMonth} this month`, color: "oklch(0.55 0.08 60)" },
                     { label: "Photos Submitted", value: analytics.photos.total, sub: `${analytics.photos.pending} pending review`, color: "oklch(0.35 0.06 145)" },
                     { label: "Photos Approved", value: analytics.photos.approved, sub: `${analytics.photos.rejected} rejected`, color: "oklch(0.55 0.04 145)" },
                   ].map(card => (

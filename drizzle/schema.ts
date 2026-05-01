@@ -74,3 +74,16 @@ export const configuratorLeads = mysqlTable("configurator_leads", {
 
 export type ConfiguratorLead = typeof configuratorLeads.$inferSelect;
 export type InsertConfiguratorLead = typeof configuratorLeads.$inferInsert;
+
+export const bookings = mysqlTable("bookings", {
+  id: int("id").autoincrement().primaryKey(),
+  riderName: varchar("riderName", { length: 128 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  territory: mysqlEnum("territory", ["TX", "OK", "AR"]).notNull(),
+  popUpDate: varchar("popUpDate", { length: 32 }).notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Booking = typeof bookings.$inferSelect;
+export type InsertBooking = typeof bookings.$inferInsert;

@@ -141,12 +141,12 @@
 - [x] Add analyticsRouter.ts with summary procedure (admin-only)
 - [x] Register analyticsRouter in server/routers.ts
 
-## Follow-up Items (Next Session)
-- [ ] Add RESEND_API_KEY secret once user provides the actual key in Manus secrets
-- [ ] Persist booking requests to database and add booking totals to analyticsRouter
-- [ ] Update Comparison.tsx to include frame material, geometry, weight fields
-- [ ] Add explicit 'Remove from Comparison' buttons for each selected model
-- [ ] Implement true difference highlighting across compared models (contrasting styles for differing values)
+## Follow-up Items (Completed)
+- [ ] Add RESEND_API_KEY secret (user to provide key when ready)
+- [x] Persist booking requests to database and add booking totals to analyticsRouter
+- [x] Update Comparison.tsx to include frame material, geometry, weight fields
+- [x] Add explicit 'Remove from Comparison' buttons for each selected model
+- [x] Implement true difference highlighting across compared models (contrasting styles for differing values)
 
 ## Feature Batch 5 — Model Comparison
 
