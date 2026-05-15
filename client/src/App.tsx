@@ -1,6 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
+import { useEffect } from "react";
 import { Route, Switch } from "wouter";
 import { IS_STATIC_SITE } from "./const";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -12,6 +13,43 @@ import Dealers from "@/pages/Dealers";
 import BuildConfigurator from "@/pages/BuildConfigurator";
 import Admin from "@/pages/Admin";
 import Comparison from "@/pages/Comparison";
+
+const ANALYTICS_ENDPOINT = import.meta.env.VITE_ANALYTICS_ENDPOINT;
+const ANALYTICS_WEBSITE_ID = import.meta.env.VITE_ANALYTICS_WEBSITE_ID;
+
+/** Matches only https:// origins — rejects misconfigured or non-HTTPS values. */
+function isHttpsUrl(value: string): boolean {
+  try {
+    return new URL(value).protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Injects the Umami analytics script at runtime only when both env vars are
+ * defined, non-empty, and the endpoint is a valid https:// URL.  This keeps
+ * the static GitHub Pages build free of broken script tags when those optional
+ * vars are absent from CI.
+ */
+function AnalyticsScript() {
+  // ANALYTICS_ENDPOINT and ANALYTICS_WEBSITE_ID are module-level constants
+  // evaluated once from import.meta.env — they never change at runtime, so
+  // the empty dependency array is intentional.
+  useEffect(() => {
+    if (!ANALYTICS_ENDPOINT || !ANALYTICS_WEBSITE_ID) return;
+    if (!isHttpsUrl(ANALYTICS_ENDPOINT)) return;
+    const SCRIPT_ID = "umami-analytics";
+    if (document.getElementById(SCRIPT_ID)) return;
+    const script = document.createElement("script");
+    script.id = SCRIPT_ID;
+    script.defer = true;
+    script.src = `${ANALYTICS_ENDPOINT}/umami`;
+    script.dataset.websiteId = ANALYTICS_WEBSITE_ID;
+    document.head.appendChild(script);
+  }, []);
+  return null;
+}
 
 function StaticUnavailablePage() {
   return (
@@ -48,6 +86,7 @@ function App() {
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light">
         <TooltipProvider>
+          <AnalyticsScript />
           <Toaster />
           <Router />
         </TooltipProvider>
