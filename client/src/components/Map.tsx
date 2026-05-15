@@ -77,6 +77,7 @@
 /// <reference types="@types/google.maps" />
 
 import { useEffect, useRef } from "react";
+import { IS_STATIC_SITE } from "@/const";
 import { usePersistFn } from "@/hooks/usePersistFn";
 import { cn } from "@/lib/utils";
 
@@ -86,24 +87,34 @@ declare global {
   }
 }
 
-const API_KEY = import.meta.env.VITE_FRONTEND_FORGE_API_KEY;
+const API_KEY = import.meta.env.VITE_FRONTEND_FORGE_API_KEY?.trim();
 const FORGE_BASE_URL =
   import.meta.env.VITE_FRONTEND_FORGE_API_URL ||
   "https://forge.butterfly-effect.dev";
 const MAPS_PROXY_URL = `${FORGE_BASE_URL}/v1/maps/proxy`;
+export const MAPS_INTERACTIVE_ENABLED = !IS_STATIC_SITE && Boolean(API_KEY);
 
 function loadMapScript() {
-  return new Promise(resolve => {
+  return new Promise<boolean>(resolve => {
+    if (!MAPS_INTERACTIVE_ENABLED) {
+      resolve(false);
+      return;
+    }
+    if (window.google?.maps) {
+      resolve(true);
+      return;
+    }
     const script = document.createElement("script");
     script.src = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry`;
     script.async = true;
     script.crossOrigin = "anonymous";
     script.onload = () => {
-      resolve(null);
+      resolve(Boolean(window.google?.maps));
       script.remove(); // Clean up immediately
     };
     script.onerror = () => {
       console.error("Failed to load Google Maps script");
+      resolve(false);
     };
     document.head.appendChild(script);
   });
@@ -126,7 +137,10 @@ export function MapView({
   const map = useRef<google.maps.Map | null>(null);
 
   const init = usePersistFn(async () => {
-    await loadMapScript();
+    const mapReady = await loadMapScript();
+    if (!mapReady || !window.google?.maps) {
+      return;
+    }
     if (!mapContainer.current) {
       console.error("Map container not found");
       return;
