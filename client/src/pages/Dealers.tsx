@@ -128,7 +128,6 @@ function DealersNav() {
 function Dealers() {
   const [filter, setFilter] = useState<Territory>("ALL");
   const [selected, setSelected] = useState<number | null>(null);
-  const showInteractiveMap = MAPS_INTERACTIVE_ENABLED;
   // Store markers keyed by dealer id so we can show/hide them on filter change
   const markersRef = useRef<Map<number, google.maps.Marker>>(new Map());
   const mapRef = useRef<google.maps.Map | null>(null);
@@ -138,7 +137,7 @@ function Dealers() {
 
   // When filter changes, show/hide markers on the map
   useEffect(() => {
-    if (!showInteractiveMap) {
+    if (!MAPS_INTERACTIVE_ENABLED) {
       return;
     }
     markersRef.current.forEach((marker: google.maps.Marker, id: number) => {
@@ -159,10 +158,10 @@ function Dealers() {
       });
       if (!bounds.isEmpty()) mapRef.current.fitBounds(bounds);
     }
-  }, [filter, showInteractiveMap]);
+  }, [filter]);
 
   const handleMapReady = useCallback((map: google.maps.Map) => {
-    if (!showInteractiveMap) {
+    if (!MAPS_INTERACTIVE_ENABLED) {
       return;
     }
     mapRef.current = map;
@@ -204,7 +203,7 @@ function Dealers() {
     });
 
     map.fitBounds(bounds);
-  }, [showInteractiveMap]);
+  }, []);
 
   return (
     <div className="min-h-screen" style={{ background: "oklch(0.22 0.01 60)" }}>
@@ -245,7 +244,7 @@ function Dealers() {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Map */}
           <div className="lg:w-2/3 h-[500px] lg:h-[640px] relative overflow-hidden" style={{ border: "1px solid oklch(0.38 0.015 60 / 0.5)" }}>
-            {showInteractiveMap ? (
+            {MAPS_INTERACTIVE_ENABLED ? (
               <>
                 <MapView
                   onMapReady={handleMapReady}
