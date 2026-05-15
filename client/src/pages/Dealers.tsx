@@ -4,7 +4,8 @@
  */
 
 import { useState, useCallback, useRef, useEffect } from "react";
-import { MapView } from "@/components/Map";
+import { MAPS_INTERACTIVE_ENABLED, MapView } from "@/components/Map";
+import { IS_STATIC_SITE } from "@/const";
 import { Link } from "wouter";
 
 // ─── Dealer Data ───────────────────────────────────────────────────────────────
@@ -136,6 +137,9 @@ function Dealers() {
 
   // When filter changes, show/hide markers on the map
   useEffect(() => {
+    if (!MAPS_INTERACTIVE_ENABLED) {
+      return;
+    }
     markersRef.current.forEach((marker: google.maps.Marker, id: number) => {
       const dealer = DEALERS.find(d => d.id === id);
       if (!dealer) return;
@@ -157,6 +161,9 @@ function Dealers() {
   }, [filter]);
 
   const handleMapReady = useCallback((map: google.maps.Map) => {
+    if (!MAPS_INTERACTIVE_ENABLED) {
+      return;
+    }
     mapRef.current = map;
     const bounds = new google.maps.LatLngBounds();
     const infoWindow = new google.maps.InfoWindow();
@@ -237,19 +244,37 @@ function Dealers() {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Map */}
           <div className="lg:w-2/3 h-[500px] lg:h-[640px] relative overflow-hidden" style={{ border: "1px solid oklch(0.38 0.015 60 / 0.5)" }}>
-            <MapView
-              onMapReady={handleMapReady}
-              className="w-full h-full"
-            />
-            {/* Legend */}
-            <div className="absolute bottom-4 left-4 flex gap-3" style={{ background: "oklch(0.22 0.01 60 / 0.9)", padding: "8px 12px" }}>
-              {["TX", "OK", "AR"].map(t => (
-                <div key={t} className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full" style={{ background: t === "TX" ? "#c2692a" : t === "AR" ? "#3a6e3a" : "#555" }} />
-                  <span className="font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.72 0.04 65)" }}>{t}</span>
+            {MAPS_INTERACTIVE_ENABLED ? (
+              <>
+                <MapView
+                  onMapReady={handleMapReady}
+                  className="w-full h-full"
+                />
+                {/* Legend */}
+                <div className="absolute bottom-4 left-4 flex gap-3" style={{ background: "oklch(0.22 0.01 60 / 0.9)", padding: "8px 12px" }}>
+                  {["TX", "OK", "AR"].map(t => (
+                    <div key={t} className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full" style={{ background: t === "TX" ? "#c2692a" : t === "AR" ? "#3a6e3a" : "#555" }} />
+                      <span className="font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.72 0.04 65)" }}>{t}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </>
+            ) : (
+              <div className="h-full flex flex-col items-center justify-center text-center p-8" style={{ background: "oklch(0.24 0.01 60)" }}>
+                <p className="font-label text-xs tracking-[0.35em] uppercase mb-4" style={{ color: "oklch(0.52 0.12 45)" }}>
+                  Interactive Map Unavailable
+                </p>
+                <h2 className="font-display text-2xl font-bold mb-3" style={{ color: "oklch(0.945 0.018 78)" }}>
+                  Browse dealers from the list.
+                </h2>
+                <p className="font-mono-custom text-sm max-w-md" style={{ color: "oklch(0.52 0.04 65)" }}>
+                  {IS_STATIC_SITE
+                    ? "The GitHub Pages version uses static hosting, so the live map is disabled."
+                    : "Map configuration is missing, so the dealer list is shown instead."}
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Sidebar list */}
