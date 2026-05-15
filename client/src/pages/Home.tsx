@@ -10,6 +10,13 @@ import { trpc } from "@/lib/trpc";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
+// Set page title for SEO
+if (typeof window !== "undefined") {
+  document.title = "Moots Titanium Bikes — The Forever Frame Campaign";
+}
+
+// ─── SEO & Page Setup ──────────────────────────────────────────────────────────────
+
 // ─── Asset URLs ────────────────────────────────────────────────────────────────
 const HERO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663557843772/QUvoVjeKdQzxhUCD9R3yK5/hero-main-4D9bn8NjtqknDj4u5Mioxh.webp";
 const BADGE_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663557843772/QUvoVjeKdQzxhUCD9R3yK5/moots-badge-SsSjrtob5NzC4d8pf8FWPY.webp";
@@ -255,12 +262,17 @@ function GrainOverlay({ opacity = 0.18 }: { opacity?: number }) {
 // ─── Nav ───────────────────────────────────────────────────────────────────────
 function Nav() {
   const [scrolled, setScrolled] = useState(false);
+
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    document.title = "Moots Titanium Bikes — The Forever Frame Campaign";
   }, []);
 
   // Close menu on ESC
@@ -1721,6 +1733,10 @@ function Footer() {
 
 // ─── Home Page ─────────────────────────────────────────────────────────────────
 export default function Home() {
+  // Set document title on mount
+  useEffect(() => {
+    document.title = "Moots Titanium Bikes — The Forever Frame Campaign";
+  }, []);
   return (
     <div className="min-h-screen" style={{ background: "oklch(0.945 0.018 78)" }}>
       <Nav />
