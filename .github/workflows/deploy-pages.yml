@@ -21,30 +21,36 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: "pnpm"
 
-      - name: Enable Corepack
-        run: corepack enable
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build frontend
         run: pnpm exec vite build
+        env:
+          VITE_STATIC_SITE: "true"
 
       - name: Prepare Pages artifact
         run: |
           test -f dist/public/index.html
+          if [ -f CNAME ]; then
+            cp CNAME dist/public/CNAME
+          fi
           cp dist/public/index.html dist/public/404.html
           if [ -d dist/public/__manus__ ]; then
             rm -rf dist/public/__manus__
           fi
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

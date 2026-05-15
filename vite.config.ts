@@ -158,7 +158,6 @@ export default defineConfig(({ mode }) => {
   if (!isProduction) {
     plugins.push(vitePluginManusRuntime(), vitePluginManusDebugCollector());
   }
-
   return {
     plugins,
     base: "/",

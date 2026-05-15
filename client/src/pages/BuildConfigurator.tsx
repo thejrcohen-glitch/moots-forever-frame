@@ -7,6 +7,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { trpc } from "@/lib/trpc";
+import { IS_STATIC_SITE } from "@/const";
 import { toast } from "sonner";
 import { Link } from "wouter";
 
@@ -261,6 +262,10 @@ export default function BuildConfigurator() {
 
   const handleSubmitLead = (e: React.FormEvent) => {
     e.preventDefault();
+    if (IS_STATIC_SITE) {
+      toast.info("Lead submission is unavailable on the static site. Please use the contact links on this site.");
+      return;
+    }
     if (!leadForm.name || !leadForm.email) {
       toast.error("Please fill in your name and email.");
       return;
