@@ -1013,7 +1013,7 @@ function RsvpModal({ event, onClose }: RsvpModalProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (IS_STATIC_SITE) {
-      toast.info("RSVP submission is unavailable on the static site. Please contact Ian at ianzskrocki.com.");
+      toast.info("RSVP submission is unavailable on the static site. Please use the contact links on this site.");
       return;
     }
     if (!name || !email) { toast.error("Name and email are required."); return; }
@@ -1556,7 +1556,7 @@ function BookingForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (IS_STATIC_SITE) {
-      toast.info("Booking requests are unavailable on the static site. Please contact Ian at ianzskrocki.com.");
+      toast.info("Booking requests are unavailable on the static site. Please use the contact links on this site.");
       return;
     }
     if (!form.name || !form.email || !form.territory || form.territory === "other") {

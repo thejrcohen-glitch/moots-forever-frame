@@ -263,7 +263,7 @@ export default function BuildConfigurator() {
   const handleSubmitLead = (e: React.FormEvent) => {
     e.preventDefault();
     if (IS_STATIC_SITE) {
-      toast.info("Lead submission is unavailable on the static site. Please contact Ian directly at ianzskrocki.com.");
+      toast.info("Lead submission is unavailable on the static site. Please use the contact links on this site.");
       return;
     }
     if (!leadForm.name || !leadForm.email) {

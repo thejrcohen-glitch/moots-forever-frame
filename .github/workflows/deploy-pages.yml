@@ -34,16 +34,18 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Install dependencies
-        run: corepack pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Build frontend
-        run: corepack pnpm exec vite build
+        run: pnpm exec vite build
         env:
           VITE_STATIC_SITE: "true"
 
       - name: Prepare Pages artifact
         run: |
-          cp CNAME dist/public/CNAME
+          if [ -f CNAME ]; then
+            cp CNAME dist/public/CNAME
+          fi
           cp dist/public/index.html dist/public/404.html
 
       - name: Upload artifact
