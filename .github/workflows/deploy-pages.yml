@@ -11,7 +11,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: pages
   cancel-in-progress: true
 
 jobs:
@@ -24,7 +24,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
-      - name: Setup Node
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -43,10 +43,14 @@ jobs:
 
       - name: Prepare Pages artifact
         run: |
+          test -f dist/public/index.html
           if [ -f CNAME ]; then
             cp CNAME dist/public/CNAME
           fi
           cp dist/public/index.html dist/public/404.html
+          if [ -d dist/public/__manus__ ]; then
+            rm -rf dist/public/__manus__
+          fi
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

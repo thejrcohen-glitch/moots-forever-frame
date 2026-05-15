@@ -151,16 +151,13 @@ function vitePluginManusDebugCollector(): Plugin {
 }
 
 export default defineConfig(({ mode }) => {
-  const isDevelopment = mode === "development";
-  const plugins = [
-    react(),
-    tailwindcss(),
-    jsxLocPlugin(),
-    ...(isDevelopment
-      ? [vitePluginManusRuntime(), vitePluginManusDebugCollector()]
-      : []),
-  ];
+  const isProduction = mode === "production";
 
+  const plugins = [react(), tailwindcss(), jsxLocPlugin()];
+
+  if (!isProduction) {
+    plugins.push(vitePluginManusRuntime(), vitePluginManusDebugCollector());
+  }
   return {
     plugins,
     base: "/",

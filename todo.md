@@ -160,3 +160,13 @@
 - [x] Add "Build This Model" CTA button for each column
 - [x] Create /comparison route in App.tsx
 - [x] Add Comparison link to nav on BuildConfigurator page
+
+## Feature Batch 6 — SEO Optimization
+
+### Homepage SEO Fixes
+- [x] Reduce keywords from 27 to 5-7 focused terms
+- [x] Expand page title from 25 to 48 characters
+- [x] Shorten meta description from 250 to 118 characters
+- [x] Add dynamic document.title via useEffect in Home.tsx
+- [x] Update Open Graph meta tags
+- [x] Update Twitter Card meta tags
