@@ -7,6 +7,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { trpc } from "@/lib/trpc";
+import { IS_STATIC_SITE } from "@/const";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
@@ -1011,6 +1012,10 @@ function RsvpModal({ event, onClose }: RsvpModalProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (IS_STATIC_SITE) {
+      toast.info("RSVP submission is unavailable on the static site. Please contact Ian at ianzskrocki.com.");
+      return;
+    }
     if (!name || !email) { toast.error("Name and email are required."); return; }
     rsvpMutation.mutate({
       eventId: event.id,
@@ -1089,7 +1094,10 @@ function RideCalendar() {
 
   // Fetch RSVP counts for all events
   const eventIds = CALENDAR_EVENTS.map(e => e.id);
-  const { data: rsvpCounts = {} } = trpc.rsvp.counts.useQuery({ eventIds });
+  const { data: rsvpCounts = {} } = trpc.rsvp.counts.useQuery(
+    { eventIds },
+    { enabled: !IS_STATIC_SITE }
+  );
 
   const filtered = CALENDAR_EVENTS.filter((e) => {
     const tMatch = activeTerritory === "all" || e.territory === activeTerritory;
@@ -1547,6 +1555,10 @@ function BookingForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (IS_STATIC_SITE) {
+      toast.info("Booking requests are unavailable on the static site. Please contact Ian at ianzskrocki.com.");
+      return;
+    }
     if (!form.name || !form.email || !form.territory || form.territory === "other") {
       toast.error("Please fill in all required fields and select a territory.");
       return;
