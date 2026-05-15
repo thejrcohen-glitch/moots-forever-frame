@@ -33,6 +33,9 @@ function isHttpsUrl(value: string): boolean {
  * vars are absent from CI.
  */
 function AnalyticsScript() {
+  // ANALYTICS_ENDPOINT and ANALYTICS_WEBSITE_ID are module-level constants
+  // evaluated once from import.meta.env — they never change at runtime, so
+  // the empty dependency array is intentional.
   useEffect(() => {
     if (!ANALYTICS_ENDPOINT || !ANALYTICS_WEBSITE_ID) return;
     if (!isHttpsUrl(ANALYTICS_ENDPOINT)) return;
