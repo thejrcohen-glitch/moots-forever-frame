@@ -35,6 +35,14 @@ jobs:
       - name: Build frontend
         run: pnpm exec vite build
 
+      - name: Prepare Pages artifact
+        run: |
+          test -f dist/public/index.html
+          cp dist/public/index.html dist/public/404.html
+          if [ -d dist/public/__manus__ ]; then
+            rm -rf dist/public/__manus__
+          fi
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
