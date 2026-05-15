@@ -141,8 +141,8 @@
 - [x] Add analyticsRouter.ts with summary procedure (admin-only)
 - [x] Register analyticsRouter in server/routers.ts
 
-## Follow-up Items (Completed)
-- [ ] Add RESEND_API_KEY secret (user to provide key when ready)
+## Follow-up Items (Pending User Action)
+- [ ] Add RESEND_API_KEY secret (user to provide key when ready — email confirmations wired and ready to activate)
 - [x] Persist booking requests to database and add booking totals to analyticsRouter
 - [x] Update Comparison.tsx to include frame material, geometry, weight fields
 - [x] Add explicit 'Remove from Comparison' buttons for each selected model
