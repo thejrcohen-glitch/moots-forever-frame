@@ -7,15 +7,15 @@ import { createServer as createViteServer, type UserConfig } from "vite";
 import viteConfig from "../../vite.config";
 
 export async function setupVite(app: Express, server: Server) {
-  const resolvedViteConfig = viteConfig as UserConfig;
+  const typedViteConfig = viteConfig as UserConfig;
   const serverOptions = {
-    ...(resolvedViteConfig.server ?? {}),
+    ...(typedViteConfig.server ?? {}),
     middlewareMode: true,
     hmr: { server },
   };
 
   const vite = await createViteServer({
-    ...resolvedViteConfig,
+    ...typedViteConfig,
     configFile: false,
     server: serverOptions,
     appType: "custom",
