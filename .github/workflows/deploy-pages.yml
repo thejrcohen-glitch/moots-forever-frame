@@ -37,8 +37,9 @@ jobs:
 
       - name: Prepare Pages artifact
         run: |
+          test -f dist/public/index.html
           cp dist/public/index.html dist/public/404.html
-          rm -rf dist/public/__manus__
+          test -d dist/public/__manus__ && rm -rf dist/public/__manus__
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
