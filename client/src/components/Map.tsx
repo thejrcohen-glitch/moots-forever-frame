@@ -115,6 +115,7 @@ function loadMapScript() {
     };
     script.onerror = () => {
       console.error("Failed to load Google Maps script");
+      script.remove();
       resolve(false);
     };
     document.head.appendChild(script);
