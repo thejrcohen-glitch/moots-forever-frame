@@ -71,7 +71,7 @@ function Nav() {
                 <span className="font-label text-xs tracking-widest uppercase transition-opacity hover:opacity-70 cursor-pointer" style={{ color: scrolled ? "oklch(0.38 0.015 60)" : "oklch(0.88 0.025 75)" }}>{l.label}</span>
               </Link>
             ))}
-            <a href="https://ianzskrocki.com" target="_blank" rel="noopener noreferrer" className="font-label text-xs tracking-widest uppercase transition-opacity hover:opacity-70" style={{ color: "oklch(0.72 0.14 65)" }}>Order →</a>
+            <a href="mailto:ianzak@mac.com" target="_blank" rel="noopener noreferrer" className="font-label text-xs tracking-widest uppercase transition-opacity hover:opacity-70" style={{ color: "oklch(0.72 0.14 65)" }}>Order →</a>
           </div>
           {/* Mobile hamburger */}
           <button className="md:hidden flex flex-col justify-center items-center w-9 h-9 gap-1.5" onClick={() => setMenuOpen(o => !o)} aria-label={menuOpen ? "Close menu" : "Open menu"}>
@@ -93,7 +93,7 @@ function Nav() {
                   <span className="font-label text-sm tracking-widest uppercase hover:opacity-60 cursor-pointer" style={{ color: "oklch(0.22 0.01 60)" }}>{l.label}</span>
                 </Link>
               ))}
-              <a href="https://ianzskrocki.com" target="_blank" rel="noopener noreferrer" onClick={close} className="font-label text-sm tracking-widest uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>Order →</a>
+              <a href="mailto:ianzak@mac.com" target="_blank" rel="noopener noreferrer" onClick={close} className="font-label text-sm tracking-widest uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>Order →</a>
             </div>
           </div>
         )}
@@ -491,7 +491,7 @@ function ModelsSection() {
                   <span style={{ color: "oklch(0.52 0.12 45)" }}>Territory fit:</span> {model.territory}
                 </p>
                 <a
-                  href="https://ianzskrocki.com"
+                  href="mailto:ianzak@mac.com"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block font-label text-xs tracking-[0.2em] uppercase px-6 py-2.5 transition-all hover:opacity-80"
@@ -517,7 +517,7 @@ function FAQ() {
     { q: "Why does titanium cost more than carbon at the same weight?", a: "Titanium is more expensive to source, more difficult to machine, and requires significantly more skilled labor to weld. A Moots frame takes 40–60 hours of skilled craftsman time. The premium reflects the material, the process, and the lifetime guarantee — not marketing." },
     { q: "What is the difference between Grade 9 and Grade 5 titanium?", a: "Grade 9 (Ti-3Al-2.5V) is the standard for Moots frames. It offers an excellent balance of strength, weldability, and formability. Grade 5 (Ti-6Al-4V) is stronger but harder to weld and more brittle — better suited for aerospace fasteners than bicycle frames. Grade 9 is the correct choice for a hand-welded bicycle." },
     { q: "Does titanium need to be painted or coated?", a: "No. Titanium forms a natural oxide layer that is harder than the metal itself and self-repairing. It does not rust, corrode, or require paint for protection. Moots frames are finished with a brushed surface treatment that highlights the natural metal. Some riders add anodized color accents, but the base frame requires no coating." },
-    { q: "How do I order a Moots in Texas, Arkansas, or Oklahoma?", a: "Contact Ian Zakrocki at ianzskrocki.com. Ian is the sole Moots representative for all three states. He handles dealer accounts, individual builds, geometry consultations, and pop-up demo events." },
+    { q: "How do I order a Moots in Texas, Arkansas, or Oklahoma?", a: "Contact Ian Zakrocki at ianzak@mac.com or 917-578-7687. Ian is the sole Moots representative for all three states. He handles dealer accounts, individual builds, geometry consultations, and pop-up demo events." },
   ];
 
   return (
@@ -594,7 +594,7 @@ function EngineeringCTA() {
         </p>
         <div className="flex flex-wrap items-center justify-center gap-4">
           <a
-            href="https://ianzskrocki.com"
+            href="mailto:ianzak@mac.com"
             target="_blank"
             rel="noopener noreferrer"
             className="font-label text-sm tracking-[0.2em] uppercase px-10 py-4 transition-all hover:opacity-80"
@@ -628,8 +628,8 @@ function Footer() {
           </div>
           <div className="flex flex-col gap-1 text-right">
             <p className="font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>Territory Rep · TX · OK · AR</p>
-            <a href="https://ianzskrocki.com" target="_blank" rel="noopener noreferrer" className="font-mono-custom text-sm hover:underline" style={{ color: "oklch(0.88 0.025 75)" }}>
-              ianzskrocki.com
+            <a href="mailto:ianzak@mac.com" className="font-mono-custom text-sm hover:underline" style={{ color: "oklch(0.88 0.025 75)" }}>
+              ianzak@mac.com
             </a>
           </div>
         </div>

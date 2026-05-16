@@ -72,7 +72,7 @@ function Nav() {
                 <span className="font-label text-xs tracking-widest uppercase transition-opacity hover:opacity-70 cursor-pointer" style={{ color: scrolled ? "oklch(0.38 0.015 60)" : "oklch(0.88 0.025 75)" }}>{l.label}</span>
               </Link>
             ))}
-            <a href="https://ianzskrocki.com" target="_blank" rel="noopener noreferrer" className="font-label text-xs tracking-widest uppercase transition-opacity hover:opacity-70" style={{ color: "oklch(0.72 0.14 65)" }}>Order →</a>
+            <a href="mailto:ianzak@mac.com" className="font-label text-xs tracking-widest uppercase transition-opacity hover:opacity-70" style={{ color: "oklch(0.72 0.14 65)" }}>Order →</a>
           </div>
           {/* Mobile hamburger */}
           <button className="md:hidden flex flex-col justify-center items-center w-9 h-9 gap-1.5" onClick={() => setMenuOpen(o => !o)} aria-label={menuOpen ? "Close menu" : "Open menu"}>
@@ -94,7 +94,7 @@ function Nav() {
                   <span className="font-label text-sm tracking-widest uppercase hover:opacity-60 cursor-pointer" style={{ color: "oklch(0.22 0.01 60)" }}>{l.label}</span>
                 </Link>
               ))}
-              <a href="https://ianzskrocki.com" target="_blank" rel="noopener noreferrer" onClick={close} className="font-label text-sm tracking-widest uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>Order →</a>
+              <a href="mailto:ianzak@mac.com" onClick={close} className="font-label text-sm tracking-widest uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>Order →</a>
             </div>
           </div>
         )}
@@ -617,10 +617,10 @@ export default function Community() {
               <h3 className="font-display text-2xl font-bold mb-2" style={{ color: "oklch(0.945 0.018 78)" }}>Book a Pop-Up →</h3>
               <p className="font-mono-custom text-xs" style={{ color: "oklch(0.52 0.04 65)" }}>Demo a Moots at your local coffee shop</p>
             </a>
-            <a href="https://ianzskrocki.com" target="_blank" rel="noopener noreferrer" className="p-8 hover:opacity-90 transition-opacity" style={{ background: "oklch(0.22 0.01 60)" }}>
+            <a href="mailto:ianzak@mac.com" className="p-8 hover:opacity-90 transition-opacity" style={{ background: "oklch(0.22 0.01 60)" }}>
               <p className="font-label text-xs tracking-widest uppercase mb-2" style={{ color: "oklch(0.72 0.14 65)" }}>Own</p>
               <h3 className="font-display text-2xl font-bold mb-2" style={{ color: "oklch(0.945 0.018 78)" }}>Start a Build →</h3>
-              <p className="font-mono-custom text-xs" style={{ color: "oklch(0.52 0.04 65)" }}>ianzskrocki.com — Ian Zakrocki, TX · OK · AR</p>
+              <p className="font-mono-custom text-xs" style={{ color: "oklch(0.52 0.04 65)" }}>ianzak@mac.com — Ian Zakrocki, TX · OK · AR</p>
             </a>
           </div>
         </div>
@@ -637,7 +637,7 @@ export default function Community() {
             </div>
             <div className="flex flex-col gap-1 text-right">
               <p className="font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>Territory Rep · TX · OK · AR</p>
-              <a href="https://ianzskrocki.com" target="_blank" rel="noopener noreferrer" className="font-mono-custom text-sm hover:underline" style={{ color: "oklch(0.88 0.025 75)" }}>ianzskrocki.com</a>
+              <a href="mailto:ianzak@mac.com" className="font-mono-custom text-sm hover:underline" style={{ color: "oklch(0.88 0.025 75)" }}>ianzak@mac.com</a>
             </div>
           </div>
           <div className="mt-8 pt-8 border-t flex flex-col md:flex-row items-center justify-between gap-4" style={{ borderColor: "oklch(0.38 0.015 60 / 0.4)" }}>

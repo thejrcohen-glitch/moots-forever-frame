@@ -860,7 +860,7 @@ function ModelComparison() {
               ))}
             </div>
             <a
-              href="https://ianzskrocki.com"
+              href="mailto:ianzak@mac.com"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block mt-4 font-label text-xs tracking-[0.2em] uppercase px-5 py-2 transition-all hover:opacity-80"
@@ -955,7 +955,7 @@ function ModelComparison() {
               {MODELS.map((m) => (
                 <td key={m.name} className="p-5" style={{ background: m.highlight ? "oklch(0.22 0.01 60)" : "oklch(0.945 0.018 78)", borderLeft: "1px solid oklch(0.78 0.03 70 / 0.2)" }}>
                   <a
-                    href="https://ianzskrocki.com"
+                    href="mailto:ianzak@mac.com"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-block font-label text-xs tracking-[0.2em] uppercase px-5 py-2.5 transition-all hover:opacity-80"
@@ -979,19 +979,19 @@ function ModelComparison() {
 // ─── Ride Calendar Data ────────────────────────────────────────────────────────
 const CALENDAR_EVENTS = [
   // Bentonville
-  { id: 1, territory: "bentonville", territoryName: "Bentonville, AR", type: "popup", title: "Moots Pop-Up: Airship Coffee at Coler", date: "2026-04-25", time: "7:00 AM – 10:00 AM", location: "Airship Coffee, Coler Preserve", description: "Demo fleet on-site. Espresso flowing. Bring your gravel bike or test ride a Routt 45.", contact: "ianzskrocki.com" },
+  { id: 1, territory: "bentonville", territoryName: "Bentonville, AR", type: "popup", title: "Moots Pop-Up: Airship Coffee at Coler", date: "2026-04-25", time: "7:00 AM – 10:00 AM", location: "Airship Coffee, Coler Preserve", description: "Demo fleet on-site. Espresso flowing. Bring your gravel bike or test ride a Routt 45.", contact: "917-578-7687" },
   { id: 2, territory: "bentonville", territoryName: "Bentonville, AR", type: "event", title: "Oz Trails Off-Road", date: "2026-05-02", time: "All Day", location: "Bentonville, AR", description: "One of the premier mountain bike events in the Ozarks. Moots will be in the mix.", contact: null },
-  { id: 3, territory: "bentonville", territoryName: "Bentonville, AR", type: "popup", title: "Moots Pop-Up: Bike Rack Brewing", date: "2026-05-16", time: "4:00 PM – 7:00 PM", location: "Bike Rack Brewing Co., Bentonville", description: "Post-ride pints and titanium. Demo bikes available. No hard sell — just good beer and better bikes.", contact: "ianzskrocki.com" },
+  { id: 3, territory: "bentonville", territoryName: "Bentonville, AR", type: "popup", title: "Moots Pop-Up: Bike Rack Brewing", date: "2026-05-16", time: "4:00 PM – 7:00 PM", location: "Bike Rack Brewing Co., Bentonville", description: "Post-ride pints and titanium. Demo bikes available. No hard sell — just good beer and better bikes.", contact: "917-578-7687" },
   { id: 4, territory: "bentonville", territoryName: "Bentonville, AR", type: "event", title: "Slaughter Pen Jam", date: "2026-10-10", time: "All Day", location: "Slaughter Pen Trail, Bentonville", description: "Annual gravel and MTB gathering in the Ozarks. Prime demo opportunity.", contact: null },
   // Austin
-  { id: 5, territory: "austin", territoryName: "Austin, TX", type: "popup", title: "Moots Pop-Up: Flat Track Coffee", date: "2026-04-19", time: "7:30 AM – 10:30 AM", location: "Flat Track Coffee, East Austin", description: "Vamoots RSL demo fleet. Cortados, titanium, and no carbon in sight.", contact: "ianzskrocki.com" },
+  { id: 5, territory: "austin", territoryName: "Austin, TX", type: "popup", title: "Moots Pop-Up: Flat Track Coffee", date: "2026-04-19", time: "7:30 AM – 10:30 AM", location: "Flat Track Coffee, East Austin", description: "Vamoots RSL demo fleet. Cortados, titanium, and no carbon in sight.", contact: "917-578-7687" },
   { id: 6, territory: "austin", territoryName: "Austin, TX", type: "event", title: "Gravel Locos", date: "2026-05-09", time: "All Day", location: "Hico, TX (near Austin)", description: "Texas gravel racing staple. 100 miles of Hill Country dirt. Moots territory.", contact: null },
-  { id: 7, territory: "austin", territoryName: "Austin, TX", type: "popup", title: "Moots Pop-Up: Cosmic Coffee", date: "2026-06-06", time: "8:00 AM – 11:00 AM", location: "Cosmic Coffee + Beer Garden, Austin", description: "Morning espresso pop-up in the garden. Vamoots RSL and Routt RSL on display.", contact: "ianzskrocki.com" },
+  { id: 7, territory: "austin", territoryName: "Austin, TX", type: "popup", title: "Moots Pop-Up: Cosmic Coffee", date: "2026-06-06", time: "8:00 AM – 11:00 AM", location: "Cosmic Coffee + Beer Garden, Austin", description: "Morning espresso pop-up in the garden. Vamoots RSL and Routt RSL on display.", contact: "917-578-7687" },
   { id: 8, territory: "austin", territoryName: "Austin, TX", type: "event", title: "Hotter 'N Hell Hundred", date: "2026-08-29", time: "All Day", location: "Wichita Falls, TX", description: "100-mile road century. The Vamoots RSL was built for days like this.", contact: null },
   // OKC
-  { id: 9, territory: "okc", territoryName: "Oklahoma City, OK", type: "popup", title: "Moots Pop-Up: Elemental Coffee", date: "2026-04-26", time: "8:00 AM – 11:00 AM", location: "Elemental Coffee Roasters, Midtown OKC", description: "Routt RSL demo fleet. Single-origin espresso. The kind of morning that earns a forever bike.", contact: "ianzskrocki.com" },
+  { id: 9, territory: "okc", territoryName: "Oklahoma City, OK", type: "popup", title: "Moots Pop-Up: Elemental Coffee", date: "2026-04-26", time: "8:00 AM – 11:00 AM", location: "Elemental Coffee Roasters, Midtown OKC", description: "Routt RSL demo fleet. Single-origin espresso. The kind of morning that earns a forever bike.", contact: "917-578-7687" },
   { id: 10, territory: "okc", territoryName: "Oklahoma City, OK", type: "event", title: "Red Dirt Gravel Grinder", date: "2026-05-23", time: "All Day", location: "Lake Hefner, Oklahoma City", description: "OKC's signature gravel event. Flat, fast, and relentless. Routt RSL weather.", contact: null },
-  { id: 11, territory: "okc", territoryName: "Oklahoma City, OK", type: "popup", title: "Moots Pop-Up: Stonecloud Brewing", date: "2026-06-13", time: "3:00 PM – 6:00 PM", location: "Stonecloud Brewing, OKC", description: "Post-ride taproom takeover. Demo bikes outside, cold pints inside.", contact: "ianzskrocki.com" },
+  { id: 11, territory: "okc", territoryName: "Oklahoma City, OK", type: "popup", title: "Moots Pop-Up: Stonecloud Brewing", date: "2026-06-13", time: "3:00 PM – 6:00 PM", location: "Stonecloud Brewing, OKC", description: "Post-ride taproom takeover. Demo bikes outside, cold pints inside.", contact: "917-578-7687" },
   { id: 12, territory: "okc", territoryName: "Oklahoma City, OK", type: "event", title: "Flint Hills Gravel", date: "2026-10-17", time: "All Day", location: "Emporia, KS (near OKC)", description: "Classic Flint Hills gravel riding. The landscape that inspired the campaign.", contact: null },
 ];
 
@@ -1320,7 +1320,7 @@ function RideCalendar() {
 
         <p className="font-mono-custom text-xs mt-8 text-center" style={{ color: "oklch(0.38 0.015 60)" }}>
           Want to add your event or host a pop-up? Contact Ian at{" "}
-          <a href="https://ianzskrocki.com" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "oklch(0.52 0.12 45)" }}>ianzskrocki.com</a>
+          <a href="mailto:ianzak@mac.com" className="hover:underline" style={{ color: "oklch(0.52 0.12 45)" }}>ianzak@mac.com</a>
         </p>
       </div>
     </section>
@@ -1375,7 +1375,7 @@ function OrderSection() {
               ))}
             </ul>
             <a
-              href="https://ianzskrocki.com"
+              href="mailto:ianzak@mac.com"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block font-label text-sm tracking-[0.2em] uppercase px-8 py-3.5 transition-all duration-300 hover:opacity-80 text-center"
@@ -1409,7 +1409,7 @@ function OrderSection() {
               ))}
             </ul>
             <a
-              href="https://ianzskrocki.com"
+              href="mailto:ianzak@mac.com"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block font-label text-sm tracking-[0.2em] uppercase px-8 py-3.5 transition-all duration-300 hover:opacity-80 text-center"
@@ -1422,8 +1422,8 @@ function OrderSection() {
 
         <p className="text-center font-mono-custom text-xs mt-8" style={{ color: "oklch(0.52 0.04 65)" }}>
           All orders and dealer inquiries for TX · OK · AR are handled directly by Ian Zakrocki at{" "}
-          <a href="https://ianzskrocki.com" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "oklch(0.52 0.12 45)" }}>
-            ianzskrocki.com
+          <a href="mailto:ianzak@mac.com" className="hover:underline" style={{ color: "oklch(0.52 0.12 45)" }}>
+            ianzak@mac.com
           </a>
         </p>
 
@@ -1622,13 +1622,13 @@ function BookingForm() {
                   { label: "Ideal Temp", value: "72°F, clear skies" },
                   { label: "Best Windows", value: "Mid-Oct or Early April" },
                   { label: "Demo Fleet", value: "Routt 45 · Routt RSL · Vamoots RSL" },
-                  { label: "Contact", value: "ianzskrocki.com" },
+                  { label: "Contact", value: "917-578-7687" },
                 ].map(({ label, value }) => (
                   <div key={label} className="flex gap-4">
                     <span className="font-label text-xs tracking-widest uppercase w-28 flex-shrink-0 pt-0.5" style={{ color: "oklch(0.52 0.12 45)" }}>{label}</span>
                     <span className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>
                       {label === "Contact" ? (
-                        <a href="https://ianzskrocki.com" target="_blank" rel="noopener noreferrer" className="hover:underline">{value}</a>
+                        value.startsWith('917') ? <span>{value}</span> : <a href="https://mootsframe.com" target="_blank" rel="noopener noreferrer" className="hover:underline">{value}</a>
                       ) : value}
                     </span>
                   </div>
@@ -1646,8 +1646,8 @@ function BookingForm() {
                     </div>
                     <h3 className="font-display text-3xl font-bold mb-4" style={{ color: "oklch(0.22 0.01 60)" }}>Request Received.</h3>
                     <p className="font-mono-custom text-sm" style={{ color: "oklch(0.52 0.04 65)" }}>Ian will be in touch to confirm your pop-up details.</p>
-                    <a href="https://ianzskrocki.com" target="_blank" rel="noopener noreferrer" className="mt-6 font-label text-xs tracking-[0.2em] uppercase hover:underline" style={{ color: "oklch(0.52 0.12 45)" }}>
-                      Visit ianzskrocki.com →
+                    <a href="tel:917-578-7687" className="mt-6 font-label text-xs tracking-[0.2em] uppercase hover:underline" style={{ color: "oklch(0.52 0.12 45)" }}>
+                      Call 917-578-7687 →
                     </a>
                   </motion.div>
                 ) : (
@@ -1700,8 +1700,8 @@ function BookingForm() {
                       <button type="submit" disabled={submitMutation.isPending} className="font-label text-sm tracking-[0.2em] uppercase px-10 py-3.5 transition-all duration-300 hover:opacity-80 disabled:opacity-40" style={{ background: "oklch(0.22 0.01 60)", color: "oklch(0.945 0.018 78)" }}>
                         {submitMutation.isPending ? "Sending..." : "Request Pop-Up"}
                       </button>
-                      <a href="https://ianzskrocki.com" target="_blank" rel="noopener noreferrer" className="font-mono-custom text-xs hover:underline" style={{ color: "oklch(0.52 0.04 65)" }}>
-                        or visit ianzskrocki.com →
+                      <a href="mailto:ianzak@mac.com" className="font-mono-custom text-xs hover:underline" style={{ color: "oklch(0.52 0.04 65)" }}>
+                        or email ianzak@mac.com →
                       </a>
                     </div>
                   </motion.form>
@@ -1728,8 +1728,8 @@ function Footer() {
           </div>
           <div className="flex flex-col gap-1 text-right">
             <p className="font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>Territory Rep · TX · OK · AR</p>
-            <a href="https://ianzskrocki.com" target="_blank" rel="noopener noreferrer" className="font-mono-custom text-sm hover:underline" style={{ color: "oklch(0.88 0.025 75)" }}>
-              ianzskrocki.com
+            <a href="mailto:ianzak@mac.com" className="font-mono-custom text-sm hover:underline" style={{ color: "oklch(0.88 0.025 75)" }}>
+              ianzak@mac.com
             </a>
             <p className="font-mono-custom text-xs" style={{ color: "oklch(0.52 0.04 65)" }}>Ian Zakrocki — Dealer & Individual Orders</p>
           </div>

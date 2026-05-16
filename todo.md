@@ -170,3 +170,30 @@
 - [x] Add dynamic document.title via useEffect in Home.tsx
 - [x] Update Open Graph meta tags
 - [x] Update Twitter Card meta tags
+
+## Feature Batch 7 — Contact Info Audit & Update
+
+### Contact Information Audit
+- [x] Search for all ianzskrocki.com references across codebase
+- [x] Search for all *.manus.space contact references
+- [x] Search for old email/phone numbers
+- [x] Identify which references should become: mootsframe.com, ianzak@mac.com, or 917-578-7687
+- [x] Document all locations requiring updates
+
+### Homepage & Footer Updates
+- [x] Update footer contact section with Ian's info
+- [x] Update homepage contact CTA with email/phone
+- [x] Replace ianzskrocki.com with mootsframe.com in footer links
+- [x] Remove manus.space references from public-facing sections
+
+### Form & Page Updates
+- [x] Update booking form confirmation text with correct contact info
+- [x] Update build configurator result screen with contact CTA
+- [x] Update dealer inquiry pages with correct contact info
+- [x] Update FAQ with correct contact references
+
+### Structured Data & Meta
+- [x] Update organization schema in index.html with correct contact info
+- [x] Update og:url and canonical tags if needed
+- [x] Verify all email links use ianzak@mac.com
+- [x] Verify all phone numbers display 917-578-7687

@@ -132,7 +132,7 @@ export function rsvpConfirmationEmail(opts: {
       <hr style="${DIVIDER_STYLE}" />
       <p style="${FOOTER_STYLE}">
         Moots Forever Frame · TX · OK · AR Territory<br />
-        Questions? Reply to this email or visit <a href="https://ianzskrocki.com" style="color: #8b4513;">ianzskrocki.com</a>
+        Questions? Reply to this email or contact Ian at <strong>ianzak@mac.com</strong> · <strong>917-578-7687</strong>
       </p>
     </div>
   `;
@@ -162,7 +162,7 @@ export function bookingConfirmationEmail(opts: {
       <hr style="${DIVIDER_STYLE}" />
       <p style="${FOOTER_STYLE}">
         Moots Forever Frame · TX · OK · AR Territory<br />
-        Questions? Reply to this email or visit <a href="https://ianzskrocki.com" style="color: #8b4513;">ianzskrocki.com</a>
+        Questions? Reply to this email or contact Ian at <strong>ianzak@mac.com</strong> · <strong>917-578-7687</strong>
       </p>
     </div>
   `;
@@ -190,7 +190,7 @@ export function communityUploadAcknowledgmentEmail(opts: {
       <hr style="${DIVIDER_STYLE}" />
       <p style="${FOOTER_STYLE}">
         Moots Forever Frame · TX · OK · AR Territory<br />
-        Questions? Reply to this email or visit <a href="https://ianzskrocki.com" style="color: #8b4513;">ianzskrocki.com</a>
+        Questions? Reply to this email or contact Ian at <strong>ianzak@mac.com</strong> · <strong>917-578-7687</strong>
       </p>
     </div>
   `;

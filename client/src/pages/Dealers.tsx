@@ -336,13 +336,11 @@ function Dealers() {
             Ian Zakrocki handles all dealer and individual orders across Texas, Oklahoma, and Arkansas.
           </p>
           <a
-            href="https://ianzskrocki.com"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="mailto:ianzak@mac.com"
             className="inline-block font-label text-sm tracking-[0.2em] uppercase px-10 py-3.5 transition-all duration-300 hover:opacity-80"
             style={{ background: "oklch(0.52 0.12 45)", color: "oklch(0.945 0.018 78)" }}
           >
-            Contact Ian at ianzskrocki.com
+            Contact Ian: ianzak@mac.com · 917-578-7687
           </a>
         </div>
       </div>
