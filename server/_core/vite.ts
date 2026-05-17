@@ -7,6 +7,15 @@ import path from "path";
 import { createServer as createViteServer, type UserConfig } from "vite";
 import viteConfig from "../../vite.config";
 
+function createFallbackRateLimiter() {
+  return rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+}
+
 export async function setupVite(app: Express, server: Server) {
   const typedViteConfig = viteConfig as UserConfig;
   const serverOptions = {
@@ -23,12 +32,7 @@ export async function setupVite(app: Express, server: Server) {
   });
 
   app.use(vite.middlewares);
-  const devFallbackLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100,
-    standardHeaders: true,
-    legacyHeaders: false,
-  });
+  const devFallbackLimiter = createFallbackRateLimiter();
   app.use("*", devFallbackLimiter, async (req, res, next) => {
     const url = req.originalUrl;
 
@@ -67,12 +71,7 @@ export function serveStatic(app: Express) {
   }
 
   app.use(express.static(distPath));
-  const staticFallbackLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100,
-    standardHeaders: true,
-    legacyHeaders: false,
-  });
+  const staticFallbackLimiter = createFallbackRateLimiter();
 
   // fall through to index.html if the file doesn't exist
   app.use("*", staticFallbackLimiter, (_req, res) => {
