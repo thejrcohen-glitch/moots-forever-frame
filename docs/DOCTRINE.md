@@ -27,7 +27,7 @@ Execution routing is allowed only in execution layers.
 ## Territory Routing
 Execution pathways for Texas, Arkansas, and Oklahoma route through:
 
-https://ianzskrocki.com
+https://mootsframe.com/
 
 ## Source
 Moots Vibe Marketing Campaign:
