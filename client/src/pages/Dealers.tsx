@@ -140,6 +140,9 @@ function Dealers() {
     if (!MAPS_INTERACTIVE_ENABLED) {
       return;
     }
+    if (!window.google?.maps) {
+      return;
+    }
     markersRef.current.forEach((marker: google.maps.Marker, id: number) => {
       const dealer = DEALERS.find(d => d.id === id);
       if (!dealer) return;
@@ -148,7 +151,7 @@ function Dealers() {
     });
     // Refit bounds to visible markers
     if (mapRef.current) {
-      const bounds = new google.maps.LatLngBounds();
+      const bounds = new window.google.maps.LatLngBounds();
       markersRef.current.forEach((_marker: google.maps.Marker, id: number) => {
         const dealer = DEALERS.find(d => d.id === id);
         if (!dealer) return;
@@ -164,19 +167,22 @@ function Dealers() {
     if (!MAPS_INTERACTIVE_ENABLED) {
       return;
     }
+    if (!window.google?.maps) {
+      return;
+    }
     mapRef.current = map;
-    const bounds = new google.maps.LatLngBounds();
-    const infoWindow = new google.maps.InfoWindow();
+    const bounds = new window.google.maps.LatLngBounds();
+    const infoWindow = new window.google.maps.InfoWindow();
 
     DEALERS.forEach(dealer => {
       const color = TERRITORY_COLORS[dealer.territory] ?? "#888";
       const hexColor = dealer.territory === "TX" ? "#c2692a" : dealer.territory === "AR" ? "#3a6e3a" : "#555";
-      const marker = new google.maps.Marker({
+      const marker = new window.google.maps.Marker({
         position: { lat: dealer.lat, lng: dealer.lng },
         map,
         title: dealer.name,
         icon: {
-          path: google.maps.SymbolPath.CIRCLE,
+          path: window.google.maps.SymbolPath.CIRCLE,
           scale: 8,
           fillColor: hexColor,
           fillOpacity: 0.9,
