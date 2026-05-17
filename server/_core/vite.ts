@@ -1,4 +1,5 @@
 import express, { type Express } from "express";
+import rateLimit from "express-rate-limit";
 import fs from "fs";
 import { type Server } from "http";
 import { nanoid } from "nanoid";
@@ -22,7 +23,13 @@ export async function setupVite(app: Express, server: Server) {
   });
 
   app.use(vite.middlewares);
-  app.use("*", async (req, res, next) => {
+  const devFallbackLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+  app.use("*", devFallbackLimiter, async (req, res, next) => {
     const url = req.originalUrl;
 
     try {
@@ -60,9 +67,15 @@ export function serveStatic(app: Express) {
   }
 
   app.use(express.static(distPath));
+  const staticFallbackLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
 
   // fall through to index.html if the file doesn't exist
-  app.use("*", (_req, res) => {
+  app.use("*", staticFallbackLimiter, (_req, res) => {
     res.sendFile(path.resolve(distPath, "index.html"));
   });
 }
