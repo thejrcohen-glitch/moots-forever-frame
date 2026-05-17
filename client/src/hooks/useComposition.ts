@@ -51,8 +51,8 @@ export function useComposition<
     timer.current = setTimeout(() => {
       timer2.current = setTimeout(() => {
         c.current = false;
-      });
-    });
+      }, 0);
+    }, 0);
     originalOnCompositionEnd?.(e);
   });
 
