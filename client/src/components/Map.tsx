@@ -88,8 +88,11 @@ declare global {
 }
 
 const API_KEY = import.meta.env.VITE_FRONTEND_FORGE_API_KEY;
-const NORMALIZED_API_KEY = API_KEY?.trim() ?? "";
-const FORGE_BASE_URL = import.meta.env.VITE_FRONTEND_FORGE_API_URL?.trim() ?? "";
+const NORMALIZED_API_KEY = typeof API_KEY === "string" && API_KEY.trim() ? API_KEY.trim() : "";
+const FORGE_BASE_URL =
+  typeof import.meta.env.VITE_FRONTEND_FORGE_API_URL === "string" && import.meta.env.VITE_FRONTEND_FORGE_API_URL.trim()
+    ? import.meta.env.VITE_FRONTEND_FORGE_API_URL.trim()
+    : "";
 const MAPS_PROXY_URL = FORGE_BASE_URL ? `${FORGE_BASE_URL}/v1/maps/proxy` : "";
 export const MAPS_INTERACTIVE_ENABLED =
   !IS_STATIC_SITE && NORMALIZED_API_KEY.length > 0 && FORGE_BASE_URL.length > 0;

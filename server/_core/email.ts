@@ -6,7 +6,7 @@
 
 import { Resend } from "resend";
 
-const FROM_ADDRESS = "Moots Forever Frame <noreply@mootsframe-quvovjek.manus.space>";
+const FROM_ADDRESS = "Moots Forever Frame <hello@email.mootsframe.com>";
 
 function getResend(): Resend | null {
   const key = process.env.RESEND_API_KEY;
@@ -126,7 +126,7 @@ export function rsvpConfirmationEmail(opts: {
         In the meantime, if you haven't already — take a look at the Build Configurator
         to find the right Moots for your riding style.
       </p>
-      <a href="https://mootsframe-quvovjek.manus.space/build" style="${CTA_STYLE}">
+      <a href="https://mootsframe.com/build" style="${CTA_STYLE}">
         Start Your Build →
       </a>
       <hr style="${DIVIDER_STYLE}" />
@@ -156,7 +156,7 @@ export function bookingConfirmationEmail(opts: {
         Pop-up events are free to attend and open to all riders. Bring your current bike,
         your questions, and your appetite for titanium.
       </p>
-      <a href="https://mootsframe-quvovjek.manus.space" style="${CTA_STYLE}">
+      <a href="https://mootsframe.com" style="${CTA_STYLE}">
         Back to the Campaign →
       </a>
       <hr style="${DIVIDER_STYLE}" />
@@ -184,7 +184,7 @@ export function communityUploadAcknowledgmentEmail(opts: {
       <p style="${BODY_STYLE}">
         Thank you for sharing your ride. The wall is only as good as the riders who fill it.
       </p>
-      <a href="https://mootsframe-quvovjek.manus.space/community" style="${CTA_STYLE}">
+      <a href="https://mootsframe.com/community" style="${CTA_STYLE}">
         View the Community Wall →
       </a>
       <hr style="${DIVIDER_STYLE}" />
