@@ -87,12 +87,25 @@ declare global {
   }
 }
 
-const API_KEY = import.meta.env.VITE_FRONTEND_FORGE_API_KEY;
-const NORMALIZED_API_KEY = typeof API_KEY === "string" && API_KEY.trim() ? API_KEY.trim() : "";
+function normalizeOptionalEnv(value: unknown): string {
+  if (typeof value !== "string") {
+    return "";
+  }
+  const normalized = value.trim();
+  if (!normalized) {
+    return "";
+  }
+  // Defensive guard for misconfigured environments that stringify missing vars.
+  if (normalized === "undefined" || normalized === "null") {
+    return "";
+  }
+  return normalized;
+}
+
+const NORMALIZED_API_KEY = normalizeOptionalEnv(import.meta.env.VITE_FRONTEND_FORGE_API_KEY);
+const FORGE_BASE_URL_RAW = normalizeOptionalEnv(import.meta.env.VITE_FRONTEND_FORGE_API_URL);
 const FORGE_BASE_URL =
-  typeof import.meta.env.VITE_FRONTEND_FORGE_API_URL === "string" && import.meta.env.VITE_FRONTEND_FORGE_API_URL.trim()
-    ? import.meta.env.VITE_FRONTEND_FORGE_API_URL.trim()
-    : "";
+  FORGE_BASE_URL_RAW && /^https?:\/\//.test(FORGE_BASE_URL_RAW) ? FORGE_BASE_URL_RAW.replace(/\/+$/, "") : "";
 const MAPS_PROXY_URL = FORGE_BASE_URL ? `${FORGE_BASE_URL}/v1/maps/proxy` : "";
 export const MAPS_INTERACTIVE_ENABLED =
   !IS_STATIC_SITE && NORMALIZED_API_KEY.length > 0 && FORGE_BASE_URL.length > 0;
