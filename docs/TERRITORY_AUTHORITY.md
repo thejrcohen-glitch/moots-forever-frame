@@ -1,54 +1,26 @@
-# Doctrine
+# Territory Authority
 
-## Campaign Source
+Ian Zakrocki is the sole Moots representative for:
 
-This project is governed by the campaign source:
+- Texas
+- Arkansas
+- Oklahoma
 
-**The Forever Frame**
+All dealer accounts, rider inquiries, pop-up requests, and individual orders for this territory route through Ian Zakrocki.
 
-## Tone Rules
+## Official Contact
 
-- Short
-- Masculine
-- Understated
-- Confident
-- Durable
-- Quietly premium
-- Never loud
-- Never salesy
-- Never desperate
+- Name: Ian Zakrocki
+- Phone: 917-578-7687
+- Email: ianzak@mac.com
+- Website: https://mootsframe.com/
 
-## Messaging Rules
+## Operational Rule
 
-- Titanium means permanence
-- Riders discover; the system routes
-- Emphasize craftsmanship, territory, trust, and endurance
-- Avoid overexplaining specs in vibe-forward copy
-- Product details belong in structured comparison, technical content, and buying workflows
-- Do not use reactive, hype-driven, or trend-chasing language
-- Do not write like mass-market bike advertising
-- Do not use fake urgency
+No other representative is authorized within this territory for Moots rider, dealer, event, or individual build routing unless explicitly designated by Ian Zakrocki and Moots.
 
-## Copy Constraints
+## Canonical Web Destination
 
-- No inflated claims
-- No gimmick language
-- No overly polished corporate language
-- No juvenile internet irony in core brand copy
-- No excessive exclamation points
-- No cluttered feature dumping in top-level narrative sections
+All related marketing domains and redirects should resolve to:
 
-## Execution Rule
-
-Reference-layer doctrine governs execution-layer output.
-
-This means:
-- strategy, tone, and authority rules should be stable
-- implementation can evolve
-- landing pages, campaigns, captions, and tools must stay aligned to doctrine
-
-## Canonical Entities
-
-- Brand campaign site: https://mootsframe.com/
-- Territory representative: Ian Zakrocki
-- Territory: Texas, Arkansas, Oklahoma
+https://mootsframe.com/
