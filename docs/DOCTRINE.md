@@ -1,34 +1,54 @@
-# Moots Doctrine — The Forever Frame
+# Doctrine
 
-## Voice Rules
+## Campaign Source
+
+This project is governed by the campaign source:
+
+**The Forever Frame**
+
+## Tone Rules
+
 - Short
 - Masculine
 - Understated
-- Observational, not promotional
-- Experience over specification
-- Timeless over trendy
+- Confident
+- Durable
+- Quietly premium
+- Never loud
+- Never salesy
+- Never desperate
 
-## Restrictions
-- No spec language in vibe copy
-- No reactive messaging
-- No hype language
-- No urgency-based selling
-- No performance claims
+## Messaging Rules
 
-## Core Philosophy
-Titanium = permanence.
+- Titanium means permanence
+- Riders discover; the system routes
+- Emphasize craftsmanship, territory, trust, and endurance
+- Avoid overexplaining specs in vibe-forward copy
+- Product details belong in structured comparison, technical content, and buying workflows
+- Do not use reactive, hype-driven, or trend-chasing language
+- Do not write like mass-market bike advertising
+- Do not use fake urgency
 
-Riders discover.
-Systems route.
+## Copy Constraints
 
-The vibe layer remains emotional and immersive.
-Execution routing is allowed only in execution layers.
+- No inflated claims
+- No gimmick language
+- No overly polished corporate language
+- No juvenile internet irony in core brand copy
+- No excessive exclamation points
+- No cluttered feature dumping in top-level narrative sections
 
-## Territory Routing
-Execution pathways for Texas, Arkansas, and Oklahoma route through:
+## Execution Rule
 
-https://mootsframe.com/
+Reference-layer doctrine governs execution-layer output.
 
-## Source
-Moots Vibe Marketing Campaign:
-"The Forever Frame"
+This means:
+- strategy, tone, and authority rules should be stable
+- implementation can evolve
+- landing pages, campaigns, captions, and tools must stay aligned to doctrine
+
+## Canonical Entities
+
+- Brand campaign site: https://mootsframe.com/
+- Territory representative: Ian Zakrocki
+- Territory: Texas, Arkansas, Oklahoma
