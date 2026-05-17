@@ -7,16 +7,22 @@ import path from "path";
 import { createServer as createViteServer, type UserConfig } from "vite";
 import viteConfig from "../../vite.config";
 
+const HTML_RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
+const VITE_HTML_RATE_LIMIT_MAX = 100;
+const STATIC_HTML_FALLBACK_RATE_LIMIT_MAX = 200;
+
 const createHtmlLimiter = (max: number) =>
   rateLimit({
-    windowMs: 15 * 60 * 1000,
+    windowMs: HTML_RATE_LIMIT_WINDOW_MS,
     max,
     standardHeaders: true,
     legacyHeaders: false,
   });
 
-const viteHtmlLimiter = createHtmlLimiter(100);
-const staticHtmlFallbackLimiter = createHtmlLimiter(200);
+const viteHtmlLimiter = createHtmlLimiter(VITE_HTML_RATE_LIMIT_MAX);
+const staticHtmlFallbackLimiter = createHtmlLimiter(
+  STATIC_HTML_FALLBACK_RATE_LIMIT_MAX
+);
 
 export async function setupVite(app: Express, server: Server) {
   const typedViteConfig = viteConfig as UserConfig;
