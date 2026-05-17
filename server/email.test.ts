@@ -2,11 +2,23 @@ import { describe, it, expect, beforeAll } from "vitest";
 import { sendEmail, rsvpConfirmationEmail } from "./_core/email";
 
 describe("Email System", () => {
-  it("should have RESEND_API_KEY configured", () => {
-    const key = process.env.RESEND_API_KEY;
-    expect(key).toBeDefined();
-    expect(key).not.toBe("");
-    expect(typeof key).toBe("string");
+  it("should not require RESEND_API_KEY in test/CI", async () => {
+    const originalKey = process.env.RESEND_API_KEY;
+    try {
+      delete process.env.RESEND_API_KEY;
+      const result = await sendEmail({
+        to: "test@example.com",
+        subject: "Test",
+        html: "<p>Test</p>",
+      });
+      expect(result).toBe(false);
+    } finally {
+      if (typeof originalKey === "string") {
+        process.env.RESEND_API_KEY = originalKey;
+      } else {
+        delete process.env.RESEND_API_KEY;
+      }
+    }
   });
 
   it("should generate valid RSVP confirmation email HTML", () => {
