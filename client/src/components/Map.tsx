@@ -76,7 +76,7 @@
 
 /// <reference types="@types/google.maps" />
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { IS_STATIC_SITE } from "@/const";
 import { usePersistFn } from "@/hooks/usePersistFn";
 import { appendUrlPath, normalizeOptionalEnvVar, parseAllowedHosts, parseTrustedUrl } from "@/lib/urlSafety";
@@ -138,6 +138,7 @@ interface MapViewProps {
   initialCenter?: google.maps.LatLngLiteral;
   initialZoom?: number;
   onMapReady?: (map: google.maps.Map) => void;
+  fallback?: ReactNode;
 }
 
 export function MapView({
@@ -145,7 +146,30 @@ export function MapView({
   initialCenter = { lat: 37.7749, lng: -122.4194 },
   initialZoom = 12,
   onMapReady,
+  fallback,
 }: MapViewProps) {
+  if (!MAPS_INTERACTIVE_ENABLED) {
+    return (
+      <div
+        className={cn(
+          "w-full h-[500px] flex flex-col items-center justify-center gap-2 text-center",
+          className,
+        )}
+      >
+        {fallback ?? (
+          <>
+            <p className="text-sm font-medium">Map unavailable</p>
+            <p className="text-xs opacity-75 max-w-md">
+              {IS_STATIC_SITE
+                ? "This site is running in static mode, so the interactive map is disabled."
+                : "Map configuration is missing, so the interactive map is disabled."}
+            </p>
+          </>
+        )}
+      </div>
+    );
+  }
+
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<google.maps.Map | null>(null);
 
