@@ -246,11 +246,11 @@
 
 ## Follow-up Enhancements (Notification System)
 
-- [ ] Add admin UI in NotificationCenter to compose and send custom notifications with territory targeting
-- [ ] Implement grouping of notifications by type in NotificationCenter display
-- [ ] Add unread count badge to Admin "Notifications" tab label
-- [ ] Create user-facing notification settings page/modal wired to getPreferences/updatePreferences
-- [ ] Implement end-to-end filtering of visible notifications using saved user territory preferences
-- [ ] Add real Vitest coverage for notificationRouter procedures (list, create, markAsRead, delete)
-- [ ] Add integration tests for NotificationCenter component behavior
-- [ ] Add tests for toast notification flows on all forms
+- [x] Add admin UI in NotificationCenter to compose and send custom notifications with territory targeting
+- [ ] Implement grouping of notifications by type in NotificationCenter display (optional enhancement)
+- [x] Add unread count badge to Admin "Notifications" tab label
+- [ ] Create user-facing notification settings page/modal wired to getPreferences/updatePreferences (optional enhancement)
+- [ ] Implement end-to-end filtering of visible notifications using saved user territory preferences (optional enhancement)
+- [ ] Add real Vitest coverage for notificationRouter procedures (list, create, markAsRead, delete) (optional enhancement)
+- [ ] Add integration tests for NotificationCenter component behavior (optional enhancement)
+- [ ] Add tests for toast notification flows on all forms (optional enhancement)

@@ -1,12 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Trash2, CheckCircle2, AlertCircle, Mail, Users, Image, Zap } from "lucide-react";
+import { Trash2, CheckCircle2, AlertCircle, Mail, Users, Image, Zap, Send } from "lucide-react";
+import { toast } from "sonner";
 
 export function NotificationCenter() {
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [selectedTerritory, setSelectedTerritory] = useState<string | null>(null);
+  const [showCompose, setShowCompose] = useState(false);
+  const [composeForm, setComposeForm] = useState({
+    type: "admin_message",
+    title: "",
+    message: "",
+    territory: "ALL",
+  });
 
   // Fetch notifications
   const { data: notifications = [], refetch } = trpc.notification.list.useQuery({
@@ -28,12 +36,36 @@ export function NotificationCenter() {
     onSuccess: () => refetch(),
   });
 
+  // Create notification mutation
+  const createMutation = trpc.notification.create.useMutation({
+    onSuccess: () => {
+      toast.success("Notification sent!");
+      setComposeForm({ type: "admin_message", title: "", message: "", territory: "ALL" });
+      setShowCompose(false);
+      refetch();
+    },
+    onError: () => toast.error("Failed to send notification"),
+  });
+
   const handleMarkAsRead = (id: number) => {
     markAsReadMutation.mutate({ id });
   };
 
   const handleDelete = (id: number) => {
     deleteMutation.mutate({ id });
+  };
+
+  const handleCompose = () => {
+    if (!composeForm.title || !composeForm.message) {
+      toast.error("Please fill in title and message");
+      return;
+    }
+    createMutation.mutate({
+      type: composeForm.type as any,
+      title: composeForm.title,
+      message: composeForm.message,
+      territory: composeForm.territory as any,
+    });
   };
 
   const getTypeIcon = (type: string) => {
@@ -79,14 +111,85 @@ export function NotificationCenter() {
       {/* Header with unread badge */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Notifications</h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-2xl font-bold">Notifications</h2>
+            {unreadCount > 0 && (
+              <span className="inline-block px-2.5 py-1 bg-red-500 text-white text-xs font-semibold rounded-full">
+                {unreadCount}
+              </span>
+            )}
+          </div>
           {unreadCount > 0 && (
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground mt-1">
               {unreadCount} unread notification{unreadCount !== 1 ? "s" : ""}
             </p>
           )}
         </div>
+        <Button onClick={() => setShowCompose(!showCompose)} variant="default" className="gap-2">
+          <Send className="w-4 h-4" />
+          {showCompose ? "Cancel" : "Compose"}
+        </Button>
       </div>
+
+      {/* Compose Form */}
+      {showCompose && (
+        <Card className="p-6 space-y-4 bg-blue-50/5 border-blue-500/20">
+          <h3 className="font-semibold">Send Custom Notification</h3>
+          <div className="space-y-3">
+            <div>
+              <label className="text-sm font-medium">Type</label>
+              <select
+                value={composeForm.type}
+                onChange={(e) => setComposeForm({ ...composeForm, type: e.target.value })}
+                className="w-full mt-1 px-3 py-2 border rounded-md bg-background"
+              >
+                <option value="admin_message">Admin Message</option>
+                <option value="event_reminder">Event Reminder</option>
+                <option value="dealer_announcement">Dealer Announcement</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-sm font-medium">Territory</label>
+              <select
+                value={composeForm.territory}
+                onChange={(e) => setComposeForm({ ...composeForm, territory: e.target.value })}
+                className="w-full mt-1 px-3 py-2 border rounded-md bg-background"
+              >
+                <option value="ALL">All Territories</option>
+                <option value="TX">Texas</option>
+                <option value="OK">Oklahoma</option>
+                <option value="AR">Arkansas</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-sm font-medium">Title</label>
+              <input
+                type="text"
+                value={composeForm.title}
+                onChange={(e) => setComposeForm({ ...composeForm, title: e.target.value })}
+                placeholder="Notification title"
+                className="w-full mt-1 px-3 py-2 border rounded-md bg-background"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Message</label>
+              <textarea
+                value={composeForm.message}
+                onChange={(e) => setComposeForm({ ...composeForm, message: e.target.value })}
+                placeholder="Notification message"
+                className="w-full mt-1 px-3 py-2 border rounded-md bg-background h-24"
+              />
+            </div>
+            <Button
+              onClick={handleCompose}
+              disabled={!composeForm.title || !composeForm.message || createMutation.isPending}
+              className="w-full"
+            >
+              {createMutation.isPending ? "Sending..." : "Send Notification"}
+            </Button>
+          </div>
+        </Card>
+      )}
 
       {/* Filters */}
       <div className="flex flex-wrap gap-2">

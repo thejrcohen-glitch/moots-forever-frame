@@ -42,6 +42,10 @@ export default function Admin() {
     enabled: !!user && user.role === "admin" && activeTab === "analytics",
   });
 
+  const { data: unreadCount = 0 } = trpc.notification.unreadCount.useQuery(undefined, {
+    enabled: !!user && user.role === "admin",
+  });
+
   const approveMutation = trpc.moderation.approve.useMutation({
     onSuccess: () => { toast.success("Photo approved — visible on Community Wall."); utils.moderation.listAll.invalidate(); },
     onError: () => toast.error("Failed to approve photo."),
@@ -135,7 +139,7 @@ export default function Admin() {
           {([
             { id: "photos" as AdminTab, label: `Photos (${photoCounts.pending} pending)` },
             { id: "rsvps" as AdminTab, label: `RSVPs (${rsvps.length})` },
-            { id: "notifications" as AdminTab, label: "Notifications" },
+            { id: "notifications" as AdminTab, label: `Notifications${unreadCount > 0 ? ` (${unreadCount})` : ""}` },
             { id: "analytics" as AdminTab, label: "Analytics" },
           ]).map(tab => (
             <button
