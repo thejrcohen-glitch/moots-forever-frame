@@ -15,17 +15,18 @@ This repository contains the source code for the Moots Forever Frame website.
 - Vite
 - React
 - TypeScript
-- GitHub Pages
+- Manus (production hosting)
 
 ## Deployment
 
-This site deploys automatically with GitHub Actions when changes are pushed to the `main` branch.
-
-GitHub Pages publishes the built frontend artifact from the repository workflow.
+Production is hosted on Manus (`mootsframe.com`).
+GitHub remains the source of truth for code, pull requests, history, and security workflows.
+GitHub Pages publishes a static artifact from repository workflows for non-production hosting scenarios.
 
 ## Notes
 
-- The production site is configured for the custom domain `mootsframe.com`.
+- DNS for `mootsframe.com` is managed in GoDaddy.
+- Transactional email delivery uses Resend.
 - Static-site safeguards are enabled for GitHub Pages deployment.
 - Interactive map features gracefully fall back when optional frontend environment variables are not present.
 

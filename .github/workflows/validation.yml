@@ -1,0 +1,39 @@
+name: Validation
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  validation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: "pnpm"
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: corepack pnpm install --frozen-lockfile
+
+      - name: Type check
+        run: corepack pnpm run check
+
+      - name: Build app
+        run: corepack pnpm run build
+
+      - name: Run tests
+        run: corepack pnpm run test
+
+      - name: Static frontend build
+        run: VITE_STATIC_SITE=true corepack pnpm exec vite build
