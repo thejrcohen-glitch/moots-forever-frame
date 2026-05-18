@@ -13,9 +13,10 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { toast } from "sonner";
 import { Link } from "wouter";
 import { getLoginUrl } from "@/const";
+import { NotificationCenter } from "@/components/NotificationCenter";
 
 type StatusFilter = "pending" | "approved" | "rejected" | "all";
-type AdminTab = "photos" | "rsvps" | "leads" | "analytics";
+type AdminTab = "photos" | "rsvps" | "leads" | "analytics" | "notifications";
 
 const TERRITORY_COLORS: Record<string, string> = {
   TX: "oklch(0.52 0.12 45)",
@@ -129,11 +130,12 @@ export default function Admin() {
           </p>
         </div>
 
-        {/* Main Tabs */}
+         {/* Main Tabs */}
         <div className="flex gap-2 mb-10 border-b" style={{ borderColor: "oklch(0.38 0.015 60 / 0.4)" }}>
           {([
             { id: "photos" as AdminTab, label: `Photos (${photoCounts.pending} pending)` },
             { id: "rsvps" as AdminTab, label: `RSVPs (${rsvps.length})` },
+            { id: "notifications" as AdminTab, label: "Notifications" },
             { id: "analytics" as AdminTab, label: "Analytics" },
           ]).map(tab => (
             <button
@@ -408,6 +410,11 @@ export default function Admin() {
               </div>
             )}
           </>
+        )}
+
+        {/* ── NOTIFICATIONS TAB ── */}
+        {activeTab === "notifications" && (
+          <NotificationCenter />
         )}
       </div>
     </div>

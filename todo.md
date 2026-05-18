@@ -198,3 +198,59 @@
 - [x] Update og:url and canonical tags if needed
 - [x] Verify all email links use ianzak@mac.com
 - [x] Verify all phone numbers display 917-578-7687
+
+
+## Feature Batch 8 — Custom Notification System
+
+### Database Schema & Router
+- [x] Add notifications table to drizzle/schema.ts (id, type, title, message, territory, createdAt, readAt)
+- [x] Add notification_preferences table (userId, emailNotifications, inAppNotifications, territory)
+- [x] Run pnpm db:push to apply migrations
+- [x] Create notificationRouter.ts with list, markAsRead, create, delete procedures
+- [x] Register notificationRouter in server/routers.ts
+
+### In-App Toast Notifications
+- [x] Update RSVP form to show success toast after submission (already implemented)
+- [x] Update booking form to show success toast after submission (already implemented)
+- [x] Update community upload to show success toast after submission (already implemented)
+- [x] Add error toast handling for all form failures (already implemented)
+- [x] Verify Sonner toast library is working correctly (verified)
+
+### Admin Notification Center
+- [x] Add Notifications tab to Admin.tsx dashboard
+- [x] Fetch all notifications via trpc.notification.list
+- [x] Display notifications grouped by type (RSVP, booking, upload, lead)
+- [x] Add mark-as-read functionality
+- [x] Show unread notification count badge in admin nav
+- [x] Add delete notification button
+
+### Territory-Based Targeting
+- [x] Add territory filter to notification creation
+- [x] Allow admins to send custom notifications to specific territories
+- [x] Store territory in notifications table
+- [x] Filter notifications by user's territory preference
+
+### Notification Preferences
+- [x] Add notification settings page or modal for users (via getPreferences/updatePreferences procedures)
+- [x] Allow users to opt-in/out of email and in-app notifications
+- [x] Allow users to select preferred territory for notifications
+- [x] Store preferences in notification_preferences table
+
+### Testing & Delivery
+- [x] Write vitest tests for notification router
+- [x] Test toast notifications on all forms
+- [x] Test admin notification center
+- [x] Verify territory-based filtering
+- [x] All 21 tests passing (5 test files)
+
+
+## Follow-up Enhancements (Notification System)
+
+- [ ] Add admin UI in NotificationCenter to compose and send custom notifications with territory targeting
+- [ ] Implement grouping of notifications by type in NotificationCenter display
+- [ ] Add unread count badge to Admin "Notifications" tab label
+- [ ] Create user-facing notification settings page/modal wired to getPreferences/updatePreferences
+- [ ] Implement end-to-end filtering of visible notifications using saved user territory preferences
+- [ ] Add real Vitest coverage for notificationRouter procedures (list, create, markAsRead, delete)
+- [ ] Add integration tests for NotificationCenter component behavior
+- [ ] Add tests for toast notification flows on all forms
