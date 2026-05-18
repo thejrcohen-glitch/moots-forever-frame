@@ -87,7 +87,7 @@ declare global {
   }
 }
 
-function normalizeOptionalEnvVar(value: unknown): string {
+function normalizeOptionalEnvVar(value: unknown) {
   if (typeof value !== "string") {
     return "";
   }
@@ -102,7 +102,7 @@ function normalizeOptionalEnvVar(value: unknown): string {
   return trimmed;
 }
 
-function normalizeForgeBaseUrl(value: unknown): string {
+function normalizeForgeBaseUrl(value: unknown) {
   const normalized = normalizeOptionalEnvVar(value);
   if (!normalized) {
     return "";
