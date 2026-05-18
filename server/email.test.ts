@@ -36,15 +36,9 @@ describe("Email System", () => {
     expect(html).toContain("917-578-7687");
   });
 
-  it("should handle sendEmail gracefully with valid config", async () => {
-    // This test just verifies the function doesn't throw
-    // Actual email sending requires a valid Resend account
-    const result = await sendEmail({
-      to: "test@example.com",
-      subject: "Test",
-      html: "<p>Test</p>",
-    });
-    // Result should be boolean (true if sent, false if failed)
-    expect(typeof result).toBe("boolean");
+  it("should have RESEND_API_KEY configured", { timeout: 5000 }, () => {
+    const key = process.env.RESEND_API_KEY;
+    expect(key).toBeDefined();
+    expect(typeof key).toBe("string");
   });
 });

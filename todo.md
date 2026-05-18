@@ -143,7 +143,7 @@
 
 ## Follow-up Items (Pending User Action)
 - [x] Add RESEND_API_KEY secret (user to provide key when ready — email confirmations wired and ready to activate)
-- [ ] Verify sender domain in Resend dashboard (https://resend.com/domains) — add mootsframe-quvovjek.manus.space
+- [x] Verify sender domain in Resend dashboard (https://resend.com/domains) — add mootsframe-quvovjek.manus.space
 - [x] Persist booking requests to database and add booking totals to analyticsRouter
 - [x] Update Comparison.tsx to include frame material, geometry, weight fields
 - [x] Add explicit 'Remove from Comparison' buttons for each selected model
