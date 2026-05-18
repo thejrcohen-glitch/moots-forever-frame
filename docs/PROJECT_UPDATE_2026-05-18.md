@@ -2,78 +2,110 @@
 
 **Date:** May 18, 2026
 
-## What was completed today
+## Current State
 
-### Custom domain is now live
+### Live site
 
-- `mootsframe.com` is published and connected to the live Manus deployment.
-- DNS was updated in GoDaddy.
-- Root domain now points to Manus.
-- `www` points to Manus via CNAME.
+- `https://mootsframe.com` is now published and pointing to Manus.
 
-### Email delivery is working
+### DNS
 
-- Resend domain verification completed.
-- SPF and DKIM are configured.
-- Sending is enabled.
-- Test notification/email was successfully received.
+GoDaddy DNS has been updated:
 
-### GitHub repo/security work completed
+- `A @ -> 104.18.26.246`
+- `A @ -> 104.18.27.246`
+- `CNAME www -> cname.manus.space`
 
-- Merged PR #26.
-- Upgraded Vitest.
-- Removed old vulnerable `vite@5.4.21` path from the lockfile.
-- Branch/repo state is cleaner and more secure than before.
+### Email
 
-### App/runtime improvements
+Resend domain verification is complete and sending is enabled.
 
-- Dealers map fallback logic was reviewed and improved so missing Forge env vars do not break the static/fallback experience.
-- Contact info audit completed.
-- Outdated references updated.
+- SPF configured.
+- DKIM configured.
+- Successful notification/email received.
 
-### Notification system added
-
-- Custom notification system implemented.
-- Admin notification center added.
-- Unread count/badge added.
-- Territory-targeted notifications supported.
-- Mark-as-read and delete actions supported.
-- Form toast notifications working.
-- At least one successful notification was received.
-
-## Current app health
+### App health
 
 - 21 tests passing.
 - 0 TypeScript errors.
-- Dev server running clean.
-- Site considered production-ready in Manus.
+- Dev server clean.
 
-## Current platform/tool roles
+### Feature work completed today
 
-- **Manus** = live hosting / publish.
-- **GitHub** = codebase, PRs, version control, security fixes.
-- **GoDaddy** = DNS/domain management.
-- **Resend** = transactional email delivery.
-- **ChatGPT / Perplexity** = planning, debugging help, copy/research support.
+- Notification system implemented and production-ready.
+- Contact info audit completed.
+- Dependency/security cleanup improved in GitHub.
 
-## Important decisions clarified
+### Repo status
 
-- `mootsframe.com` should be hosted via Manus, not GitHub Pages.
-- GitHub remains important for development, code management, and security.
-- Resend email setup is active and functioning.
+- PR #26 merged.
+- Other PRs/branches remain open or messy and should be reviewed later, not urgently.
 
-## Outstanding / later items
+## Decisions
 
-- Review remaining open GitHub PRs: #27, #28, #29, #31.
-- Clean up stale GitHub branches later.
-- Continue building out pages/features in GitHub, then publish through Manus.
-- Optionally add newsletter signup, testimonials, and event gallery content later.
+- **Hosting:** Manus hosts the live website.
+- **Code/development:** GitHub is the source of truth for code, PRs, history, and security fixes.
+- **DNS/domain:** GoDaddy manages DNS only.
+- **Email delivery:** Resend is the email provider for transactional notifications.
+- **Research/planning tools:** ChatGPT and Perplexity are support tools, not deployment/configuration sources of truth.
+- **GitHub Pages:** Not the production host for `mootsframe.com`.
 
-## Current status summary
+## Next Steps
 
-The website is live, email works, notifications work, and the project is in a much stronger state than it was at the start of the day.
+### Immediate
 
-## Governance reminder
+Verify the live production site at:
+
+- `https://mootsframe.com`
+- `https://www.mootsframe.com`
+
+Test critical flows on production:
+
+- RSVP
+- Booking/contact forms
+- Community upload flow
+- Admin notifications
+- Email delivery
+
+### Short-term
+
+- Update the ChatGPT Project memory/brief with the current hosting and deployment model.
+- Send Ian a concise status update summarizing:
+  - Site is live.
+  - Email works.
+  - Notifications work.
+  - Codebase/security improved.
+
+### Later
+
+Review remaining open PRs and decide which to merge, replace, or close:
+
+- #27
+- #28
+- #29
+- #31
+
+Additional later work:
+
+- Clean up stale GitHub branches.
+- Continue feature development in GitHub, then publish through Manus.
+- Consider adding:
+  - Newsletter signup
+  - Dealer testimonials
+  - Event photo gallery
+
+## Operating Model Going Forward
+
+- Build and edit in GitHub.
+- Publish and host in Manus.
+- Manage DNS in GoDaddy.
+- Send emails through Resend.
+
+## One-Line Summary
+
+Moots Forever Frame is now live on Manus at `mootsframe.com`, email/notifications are working, and the project now has a clear tool/hosting structure for future development.
+
+## Governance Reminder
 
 Doctrine governs tone. Territory authority governs routing. Signal rules govern presence.
 
