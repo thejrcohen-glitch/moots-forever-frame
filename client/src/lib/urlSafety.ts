@@ -62,6 +62,11 @@ export function parseTrustedUrl(value: unknown, options: ParseTrustedUrlOptions 
   return parsed;
 }
 
+/**
+ * Appends a relative path segment to a trusted base URL and intentionally
+ * clears any existing query/hash from the base to avoid carrying forward
+ * unexpected parameters into script/auth endpoints.
+ */
 export function appendUrlPath(baseUrl: URL, path: string): URL {
   const next = new URL(baseUrl.toString());
   const basePath = next.pathname.replace(/\/+$/, "");
