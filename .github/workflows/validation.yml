@@ -1,0 +1,49 @@
+name: Validation
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  validation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # pnpm must be available before actions/setup-node tries to use it for caching.
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type check
+        run: pnpm run check
+
+      - name: Build app
+        run: pnpm run build
+
+      - name: Run tests
+        run: pnpm run test
+
+      # Mirror the GitHub Pages build: static mode must work without map secrets.
+      - name: Static frontend build
+        run: pnpm exec vite build
+        env:
+          VITE_STATIC_SITE: "true"
