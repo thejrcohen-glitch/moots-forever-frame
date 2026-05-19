@@ -76,9 +76,10 @@
 
 /// <reference types="@types/google.maps" />
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { IS_STATIC_SITE } from "@/const";
 import { usePersistFn } from "@/hooks/usePersistFn";
+import { appendUrlPath, normalizeOptionalEnvVar, parseAllowedHosts, parseTrustedUrl } from "@/lib/urlSafety";
 import { cn } from "@/lib/utils";
 
 declare global {
@@ -87,37 +88,15 @@ declare global {
   }
 }
 
-function normalizeOptionalEnvVar(value: unknown) {
-  if (typeof value !== "string") {
-    return "";
-  }
-  const trimmed = value.trim();
-  if (!trimmed) {
-    return "";
-  }
-  const lowered = trimmed.toLowerCase();
-  if (lowered === "undefined" || lowered === "null") {
-    return "";
-  }
-  return trimmed;
-}
-
-function normalizeForgeBaseUrl(value: unknown) {
-  const normalized = normalizeOptionalEnvVar(value);
-  if (!normalized) {
-    return "";
-  }
-  if (!/^https?:\/\//i.test(normalized)) {
-    return "";
-  }
-  return normalized.replace(/\/+$/, "");
-}
-
 const NORMALIZED_API_KEY = normalizeOptionalEnvVar(import.meta.env.VITE_FRONTEND_FORGE_API_KEY);
-const FORGE_BASE_URL = normalizeForgeBaseUrl(import.meta.env.VITE_FRONTEND_FORGE_API_URL);
-const MAPS_PROXY_URL = FORGE_BASE_URL ? `${FORGE_BASE_URL}/v1/maps/proxy` : "";
+const FORGE_ALLOWED_HOSTS = parseAllowedHosts(import.meta.env.VITE_FRONTEND_FORGE_API_ALLOWED_HOSTS);
+const FORGE_BASE_URL = parseTrustedUrl(import.meta.env.VITE_FRONTEND_FORGE_API_URL, {
+  allowedHosts: FORGE_ALLOWED_HOSTS,
+  allowHttpLocalhost: import.meta.env.DEV,
+});
+const MAPS_PROXY_URL = FORGE_BASE_URL ? appendUrlPath(FORGE_BASE_URL, "v1/maps/proxy") : null;
 export const MAPS_INTERACTIVE_ENABLED =
-  !IS_STATIC_SITE && NORMALIZED_API_KEY.length > 0 && FORGE_BASE_URL.length > 0;
+  !IS_STATIC_SITE && NORMALIZED_API_KEY.length > 0 && Boolean(MAPS_PROXY_URL);
 
 function loadMapScript() {
   return new Promise<boolean>(resolve => {
@@ -129,8 +108,16 @@ function loadMapScript() {
       resolve(true);
       return;
     }
+    if (!MAPS_PROXY_URL) {
+      resolve(false);
+      return;
+    }
     const script = document.createElement("script");
-    script.src = `${MAPS_PROXY_URL}/maps/api/js?key=${encodeURIComponent(NORMALIZED_API_KEY)}&v=weekly&libraries=marker,places,geocoding,geometry`;
+    const scriptUrl = appendUrlPath(MAPS_PROXY_URL, "maps/api/js");
+    scriptUrl.searchParams.set("key", NORMALIZED_API_KEY);
+    scriptUrl.searchParams.set("v", "weekly");
+    scriptUrl.searchParams.set("libraries", "marker,places,geocoding,geometry");
+    script.src = scriptUrl.toString();
     script.async = true;
     script.crossOrigin = "anonymous";
     script.onload = () => {
@@ -151,6 +138,7 @@ interface MapViewProps {
   initialCenter?: google.maps.LatLngLiteral;
   initialZoom?: number;
   onMapReady?: (map: google.maps.Map) => void;
+  fallback?: ReactNode;
 }
 
 export function MapView({
@@ -158,7 +146,30 @@ export function MapView({
   initialCenter = { lat: 37.7749, lng: -122.4194 },
   initialZoom = 12,
   onMapReady,
+  fallback,
 }: MapViewProps) {
+  if (!MAPS_INTERACTIVE_ENABLED) {
+    return (
+      <div
+        className={cn(
+          "w-full h-[500px] flex flex-col items-center justify-center gap-2 text-center",
+          className,
+        )}
+      >
+        {fallback ?? (
+          <>
+            <p className="text-sm font-medium">Map unavailable</p>
+            <p className="text-xs opacity-75 max-w-md">
+              {IS_STATIC_SITE
+                ? "This site is running in static mode, so the interactive map is disabled."
+                : "Map configuration is missing, so the interactive map is disabled."}
+            </p>
+          </>
+        )}
+      </div>
+    );
+  }
+
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<google.maps.Map | null>(null);
 
