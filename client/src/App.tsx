@@ -6,6 +6,7 @@ import { Route, Switch } from "wouter";
 import { IS_STATIC_SITE } from "./const";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { appendUrlPath, parseAllowedHosts, parseTrustedUrl } from "./lib/urlSafety";
 import Home from "./pages/Home";
 import Community from "@/pages/Community";
 import Engineering from "@/pages/Engineering";
@@ -16,15 +17,11 @@ import Comparison from "@/pages/Comparison";
 
 const ANALYTICS_ENDPOINT = import.meta.env.VITE_ANALYTICS_ENDPOINT;
 const ANALYTICS_WEBSITE_ID = import.meta.env.VITE_ANALYTICS_WEBSITE_ID;
-
-/** Matches only https:// origins — rejects misconfigured or non-HTTPS values. */
-function isHttpsUrl(value: string): boolean {
-  try {
-    return new URL(value).protocol === "https:";
-  } catch {
-    return false;
-  }
-}
+const ANALYTICS_ALLOWED_HOSTS = parseAllowedHosts(import.meta.env.VITE_ANALYTICS_ALLOWED_HOSTS);
+const ANALYTICS_ENDPOINT_URL = parseTrustedUrl(ANALYTICS_ENDPOINT, {
+  allowedHosts: ANALYTICS_ALLOWED_HOSTS,
+  allowHttpLocalhost: import.meta.env.DEV,
+});
 
 /**
  * Injects the Umami analytics script at runtime only when both env vars are
@@ -38,13 +35,13 @@ function AnalyticsScript() {
   // the empty dependency array is intentional.
   useEffect(() => {
     if (!ANALYTICS_ENDPOINT || !ANALYTICS_WEBSITE_ID) return;
-    if (!isHttpsUrl(ANALYTICS_ENDPOINT)) return;
+    if (!ANALYTICS_ENDPOINT_URL) return;
     const SCRIPT_ID = "umami-analytics";
     if (document.getElementById(SCRIPT_ID)) return;
     const script = document.createElement("script");
     script.id = SCRIPT_ID;
     script.defer = true;
-    script.src = `${ANALYTICS_ENDPOINT}/umami`;
+    script.src = appendUrlPath(ANALYTICS_ENDPOINT_URL, "umami").toString();
     script.dataset.websiteId = ANALYTICS_WEBSITE_ID;
     document.head.appendChild(script);
   }, []);
