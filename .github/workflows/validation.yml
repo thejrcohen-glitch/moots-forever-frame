@@ -42,4 +42,8 @@ jobs:
         run: corepack pnpm run test
 
       - name: Static frontend build
-        run: VITE_STATIC_SITE=true corepack pnpm exec vite build
+        run: corepack pnpm exec vite build
+        env:
+          VITE_STATIC_SITE: "true"
+          VITE_FRONTEND_FORGE_API_KEY: ""
+          VITE_FRONTEND_FORGE_API_URL: ""
