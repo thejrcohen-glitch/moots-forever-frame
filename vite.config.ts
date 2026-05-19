@@ -15,6 +15,8 @@ const PROJECT_ROOT = import.meta.dirname;
 const LOG_DIR = path.join(PROJECT_ROOT, ".manus-logs");
 const MAX_LOG_SIZE_BYTES = 1 * 1024 * 1024; // 1MB per log file
 const TRIM_TARGET_BYTES = Math.floor(MAX_LOG_SIZE_BYTES * 0.6); // Trim to 60% to avoid constant re-trimming
+const MAX_LOG_ENTRIES_PER_REQUEST = 1000;
+const MAX_REQUEST_BODY_BYTES = 256 * 1024; // 256KB
 
 type LogSource = "browserConsole" | "networkRequests" | "sessionReplay";
 
@@ -68,6 +70,17 @@ function writeToLogFile(source: LogSource, entries: unknown[]) {
   trimLogFile(logPath, MAX_LOG_SIZE_BYTES);
 }
 
+function getPayloadEntries(payload: unknown, key: string): unknown[] {
+  if (!payload || typeof payload !== "object") {
+    return [];
+  }
+  const entries = (payload as Record<string, unknown>)[key];
+  if (!Array.isArray(entries) || entries.length === 0) {
+    return [];
+  }
+  return entries.slice(0, MAX_LOG_ENTRIES_PER_REQUEST);
+}
+
 /**
  * Vite plugin to collect browser debug logs
  * - POST /__manus__/logs: Browser sends logs, written directly to files
@@ -104,16 +117,20 @@ function vitePluginManusDebugCollector(): Plugin {
           return next();
         }
 
-        const handlePayload = (payload: any) => {
+        const handlePayload = (payload: unknown) => {
+          const consoleLogs = getPayloadEntries(payload, "consoleLogs");
+          const networkRequests = getPayloadEntries(payload, "networkRequests");
+          const sessionEvents = getPayloadEntries(payload, "sessionEvents");
+
           // Write logs directly to files
-          if (payload.consoleLogs?.length > 0) {
-            writeToLogFile("browserConsole", payload.consoleLogs);
+          if (consoleLogs.length > 0) {
+            writeToLogFile("browserConsole", consoleLogs);
           }
-          if (payload.networkRequests?.length > 0) {
-            writeToLogFile("networkRequests", payload.networkRequests);
+          if (networkRequests.length > 0) {
+            writeToLogFile("networkRequests", networkRequests);
           }
-          if (payload.sessionEvents?.length > 0) {
-            writeToLogFile("sessionReplay", payload.sessionEvents);
+          if (sessionEvents.length > 0) {
+            writeToLogFile("sessionReplay", sessionEvents);
           }
 
           res.writeHead(200, { "Content-Type": "application/json" });
@@ -132,11 +149,22 @@ function vitePluginManusDebugCollector(): Plugin {
         }
 
         let body = "";
+        let bodyBytes = 0;
+        let bodyTooLarge = false;
         req.on("data", (chunk) => {
+          if (bodyTooLarge) return;
+          bodyBytes += chunk.length;
+          if (bodyBytes > MAX_REQUEST_BODY_BYTES) {
+            bodyTooLarge = true;
+            res.writeHead(413, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ success: false, error: "Payload too large" }));
+            return;
+          }
           body += chunk.toString();
         });
 
         req.on("end", () => {
+          if (bodyTooLarge) return;
           try {
             const payload = JSON.parse(body);
             handlePayload(payload);
@@ -183,6 +211,7 @@ export default defineConfig(({ mode }) => {
         ".manus-asia.computer",
         ".manuscomputer.ai",
         ".manusvm.computer",
+        "3000-ikxgn2cpmdvffyoc40h1z-c702d285.us2.manus.computer",
         "localhost",
         "127.0.0.1",
       ],
