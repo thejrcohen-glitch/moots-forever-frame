@@ -1,3 +1,9 @@
+/**
+ * Security: Localhost hostnames for development-only HTTP allowlist.
+ * Production requires HTTPS; HTTP is only permitted for these hosts when
+ * explicitly enabled via allowHttpLocalhost (typically import.meta.env.DEV).
+ * This is intentional security validation, not debug code.
+ */
 const LOCALHOST_HOSTNAMES = new Set(["localhost", "127.0.0.1", "::1", "[::1]"]);
 
 export function normalizeOptionalEnvVar(value: unknown): string {
