@@ -76,7 +76,7 @@
 
 /// <reference types="@types/google.maps" />
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { IS_STATIC_SITE } from "@/const";
 import { usePersistFn } from "@/hooks/usePersistFn";
 import { appendUrlPath, normalizeOptionalEnvVar, parseAllowedHosts, parseTrustedUrl } from "@/lib/urlSafety";
@@ -172,14 +172,18 @@ export function MapView({
 
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<google.maps.Map | null>(null);
+  const [mapLoadFailed, setMapLoadFailed] = useState(false);
 
   const init = usePersistFn(async () => {
+    setMapLoadFailed(false);
     const mapReady = await loadMapScript();
     if (!mapReady || !window.google?.maps) {
+      setMapLoadFailed(true);
       return;
     }
     if (!mapContainer.current) {
       console.error("Map container not found");
+      setMapLoadFailed(true);
       return;
     }
     map.current = new window.google.maps.Map(mapContainer.current, {
@@ -199,6 +203,26 @@ export function MapView({
   useEffect(() => {
     init();
   }, [init]);
+
+  if (mapLoadFailed) {
+    return (
+      <div
+        className={cn(
+          "w-full h-[500px] flex flex-col items-center justify-center gap-2 text-center",
+          className,
+        )}
+      >
+        {fallback ?? (
+          <>
+            <p className="text-sm font-medium">Map unavailable</p>
+            <p className="text-xs opacity-75 max-w-md">
+              Failed to load the interactive map. Please try again later.
+            </p>
+          </>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div ref={mapContainer} className={cn("w-full h-[500px]", className)} />
