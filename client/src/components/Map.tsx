@@ -181,12 +181,12 @@ export function MapView({
       const mapReady = await loadMapScript();
       if (cancelled) return;
       if (!mapReady || !window.google?.maps) {
-        setMapLoadFailed(true);
+        if (!cancelled) setMapLoadFailed(true);
         return;
       }
       if (!mapContainer.current) {
         console.error("Map container not found");
-        setMapLoadFailed(true);
+        if (!cancelled) setMapLoadFailed(true);
         return;
       }
       map.current = new window.google.maps.Map(mapContainer.current, {
