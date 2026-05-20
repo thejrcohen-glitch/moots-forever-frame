@@ -78,7 +78,6 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { IS_STATIC_SITE } from "@/const";
-import { usePersistFn } from "@/hooks/usePersistFn";
 import { appendUrlPath, normalizeOptionalEnvVar, parseAllowedHosts, parseTrustedUrl } from "@/lib/urlSafety";
 import { cn } from "@/lib/utils";
 
@@ -174,35 +173,40 @@ export function MapView({
   const map = useRef<google.maps.Map | null>(null);
   const [mapLoadFailed, setMapLoadFailed] = useState(false);
 
-  const init = usePersistFn(async () => {
-    setMapLoadFailed(false);
-    const mapReady = await loadMapScript();
-    if (!mapReady || !window.google?.maps) {
-      setMapLoadFailed(true);
-      return;
-    }
-    if (!mapContainer.current) {
-      console.error("Map container not found");
-      setMapLoadFailed(true);
-      return;
-    }
-    map.current = new window.google.maps.Map(mapContainer.current, {
-      zoom: initialZoom,
-      center: initialCenter,
-      mapTypeControl: true,
-      fullscreenControl: true,
-      zoomControl: true,
-      streetViewControl: true,
-      mapId: "DEMO_MAP_ID",
-    });
-    if (onMapReady) {
-      onMapReady(map.current);
-    }
-  });
-
   useEffect(() => {
-    init();
-  }, [init]);
+    let cancelled = false;
+
+    (async () => {
+      setMapLoadFailed(false);
+      const mapReady = await loadMapScript();
+      if (cancelled) return;
+      if (!mapReady || !window.google?.maps) {
+        setMapLoadFailed(true);
+        return;
+      }
+      if (!mapContainer.current) {
+        console.error("Map container not found");
+        setMapLoadFailed(true);
+        return;
+      }
+      map.current = new window.google.maps.Map(mapContainer.current, {
+        zoom: initialZoom,
+        center: initialCenter,
+        mapTypeControl: true,
+        fullscreenControl: true,
+        zoomControl: true,
+        streetViewControl: true,
+        mapId: "DEMO_MAP_ID",
+      });
+      if (onMapReady) {
+        onMapReady(map.current);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialCenter, initialZoom, onMapReady]);
 
   if (mapLoadFailed) {
     return (
