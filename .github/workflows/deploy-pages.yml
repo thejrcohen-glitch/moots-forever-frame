@@ -43,12 +43,15 @@ jobs:
         run: pnpm exec vite build
         env:
           VITE_STATIC_SITE: "true"
-          # VITE_FRONTEND_FORGE_API_KEY and VITE_FRONTEND_FORGE_API_URL are
-          # intentionally omitted: the interactive Google Maps feature is
-          # disabled in static mode (MAPS_INTERACTIVE_ENABLED = false) and
-          # those keys must never be embedded in a public artifact without a
-          # server-side proxy.  The Dealers page renders a graceful text
-          # fallback when the map is unavailable.
+          # These map env vars are intentionally set to empty in Pages builds:
+          # - the interactive Google Maps feature is disabled in static mode
+          #   (MAPS_INTERACTIVE_ENABLED = false)
+          # - GitHub Pages artifacts are public, so we must never embed private
+          #   keys into the bundle
+          # - the Dealers page renders a graceful text fallback UI when the map
+          #   is unavailable
+          VITE_FRONTEND_FORGE_API_KEY: ""
+          VITE_FRONTEND_FORGE_API_URL: ""
 
       - name: Prepare Pages artifact
         run: |

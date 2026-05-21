@@ -14,14 +14,16 @@ import { toast } from "sonner";
 import { Link } from "wouter";
 import { getLoginUrl } from "@/const";
 import { NotificationCenter } from "@/components/NotificationCenter";
+import AdminVerificationPanel from "@/components/AdminVerificationPanel";
 
 type StatusFilter = "pending" | "approved" | "rejected" | "all";
-type AdminTab = "photos" | "rsvps" | "leads" | "analytics" | "notifications";
+type AdminTab = "photos" | "rsvps" | "leads" | "analytics" | "notifications" | "verification";
 
 const TERRITORY_COLORS: Record<string, string> = {
   TX: "oklch(0.52 0.12 45)",
   OK: "oklch(0.38 0.015 60)",
   AR: "oklch(0.35 0.06 145)",
+  CH: "oklch(0.45 0.15 145)",
 };
 
 export default function Admin() {
@@ -140,6 +142,7 @@ export default function Admin() {
             { id: "photos" as AdminTab, label: `Photos (${photoCounts.pending} pending)` },
             { id: "rsvps" as AdminTab, label: `RSVPs (${rsvps.length})` },
             { id: "notifications" as AdminTab, label: `Notifications${unreadCount > 0 ? ` (${unreadCount})` : ""}` },
+            { id: "verification" as AdminTab, label: "Verification" },
             { id: "analytics" as AdminTab, label: "Analytics" },
           ]).map(tab => (
             <button
@@ -419,6 +422,11 @@ export default function Admin() {
         {/* ── NOTIFICATIONS TAB ── */}
         {activeTab === "notifications" && (
           <NotificationCenter />
+        )}
+
+        {/* ── VERIFICATION TAB ── */}
+        {activeTab === "verification" && (
+          <AdminVerificationPanel />
         )}
       </div>
     </div>
