@@ -10,6 +10,7 @@ import { trpc } from "@/lib/trpc";
 import { IS_STATIC_SITE } from "@/const";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
+import { InstagramFeed } from "@/components/InstagramFeed";
 
 // Set page title for SEO
 if (typeof window !== "undefined") {
@@ -1760,6 +1761,7 @@ export default function Home() {
       <WarrantyTradeUpSection />
       <RideCalendar />
       <BookingForm />
+      <InstagramFeed limit={12} />
       <Footer />
     </div>
   );
