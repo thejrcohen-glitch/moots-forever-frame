@@ -14,6 +14,7 @@ import { Link } from "wouter";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import type { CommunityPhoto } from "../../../drizzle/schema";
+import EventPhotoGallery from "@/components/EventPhotoGallery";
 
 // ─── Grain overlay ─────────────────────────────────────────────────────────────
 function GrainOverlay({ opacity = 0.18 }: { opacity?: number }) {
@@ -521,6 +522,9 @@ export default function Community() {
           </div>
         </div>
       </section>
+
+      {/* Event Photo Gallery */}
+      <EventPhotoGallery />
 
       {/* Filter + Gallery */}
       <section className="pb-24 relative" style={{ background: "oklch(0.18 0.008 60)" }}>

@@ -259,53 +259,53 @@
 ## Feature Batch 9 — Newsletter, Event Gallery, Testimonials, Switzerland Expansion
 
 ### Phase 1: Newsletter Signup Form
-- [ ] Create NewsletterSignup component with email input and subscribe button
-- [ ] Add to footer with Resend integration for email capture
-- [ ] Create newsletter_subscribers table in database
-- [ ] Add tRPC procedure for newsletter.subscribe
-- [ ] Add success/error toast notifications
-- [ ] Style to match footer design
+- [x] Create NewsletterSignup component with email input and subscribe button
+- [x] Add to footer with Resend integration for email capture
+- [x] Create newsletter_subscribers table in database
+- [x] Add tRPC procedure for newsletter.subscribe
+- [x] Add success/error toast notifications
+- [x] Style to match footer design
 
 ### Phase 2: Event Photo Gallery & Swiss Routes
-- [ ] Add "Event Photos" tab to Community Wall
-- [ ] Create routes table with Swiss gravel routes (Tremola, Trans Jura, Bernina Express, etc.)
-- [ ] Add route_id foreign key to photos table
-- [ ] Create EventPhotoGallery component with route filtering
-- [ ] Display route metadata (distance, elevation, terrain type, Moots tips)
-- [ ] Add route-specific photo gallery view
-- [ ] Seed database with 10+ iconic Swiss routes
+- [x] Add "Event Photos" tab to Community Wall
+- [x] Create routes table with Swiss gravel routes (Tremola, Trans Jura, Bernina Express, etc.)
+- [x] Add route_id foreign key to photos table
+- [x] Create EventPhotoGallery component with route filtering
+- [x] Display route metadata (distance, elevation, terrain type, Moots tips)
+- [x] Add route-specific photo gallery view
+- [x] Seed database with 10+ iconic Swiss routes
 
 ### Phase 3: Dealer Testimonials Carousel
-- [ ] Create testimonials table (name, territory, quote, image_url, company)
-- [ ] Create DealerTestimonials component with carousel/rotation
-- [ ] Add to homepage hero or below fold
-- [ ] Seed with TX, OK, AR dealer testimonials
-- [ ] Add admin UI to manage testimonials
-- [ ] Style with dealer photos and quotes
+- [x] Create testimonials table (name, territory, quote, image_url, company)
+- [x] Create DealerTestimonials component with carousel/rotation
+- [x] Add to homepage hero or below fold
+- [x] Seed with TX, OK, AR dealer testimonials
+- [x] Add admin UI to manage testimonials
+- [x] Style with dealer photos and quotes
 
 ### Phase 4: Switzerland Territory & Routes
-- [ ] Add Switzerland (CH) to territories enum
-- [ ] Create Swiss coffee shops and breweries data
-- [ ] Add Swiss dealer pins to map
-- [ ] Create 5+ featured Swiss routes with GPX links
-- [ ] Add Swiss bike models (Routt 45, Routt RSL, Routt YBB, Scrambler, etc.)
-- [ ] Create Switzerland page similar to Home.tsx with territory-specific content
+- [x] Add Switzerland (CH) to territories enum
+- [x] Create Swiss coffee shops and breweries data
+- [x] Add Swiss dealer pins to map
+- [x] Create 5+ featured Swiss routes with GPX links
+- [x] Add Swiss bike models (Routt 45, Routt RSL, Routt YBB, Scrambler, etc.)
+- [x] Create Switzerland page similar to Home.tsx with territory-specific content
 
 ### Phase 5: Photo Tagging System
-- [ ] Add photo_tags table to schema (many-to-many with photos)
-- [ ] Implement tag categories: Pass Sign (2000m+), Bikepacking, Titanium vs Texture, Terrain types
-- [ ] Create photo upload form with tag selection
-- [ ] Add tag-based filtering to Community Wall
-- [ ] Create badge system for Pass Sign trophy shots
-- [ ] Display tags on photo cards
+- [x] Add photo_tags table to schema (many-to-many with photos)
+- [x] Implement tag categories: Pass Sign (2000m+), Bikepacking, Titanium vs Texture, Terrain types
+- [x] Create photo upload form with tag selection
+- [x] Add tag-based filtering to Community Wall
+- [x] Create badge system for Pass Sign trophy shots
+- [x] Display tags on photo cards
 
 ### Phase 6: Moots Bike Models Database
-- [ ] Create bike_models table (model_id, name, category, specs)
-- [ ] Seed with all Moots models: Routt 45, Routt RSL, Routt CRD, Routt YBB, Scrambler, Womble MXC, Legacy
-- [ ] Create BikeModels showcase page
-- [ ] Add model filtering to photo gallery
-- [ ] Create model-specific route recommendations
-- [ ] Add model comparison tool
+- [x] Create bike_models table (model_id, name, category, specs)
+- [x] Seed with all Moots models: Routt 45, Routt RSL, Routt CRD, Routt YBB, Scrambler, Womble MXC, Legacy
+- [x] Create BikeModels showcase page
+- [x] Add model filtering to photo gallery
+- [x] Create model-specific route recommendations
+- [x] Add model comparison tool
 
 ### Phase 7: Testing & Delivery
 - [ ] Write vitest tests for newsletter subscription

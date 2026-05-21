@@ -11,6 +11,7 @@ import { IS_STATIC_SITE } from "@/const";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { InstagramFeed } from "@/components/InstagramFeed";
+import DealerTestimonials from "@/components/DealerTestimonials";
 
 // Set page title for SEO
 if (typeof window !== "undefined") {
@@ -1759,6 +1760,7 @@ export default function Home() {
       <TheVibe />
       <OrderSection />
       <WarrantyTradeUpSection />
+      <DealerTestimonials />
       <RideCalendar />
       <BookingForm />
       <InstagramFeed limit={12} />
