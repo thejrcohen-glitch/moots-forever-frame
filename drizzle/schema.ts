@@ -82,10 +82,25 @@ export const bookings = mysqlTable("bookings", {
   riderName: varchar("riderName", { length: 128 }).notNull(),
   email: varchar("email", { length: 320 }).notNull(),
   territory: mysqlEnum("territory", ["TX", "OK", "AR"]).notNull(),
+  popUpCity: varchar("popUpCity", { length: 128 }),
+  popUpVenue: varchar("popUpVenue", { length: 256 }),
   popUpDate: varchar("popUpDate", { length: 32 }).notNull(),
   notes: text("notes"),
+  status: mysqlEnum("status", ["pending", "confirmed", "cancelled"]).default("pending").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
 export type Booking = typeof bookings.$inferSelect;
 export type InsertBooking = typeof bookings.$inferInsert;
+
+export const newsletterSubscribers = mysqlTable("newsletter_subscribers", {
+  id: int("id").autoincrement().primaryKey(),
+  email: varchar("email", { length: 320 }).notNull().unique(),
+  territory: mysqlEnum("territory", ["TX", "OK", "AR"]),
+  source: varchar("source", { length: 64 }),
+  unsubscribedAt: timestamp("unsubscribedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type NewsletterSubscriber = typeof newsletterSubscribers.$inferSelect;
+export type InsertNewsletterSubscriber = typeof newsletterSubscribers.$inferInsert;

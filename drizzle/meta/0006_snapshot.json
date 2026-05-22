@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "0705e025-1305-48c3-a0f9-d9eaeaaf6be0",
-  "prevId": "3d4f48da-e7a9-4ec5-9108-cdc71a620554",
+  "id": "a8b9c0d1-e2f3-4567-89ab-cdef01234567",
+  "prevId": "0705e025-1305-48c3-a0f9-d9eaeaaf6be0",
   "tables": {
     "bookings": {
       "name": "bookings",
@@ -166,6 +166,13 @@
           "notNull": true,
           "autoincrement": false,
           "default": "'pending'"
+        },
+        "tags": {
+          "name": "tags",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         },
         "createdAt": {
           "name": "createdAt",
