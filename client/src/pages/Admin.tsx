@@ -13,6 +13,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { toast } from "sonner";
 import { Link } from "wouter";
 import { getLoginUrl } from "@/const";
+import { COMMUNITY_PHOTO_TAG_LABELS } from "../../../shared/const";
 
 type StatusFilter = "pending" | "approved" | "rejected" | "all";
 type AdminTab = "photos" | "rsvps" | "leads" | "analytics";
@@ -213,6 +214,19 @@ export default function Admin() {
                       <p className="font-display text-base font-bold mb-1" style={{ color: "oklch(0.945 0.018 78)" }}>{photo.riderName}</p>
                       {photo.mootsModel && <p className="font-mono-custom text-xs mb-2" style={{ color: "oklch(0.72 0.14 65)" }}>{photo.mootsModel}</p>}
                       {photo.caption && <p className="font-mono-custom text-xs leading-relaxed mb-3" style={{ color: "oklch(0.52 0.04 65)" }}>"{photo.caption}"</p>}
+                      {photo.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mb-3">
+                          {photo.tags.map(slug => (
+                            <span
+                              key={slug}
+                              className="font-label text-[10px] tracking-widest uppercase px-2 py-0.5"
+                              style={{ background: "oklch(0.22 0.01 60)", color: "oklch(0.72 0.14 65)", border: "1px solid oklch(0.38 0.015 60)" }}
+                            >
+                              {COMMUNITY_PHOTO_TAG_LABELS[slug] ?? slug}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                       <p className="font-mono-custom text-xs mb-4" style={{ color: "oklch(0.38 0.015 60)" }}>
                         {new Date(photo.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                       </p>

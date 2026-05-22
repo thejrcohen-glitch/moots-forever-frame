@@ -107,4 +107,75 @@ describe("community.upload", () => {
       })
     ).rejects.toThrow();
   });
+
+  it("rejects unknown tag slugs", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    await expect(
+      caller.community.upload({
+        riderName: "Test Rider",
+        territory: "TX",
+        location: "Austin, TX",
+        // @ts-expect-error testing invalid tag slug
+        tags: ["not-a-real-tag"],
+        imageData: "data:image/jpeg;base64,abc",
+        imageMimeType: "image/jpeg",
+      })
+    ).rejects.toThrow();
+  });
+
+  it("rejects more than MAX_COMMUNITY_PHOTO_TAGS tags", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    await expect(
+      caller.community.upload({
+        riderName: "Test Rider",
+        territory: "TX",
+        location: "Austin, TX",
+        tags: ["gravel", "road", "mountain", "coffee", "sunrise", "sunset"],
+        imageData: "data:image/jpeg;base64,abc",
+        imageMimeType: "image/jpeg",
+      })
+    ).rejects.toThrow();
+  });
+
+  it("accepts a valid tag list (still fails on missing DB, proving schema passed)", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    await expect(
+      caller.community.upload({
+        riderName: "Test Rider",
+        territory: "TX",
+        location: "Austin, TX",
+        tags: ["gravel", "coffee"],
+        imageData: "data:image/jpeg;base64,abc",
+        imageMimeType: "image/jpeg",
+      })
+    ).rejects.toThrow("Database not available");
+  });
+});
+
+describe("parseCommunityPhotoTags", () => {
+  it("returns [] for null/empty/undefined", async () => {
+    const { parseCommunityPhotoTags } = await import("../shared/const");
+    expect(parseCommunityPhotoTags(null)).toEqual([]);
+    expect(parseCommunityPhotoTags(undefined)).toEqual([]);
+    expect(parseCommunityPhotoTags("")).toEqual([]);
+  });
+
+  it("decodes valid tag JSON arrays", async () => {
+    const { parseCommunityPhotoTags } = await import("../shared/const");
+    expect(parseCommunityPhotoTags('["gravel","coffee"]')).toEqual(["gravel", "coffee"]);
+  });
+
+  it("drops unknown slugs and dedupes", async () => {
+    const { parseCommunityPhotoTags } = await import("../shared/const");
+    expect(parseCommunityPhotoTags('["gravel","not-real","gravel","coffee"]')).toEqual(["gravel", "coffee"]);
+  });
+
+  it("returns [] for malformed JSON or non-arrays", async () => {
+    const { parseCommunityPhotoTags } = await import("../shared/const");
+    expect(parseCommunityPhotoTags("not-json")).toEqual([]);
+    expect(parseCommunityPhotoTags('{"foo":1}')).toEqual([]);
+  });
 });

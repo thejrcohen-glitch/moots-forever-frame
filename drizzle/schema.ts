@@ -38,6 +38,8 @@ export const communityPhotos = mysqlTable("community_photos", {
   imageUrl: text("imageUrl").notNull(),
   imageKey: text("imageKey").notNull(),
   approved: mysqlEnum("approved", ["pending", "approved", "rejected"]).default("pending").notNull(),
+  /** JSON-encoded array of tag slugs (e.g. ["gravel","coffee","sunrise"]). Nullable to preserve existing rows. */
+  tags: text("tags"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
