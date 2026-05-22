@@ -1543,11 +1543,26 @@ function WarrantyTradeUpSection() {
   );
 }
 
-// Territory ID → DB enum mapping
+// Territory ID → DB enum mapping. Switzerland ("ch") is reserved for a future
+// territory expansion — it is intentionally not in the DB enum yet, so the
+// form blocks submission and points the rider at Ian by email/phone instead.
 const TERRITORY_MAP: Record<string, "TX" | "OK" | "AR"> = {
   bentonville: "AR",
   austin: "TX",
   okc: "OK",
+};
+
+const TERRITORY_LABEL: Record<string, string> = {
+  bentonville: "Bentonville, AR — The Ozarks",
+  austin: "Austin, TX — The East Side",
+  okc: "Oklahoma City, OK — Urban Grit",
+  ch: "Switzerland (coming soon)",
+};
+
+const TERRITORY_CITY: Record<string, string> = {
+  bentonville: "Bentonville, AR",
+  austin: "Austin, TX",
+  okc: "Oklahoma City, OK",
 };
 
 // ─── Booking Form ──────────────────────────────────────────────────────────────
@@ -1565,31 +1580,39 @@ function BookingForm() {
     },
   });
 
+  // Capacity hint — only queried when a real territory + date are picked, and
+  // only when running against the live backend (the static site stub returns
+  // a graceful null).
+  const mappedTerritory = TERRITORY_MAP[form.territory];
+  const capacityEnabled = !IS_STATIC_SITE && !!mappedTerritory && !!form.date;
+  const capacityQuery = trpc.booking.capacityHint.useQuery(
+    { territory: mappedTerritory ?? "TX", date: form.date },
+    { enabled: capacityEnabled, retry: false }
+  );
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (IS_STATIC_SITE) {
-      toast.info("Booking requests are unavailable on the static site. Please use the contact links on this site.");
+      toast.info("Booking requests are unavailable on the static site. Please email ianzak@mac.com or call 917-578-7687.");
+      return;
+    }
+    if (form.territory === "ch") {
+      toast.info("Switzerland pop-ups aren't bookable here yet. Email ianzak@mac.com or call 917-578-7687 to be the first on the list.");
       return;
     }
     if (!form.name || !form.email || !form.territory || form.territory === "other") {
       toast.error("Please fill in all required fields and select a territory.");
       return;
     }
-    const mappedTerritory = TERRITORY_MAP[form.territory];
     if (!mappedTerritory) {
       toast.error("Please select a valid territory.");
       return;
     }
-    const cityMap: Record<string, string> = {
-      bentonville: "Bentonville, AR",
-      austin: "Austin, TX",
-      okc: "Oklahoma City, OK",
-    };
     submitMutation.mutate({
       name: form.name,
       email: form.email,
       territory: mappedTerritory,
-      city: cityMap[form.territory] ?? form.territory,
+      city: TERRITORY_CITY[form.territory] ?? form.territory,
       venue: form.shop || undefined,
       preferredDate: form.date || undefined,
       message: form.message || undefined,
@@ -1600,7 +1623,7 @@ function BookingForm() {
   const inputClass = "w-full font-mono-custom text-sm px-4 py-3 border-0 border-b-2 bg-transparent outline-none transition-colors duration-200";
   const inputStyle = { borderBottomColor: "oklch(0.78 0.03 70)", color: "oklch(0.22 0.01 60)" };
 
-  const showWeather = !!form.territory && form.territory !== "other";
+  const showWeather = !!mappedTerritory; // skip weather for "other" and "ch"
 
   return (
     <section id="book-a-pop-up" className="py-24 relative" style={{ background: "oklch(0.945 0.018 78)" }}>
@@ -1640,15 +1663,34 @@ function BookingForm() {
             <div className="md:w-3/5">
               <AnimatePresence mode="wait">
                 {submitted ? (
-                  <motion.div key="success" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center justify-center h-full py-20 text-center">
+                  <motion.div key="success" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center justify-center h-full py-16 text-center">
                     <div className="w-16 h-16 mb-6 flex items-center justify-center" style={{ border: "1px solid oklch(0.52 0.12 45)" }}>
                       <span className="font-display text-2xl" style={{ color: "oklch(0.52 0.12 45)" }}>✓</span>
                     </div>
-                    <h3 className="font-display text-3xl font-bold mb-4" style={{ color: "oklch(0.22 0.01 60)" }}>Request Received.</h3>
-                    <p className="font-mono-custom text-sm" style={{ color: "oklch(0.52 0.04 65)" }}>Ian will be in touch to confirm your pop-up details.</p>
-                    <a href="tel:917-578-7687" className="mt-6 font-label text-xs tracking-[0.2em] uppercase hover:underline" style={{ color: "oklch(0.52 0.12 45)" }}>
-                      Call 917-578-7687 →
-                    </a>
+                    <h3 className="font-display text-3xl font-bold mb-3" style={{ color: "oklch(0.22 0.01 60)" }}>Request Received.</h3>
+                    <p className="font-label text-xs tracking-[0.2em] uppercase mb-4" style={{ color: "oklch(0.52 0.12 45)" }}>Status · Pending Review</p>
+                    <div className="max-w-md mx-auto text-left space-y-3 mb-6 px-4 py-4" style={{ background: "oklch(0.92 0.018 78)", border: "1px solid oklch(0.78 0.03 70)" }}>
+                      <p className="font-mono-custom text-xs leading-relaxed" style={{ color: "oklch(0.38 0.015 60)" }}>
+                        <span className="font-label tracking-widest uppercase mr-2" style={{ color: "oklch(0.52 0.12 45)" }}>1.</span>
+                        Ian will review your request within <strong>2 business days</strong>.
+                      </p>
+                      <p className="font-mono-custom text-xs leading-relaxed" style={{ color: "oklch(0.38 0.015 60)" }}>
+                        <span className="font-label tracking-widest uppercase mr-2" style={{ color: "oklch(0.52 0.12 45)" }}>2.</span>
+                        Confirmation email goes to the address you submitted — check spam if it doesn't arrive.
+                      </p>
+                      <p className="font-mono-custom text-xs leading-relaxed" style={{ color: "oklch(0.38 0.015 60)" }}>
+                        <span className="font-label tracking-widest uppercase mr-2" style={{ color: "oklch(0.52 0.12 45)" }}>3.</span>
+                        Need to reach Ian directly? He's the sole rep for TX · OK · AR — no other contacts.
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-center gap-2">
+                      <a href="tel:917-578-7687" className="font-label text-xs tracking-[0.2em] uppercase hover:underline" style={{ color: "oklch(0.52 0.12 45)" }}>
+                        Call 917-578-7687 →
+                      </a>
+                      <a href="mailto:ianzak@mac.com" className="font-mono-custom text-xs hover:underline" style={{ color: "oklch(0.52 0.04 65)" }}>
+                        ianzak@mac.com
+                      </a>
+                    </div>
                   </motion.div>
                 ) : (
                   <motion.form key="form" onSubmit={handleSubmit} className="space-y-6">
@@ -1671,11 +1713,17 @@ function BookingForm() {
                         <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>Territory *</label>
                         <select className={inputClass} style={{ ...inputStyle, appearance: "none" as const }} value={form.territory} onChange={(e) => setForm({ ...form, territory: e.target.value })}>
                           <option value="">Select territory...</option>
-                          <option value="bentonville">Bentonville, AR — The Ozarks</option>
-                          <option value="austin">Austin, TX — The East Side</option>
-                          <option value="okc">Oklahoma City, OK — Urban Grit</option>
+                          <option value="bentonville">{TERRITORY_LABEL.bentonville}</option>
+                          <option value="austin">{TERRITORY_LABEL.austin}</option>
+                          <option value="okc">{TERRITORY_LABEL.okc}</option>
+                          <option value="ch" disabled>{TERRITORY_LABEL.ch}</option>
                           <option value="other">Other (specify in notes)</option>
                         </select>
+                        {form.territory === "ch" && (
+                          <p className="font-mono-custom text-xs mt-2" style={{ color: "oklch(0.52 0.12 45)" }}>
+                            Switzerland pop-ups aren't bookable through this form yet. Email <a className="hover:underline" href="mailto:ianzak@mac.com">ianzak@mac.com</a> or call <a className="hover:underline" href="tel:917-578-7687">917-578-7687</a> to be first on the list.
+                          </p>
+                        )}
                       </div>
                       <div>
                         <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>Preferred Date</label>
@@ -1691,6 +1739,18 @@ function BookingForm() {
                         </motion.div>
                       )}
                     </AnimatePresence>
+
+                    {/* Capacity hint — only when DB-backed and a real territory+date are chosen */}
+                    {capacityEnabled && capacityQuery.data && capacityQuery.data.cap != null && (
+                      <div className="px-4 py-3" style={{ background: "oklch(0.92 0.018 78)", border: "1px solid oklch(0.78 0.03 70)" }}>
+                        <p className="font-label text-xs tracking-[0.2em] uppercase mb-1" style={{ color: capacityQuery.data.available ? "oklch(0.35 0.06 145)" : "oklch(0.52 0.12 45)" }}>
+                          {capacityQuery.data.available ? "Slots open" : "Date nearly full"}
+                        </p>
+                        <p className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>
+                          {capacityQuery.data.taken} of ~{capacityQuery.data.cap} demo slots requested for this date. Capacity is approximate — Ian will confirm exact availability.
+                        </p>
+                      </div>
+                    )}
 
                     <div>
                       <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>Notes</label>

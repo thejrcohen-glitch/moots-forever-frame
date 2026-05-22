@@ -80,8 +80,11 @@ export const bookings = mysqlTable("bookings", {
   riderName: varchar("riderName", { length: 128 }).notNull(),
   email: varchar("email", { length: 320 }).notNull(),
   territory: mysqlEnum("territory", ["TX", "OK", "AR"]).notNull(),
+  popUpCity: varchar("popUpCity", { length: 128 }),
+  popUpVenue: varchar("popUpVenue", { length: 256 }),
   popUpDate: varchar("popUpDate", { length: 32 }).notNull(),
   notes: text("notes"),
+  status: mysqlEnum("status", ["pending", "confirmed", "cancelled"]).default("pending").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
