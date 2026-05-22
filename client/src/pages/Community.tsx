@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import type { CommunityPhoto } from "../../../drizzle/schema";
 import EventPhotoGallery from "@/components/EventPhotoGallery";
+import NewsletterSignup from "@/components/NewsletterSignup";
 
 // ─── Grain overlay ─────────────────────────────────────────────────────────────
 function GrainOverlay({ opacity = 0.18 }: { opacity?: number }) {
@@ -670,13 +671,16 @@ export default function Community() {
       <footer className="py-12 relative overflow-hidden" style={{ background: "oklch(0.15 0.006 60)" }}>
         <GrainOverlay opacity={0.15} />
         <div className="container relative z-20">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             <div>
               <Link href="/"><p className="font-display text-2xl font-bold mb-1 cursor-pointer hover:opacity-80" style={{ color: "oklch(0.945 0.018 78)" }}>Moots</p></Link>
               <p className="font-mono-custom text-xs" style={{ color: "oklch(0.52 0.04 65)" }}>Handbuilt in Steamboat Springs, CO since 1981</p>
             </div>
+            <div className="md:col-span-1">
+              <NewsletterSignup variant="footer" />
+            </div>
             <div className="flex flex-col gap-1 text-right">
-              <p className="font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>Territory Rep · TX · OK · AR</p>
+              <p className="font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>Territory Rep · TX · OK · AR · CH</p>
               <a href="mailto:ianzak@mac.com" className="font-mono-custom text-sm hover:underline" style={{ color: "oklch(0.88 0.025 75)" }}>ianzak@mac.com</a>
             </div>
           </div>

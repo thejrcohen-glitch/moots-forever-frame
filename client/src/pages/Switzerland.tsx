@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { AlertCircle, CheckCircle2, Map, Mountain, Zap } from "lucide-react";
+import SharedFooter from "@/components/SharedFooter";
 
 /**
  * Switzerland Territory Page
@@ -252,6 +253,11 @@ export default function Switzerland() {
           </div>
         )}
       </div>
+      <SharedFooter showLinks={true} links={[
+        { label: "Home", href: "/" },
+        { label: "Community", href: "/community" },
+        { label: "Dealers", href: "/dealers" },
+      ]} />
     </div>
   );
 }

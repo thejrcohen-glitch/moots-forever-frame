@@ -20,10 +20,34 @@ export default function NewsletterSignup({ variant = "footer", onSuccess }: News
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [region, setRegion] = useState("ALL");
-  const [isLoading, setIsLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Use tRPC mutation hook
+  const subscribeMutation = trpc.newsletter.subscribe.useMutation({
+    onSuccess: () => {
+      setSubmitted(true);
+      toast.success("Successfully subscribed! Check your email for updates.");
+      setEmail("");
+      setFirstName("");
+      setRegion("ALL");
+      onSuccess?.();
+      
+      // Reset after 3 seconds
+      setTimeout(() => {
+        setSubmitted(false);
+      }, 3000);
+    },
+    onError: (error) => {
+      console.error("Newsletter subscription error:", error);
+      if (error.message.includes("already subscribed")) {
+        toast.info("You're already subscribed!");
+      } else {
+        toast.error("Failed to subscribe. Please try again.");
+      }
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email) {
@@ -31,37 +55,10 @@ export default function NewsletterSignup({ variant = "footer", onSuccess }: News
       return;
     }
 
-    setIsLoading(true);
-
-    try {
-      // Wire to trpc.newsletter.subscribe procedure
-      await trpc.newsletter.subscribe.mutate({
-        email,
-        territory: region as any,
-      });
-
-      setSubmitted(true);
-      toast.success("Successfully subscribed! Check your email for updates.");
-      setEmail("");
-      setFirstName("");
-      setRegion("ALL");
-
-      onSuccess?.();
-
-      // Reset after 3 seconds
-      setTimeout(() => {
-        setSubmitted(false);
-      }, 3000);
-    } catch (error) {
-      console.error("Newsletter subscription error:", error);
-      if (error instanceof Error && error.message.includes("already subscribed")) {
-        toast.info("You're already subscribed!");
-      } else {
-        toast.error("Failed to subscribe. Please try again.");
-      }
-    } finally {
-      setIsLoading(false);
-    }
+    subscribeMutation.mutate({
+      email,
+      territory: region as any,
+    });
   };
 
   if (variant === "footer") {
@@ -87,28 +84,28 @@ export default function NewsletterSignup({ variant = "footer", onSuccess }: News
                 placeholder="your@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                disabled={isLoading}
-                className="text-sm"
-                required
-              />
-            </div>
+              disabled={subscribeMutation.isPending}
+              className="text-sm"
+              required
+            />
+          </div>
 
-            <div>
-              <Input
-                type="text"
-                placeholder="First name (optional)"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                disabled={isLoading}
-                className="text-sm"
-              />
-            </div>
+          <div>
+            <Input
+              type="text"
+              placeholder="First name (optional)"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              disabled={subscribeMutation.isPending}
+              className="text-sm"
+            />
+          </div>
 
-            <div>
-              <select
-                value={region}
-                onChange={(e) => setRegion(e.target.value)}
-                disabled={isLoading}
+          <div>
+            <select
+              value={region}
+              onChange={(e) => setRegion(e.target.value)}
+              disabled={subscribeMutation.isPending}
                 className="w-full px-3 py-2 border border-input rounded-md text-sm bg-background"
               >
                 <option value="ALL">All Regions</option>
@@ -121,11 +118,11 @@ export default function NewsletterSignup({ variant = "footer", onSuccess }: News
 
             <Button
               type="submit"
-              disabled={isLoading}
+              disabled={subscribeMutation.isPending}
               className="w-full"
               size="sm"
             >
-              {isLoading ? "Subscribing..." : "Subscribe"}
+              {subscribeMutation.isPending ? "Subscribing..." : "Subscribe"}
             </Button>
 
             <p className="text-xs text-gray-500 text-center">
@@ -164,7 +161,7 @@ export default function NewsletterSignup({ variant = "footer", onSuccess }: News
               placeholder="your@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              disabled={isLoading}
+              disabled={subscribeMutation.isPending}
               required
             />
 
@@ -173,13 +170,13 @@ export default function NewsletterSignup({ variant = "footer", onSuccess }: News
               placeholder="First name (optional)"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              disabled={isLoading}
+              disabled={subscribeMutation.isPending}
             />
 
             <select
               value={region}
               onChange={(e) => setRegion(e.target.value)}
-              disabled={isLoading}
+              disabled={subscribeMutation.isPending}
               className="w-full px-3 py-2 border border-input rounded-md bg-background"
             >
               <option value="ALL">All Regions</option>
@@ -189,8 +186,8 @@ export default function NewsletterSignup({ variant = "footer", onSuccess }: News
               <option value="CH">Switzerland</option>
             </select>
 
-            <Button type="submit" disabled={isLoading} className="w-full">
-              {isLoading ? "Subscribing..." : "Subscribe"}
+            <Button type="submit" disabled={subscribeMutation.isPending} className="w-full">
+              {subscribeMutation.isPending ? "Subscribing..." : "Subscribe"}
             </Button>
 
             <p className="text-xs text-gray-500 text-center">
@@ -210,12 +207,12 @@ export default function NewsletterSignup({ variant = "footer", onSuccess }: News
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        disabled={isLoading || submitted}
+        disabled={subscribeMutation.isPending || submitted}
         className="flex-1"
       />
       <Button
-        onClick={handleSubmit}
-        disabled={isLoading || submitted}
+        onClick={(e) => handleSubmit(e as any)}
+        disabled={subscribeMutation.isPending || submitted}
         size="sm"
       >
         {submitted ? <Check className="w-4 h-4" /> : "Subscribe"}

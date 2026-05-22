@@ -11,6 +11,7 @@ import { IS_STATIC_SITE } from "@/const";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { InstagramFeed } from "@/components/InstagramFeed";
+import NewsletterSignup from "@/components/NewsletterSignup";
 import DealerTestimonials from "@/components/DealerTestimonials";
 
 // Set page title for SEO
@@ -1723,20 +1724,28 @@ function Footer() {
     <footer className="py-12 relative overflow-hidden" style={{ background: "oklch(0.18 0.008 60)" }}>
       <GrainOverlay opacity={0.15} />
       <div className="container relative z-20">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+          {/* Brand Info */}
           <div>
             <p className="font-display text-2xl font-bold mb-1" style={{ color: "oklch(0.945 0.018 78)" }}>Moots</p>
             <p className="font-mono-custom text-xs" style={{ color: "oklch(0.52 0.04 65)" }}>Handbuilt in Steamboat Springs, CO since 1981</p>
           </div>
+
+          {/* Newsletter Signup */}
+          <div className="md:col-span-1">
+            <NewsletterSignup variant="footer" />
+          </div>
+
+          {/* Contact Info */}
           <div className="flex flex-col gap-1 text-right">
-            <p className="font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>Territory Rep · TX · OK · AR</p>
+            <p className="font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>Territory Rep · TX · OK · AR · CH</p>
             <a href="mailto:ianzak@mac.com" className="font-mono-custom text-sm hover:underline" style={{ color: "oklch(0.88 0.025 75)" }}>
               ianzak@mac.com
             </a>
             <p className="font-mono-custom text-xs" style={{ color: "oklch(0.52 0.04 65)" }}>Ian Zakrocki — Dealer & Individual Orders</p>
           </div>
         </div>
-        <div className="mt-8 pt-8 border-t flex flex-col md:flex-row items-center justify-between gap-4" style={{ borderColor: "oklch(0.38 0.015 60 / 0.4)" }}>
+        <div className="pt-8 border-t flex flex-col md:flex-row items-center justify-between gap-4" style={{ borderColor: "oklch(0.38 0.015 60 / 0.4)" }}>
           <p className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>© 2026 Moots Bicycle. The Forever Frame Campaign.</p>
           <p className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>Built in Colorado. Proven in the Ozarks.</p>
         </div>
