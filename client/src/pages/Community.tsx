@@ -513,7 +513,8 @@ function UploadForm({ onSuccess }: { onSuccess: () => void }) {
 
 // ─── Community Page ────────────────────────────────────────────────────────────
 export default function Community() {
-  const [filter, setFilter] = useState<"ALL" | "TX" | "OK" | "AR">("ALL");
+  const [filter, setFilter] = useState<"ALL" | "TX" | "OK" | "AR" | "CH">("ALL");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [lightbox, setLightbox] = useState<CommunityPhoto | null>(null);
 
   const utils = trpc.useUtils();
@@ -527,14 +528,40 @@ export default function Community() {
     utils.community.list.invalidate();
   };
 
-  const filters: { id: "ALL" | "TX" | "OK" | "AR"; label: string }[] = [
+  const filters: { id: "ALL" | "TX" | "OK" | "AR" | "CH"; label: string }[] = [
     { id: "ALL", label: "All States" },
     { id: "TX", label: "Texas" },
     { id: "AR", label: "Arkansas" },
     { id: "OK", label: "Oklahoma" },
+    { id: "CH", label: "Switzerland" },
   ];
 
-  const displayPhotos = photos ?? [];
+  // Available tags for filtering
+  const availableTags = [
+    { id: "bikepacking", label: "Bikepacking" },
+    { id: "coffee_stop", label: "Coffee Stop" },
+    { id: "gravel_grinder", label: "Gravel Grinder" },
+    { id: "pass_sign_2000m", label: "Pass Sign 2000m+" },
+    { id: "scenic_vista", label: "Scenic Vista" },
+    { id: "titanium_vs_texture", label: "Titanium" },
+    { id: "trail_network", label: "Trail Network" },
+  ];
+
+  // Filter photos by tags
+  const displayPhotos = (photos ?? []).filter((photo) => {
+    if (selectedTags.length === 0) return true;
+    return photo.tags?.some((tag: any) => selectedTags.includes(tag.tagName));
+  });
+
+  const toggleTag = (tagId: string) => {
+    setSelectedTags((prev) =>
+      prev.includes(tagId) ? prev.filter((t) => t !== tagId) : [...prev, tagId]
+    );
+  };
+
+  const clearFilters = () => {
+    setSelectedTags([]);
+  };
 
   return (
     <div className="min-h-screen" style={{ background: "oklch(0.18 0.008 60)" }}>
@@ -566,22 +593,57 @@ export default function Community() {
       {/* Filter + Gallery */}
       <section className="pb-24 relative" style={{ background: "oklch(0.18 0.008 60)" }}>
         <div className="container">
-          {/* Filters */}
-          <div className="flex flex-wrap gap-2 mb-10">
-            {filters.map((f) => (
-              <button
-                key={f.id}
-                onClick={() => setFilter(f.id)}
-                className="font-label text-xs tracking-widest uppercase px-5 py-2.5 transition-all duration-200"
-                style={{
-                  background: filter === f.id ? "oklch(0.72 0.14 65)" : "transparent",
-                  color: filter === f.id ? "oklch(0.22 0.01 60)" : "oklch(0.52 0.04 65)",
-                  border: `1px solid ${filter === f.id ? "oklch(0.72 0.14 65)" : "oklch(0.38 0.015 60)"}`,
-                }}
-              >
-                {f.label} {filter === f.id && displayPhotos.length > 0 ? `(${displayPhotos.length})` : ""}
-              </button>
-            ))}
+          {/* Territory Filters */}
+          <div className="mb-8">
+            <p className="font-label text-xs tracking-widest uppercase mb-3" style={{ color: "oklch(0.72 0.14 65)" }}>Territory</p>
+            <div className="flex flex-wrap gap-2 mb-6">
+              {filters.map((f) => (
+                <button
+                  key={f.id}
+                  onClick={() => setFilter(f.id)}
+                  className="font-label text-xs tracking-widest uppercase px-5 py-2.5 transition-all duration-200"
+                  style={{
+                    background: filter === f.id ? "oklch(0.72 0.14 65)" : "transparent",
+                    color: filter === f.id ? "oklch(0.22 0.01 60)" : "oklch(0.52 0.04 65)",
+                    border: `1px solid ${filter === f.id ? "oklch(0.72 0.14 65)" : "oklch(0.38 0.015 60)"}`,
+                  }}
+                >
+                  {f.label} {filter === f.id && displayPhotos.length > 0 ? `(${displayPhotos.length})` : ""}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Tag Filters */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-3">
+              <p className="font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.72 0.14 65)" }}>Tags</p>
+              {selectedTags.length > 0 && (
+                <button
+                  onClick={clearFilters}
+                  className="font-mono-custom text-xs hover:underline"
+                  style={{ color: "oklch(0.52 0.04 65)" }}
+                >
+                  Clear all
+                </button>
+              )}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {availableTags.map((tag) => (
+                <button
+                  key={tag.id}
+                  onClick={() => toggleTag(tag.id)}
+                  className="font-label text-xs tracking-widest uppercase px-4 py-2 transition-all duration-200"
+                  style={{
+                    background: selectedTags.includes(tag.id) ? "oklch(0.45 0.15 145)" : "transparent",
+                    color: selectedTags.includes(tag.id) ? "oklch(0.22 0.01 60)" : "oklch(0.52 0.04 65)",
+                    border: `1px solid ${selectedTags.includes(tag.id) ? "oklch(0.45 0.15 145)" : "oklch(0.38 0.015 60)"}`,
+                  }}
+                >
+                  {tag.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Loading state */}

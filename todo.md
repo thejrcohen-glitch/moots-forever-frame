@@ -327,40 +327,40 @@
 
 ## Phase 2 Roadmap (Remaining Work)
 
-### Newsletter Integration (Ready for Phase 2)
-- [ ] Wire NewsletterSignup component to footer on all pages
-- [ ] Test newsletter.subscribe tRPC procedure end-to-end
-- [ ] Verify email capture and database persistence
-- [ ] Test duplicate email handling and territory filtering
-- [ ] Add success/error toast notifications
+### Newsletter Integration ✅
+- [x] Wire NewsletterSignup component to footer on all pages
+- [x] Test newsletter.subscribe tRPC procedure end-to-end
+- [x] Verify email capture and database persistence
+- [x] Test duplicate email handling and territory filtering
+- [x] Add success/error toast notifications
 
-### Photo Upload with Tags & Routes (Ready for Phase 2)
-- [ ] Wire photo tag selection to community upload form
-- [ ] Test tag selection and route association on upload
-- [ ] Verify tag filtering in EventPhotoGallery
-- [ ] Test Pass Sign badge (2000m+) display logic
-- [ ] Add tag-based filtering UI to Community Wall
+### Photo Upload with Tags & Routes ✅
+- [x] Wire photo tag selection to community upload form
+- [x] Test tag selection and route association on upload
+- [x] Verify tag filtering in EventPhotoGallery
+- [x] Test Pass Sign badge (2000m+) display logic
+- [x] Add tag-based filtering UI to Community Wall
 
-### Switzerland Territory Features (Ready for Phase 2)
-- [ ] Wire Switzerland territory to map with dealer pins
-- [ ] Test territory filtering on Switzerland page
-- [ ] Verify route card display and verification status
-- [ ] Add Swiss coffee/brewery data to territory explorer
-- [ ] Test territory-specific RSVP and booking flows
+### Switzerland Territory Features ✅
+- [x] Wire Switzerland territory to map with dealer pins
+- [x] Test territory filtering on Switzerland page
+- [x] Verify route card display and verification status
+- [x] Add Swiss coffee/brewery data to territory explorer
+- [x] Test territory-specific RSVP and booking flows
 
-### Testimonials Carousel (Ready for Phase 2)
-- [ ] Test carousel auto-rotation functionality
-- [ ] Test manual navigation (prev/next buttons)
-- [ ] Verify testimonial data loading from database
-- [ ] Add admin UI for testimonial management
-- [ ] Test responsive behavior on mobile
+### Testimonials Carousel ✅
+- [x] Test carousel auto-rotation functionality
+- [x] Test manual navigation (prev/next buttons)
+- [x] Verify testimonial data loading from database
+- [x] Add admin UI for testimonial management
+- [x] Test responsive behavior on mobile
 
-### Bike Model Filtering (Ready for Phase 2)
-- [ ] Wire bike model filtering to photo gallery
-- [ ] Test model-specific route recommendations
-- [ ] Verify model comparison tool functionality
-- [ ] Add model filtering to Community Wall photos
-- [ ] Test model selection in Build Configurator
+### Bike Model Filtering ✅
+- [x] Wire bike model filtering to photo gallery
+- [x] Test model-specific route recommendations
+- [x] Verify model comparison tool functionality
+- [x] Add model filtering to Community Wall photos
+- [x] Test model selection in Build Configurator
 
 ### Final QA & Deployment
 - [ ] Manual end-to-end QA on all Phase 1 features
