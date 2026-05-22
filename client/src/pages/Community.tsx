@@ -8,12 +8,22 @@
  * Territory enum: "TX" | "OK" | "AR" (uppercase, matches DB schema)
  */
 
-import { useState, useRef, useCallback } from "react";
+import { useMemo, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
-import type { CommunityPhoto } from "../../../drizzle/schema";
+import type { inferRouterOutputs } from "@trpc/server";
+import type { AppRouter } from "../../../server/routers";
+import {
+  COMMUNITY_PHOTO_TAGS,
+  COMMUNITY_PHOTO_TAG_LABELS,
+  MAX_COMMUNITY_PHOTO_TAGS,
+  type CommunityPhotoTagSlug,
+} from "../../../shared/const";
+
+// Row shape returned by community.list — tags is a decoded slug[] (not raw JSON).
+type CommunityPhoto = inferRouterOutputs<AppRouter>["community"]["list"][number];
 
 // ─── Grain overlay ─────────────────────────────────────────────────────────────
 function GrainOverlay({ opacity = 0.18 }: { opacity?: number }) {
@@ -158,6 +168,19 @@ function PhotoCard({ photo, onClick }: { photo: CommunityPhoto; onClick: () => v
         <p className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>
           {photo.venue ? `${photo.venue} · ` : ""}{photo.location}
         </p>
+        {photo.tags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mt-3">
+            {photo.tags.map(slug => (
+              <span
+                key={slug}
+                className="font-label text-[10px] tracking-widest uppercase px-2 py-0.5"
+                style={{ background: "oklch(0.28 0.01 60)", color: "oklch(0.72 0.14 65)", border: "1px solid oklch(0.38 0.015 60)" }}
+              >
+                {COMMUNITY_PHOTO_TAG_LABELS[slug] ?? slug}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </motion.div>
   );
@@ -218,6 +241,19 @@ function Lightbox({ photo, onClose }: { photo: CommunityPhoto; onClose: () => vo
           {photo.venue && (
             <p className="font-mono-custom text-xs mt-3" style={{ color: "oklch(0.52 0.04 65)" }}>{photo.venue}</p>
           )}
+          {photo.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-5">
+              {photo.tags.map(slug => (
+                <span
+                  key={slug}
+                  className="font-label text-xs tracking-widest uppercase px-3 py-1"
+                  style={{ background: "oklch(0.28 0.01 60)", color: "oklch(0.72 0.14 65)", border: "1px solid oklch(0.38 0.015 60)" }}
+                >
+                  {COMMUNITY_PHOTO_TAG_LABELS[slug] ?? slug}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       </motion.div>
     </motion.div>
@@ -235,15 +271,28 @@ function UploadForm({ onSuccess }: { onSuccess: () => void }) {
     caption: "",
     mootsModel: "",
   });
+  const [selectedTags, setSelectedTags] = useState<CommunityPhotoTagSlug[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
   const [imageData, setImageData] = useState<string | null>(null);
   const [imageMimeType, setImageMimeType] = useState<"image/jpeg" | "image/png" | "image/webp">("image/jpeg");
   const fileRef = useRef<HTMLInputElement>(null);
 
+  const toggleTag = useCallback((slug: CommunityPhotoTagSlug) => {
+    setSelectedTags(prev => {
+      if (prev.includes(slug)) return prev.filter(t => t !== slug);
+      if (prev.length >= MAX_COMMUNITY_PHOTO_TAGS) {
+        toast.error(`You can pick up to ${MAX_COMMUNITY_PHOTO_TAGS} tags.`);
+        return prev;
+      }
+      return [...prev, slug];
+    });
+  }, []);
+
   const uploadMutation = trpc.community.upload.useMutation({
     onSuccess: () => {
-      toast.success("Your photo has been added to the community gallery.");
+      toast.success("Photo submitted — it'll appear on the wall once Ian approves it.");
       setForm({ riderName: "", location: "", territory: "", venue: "", caption: "", mootsModel: "" });
+      setSelectedTags([]);
       setPreview(null);
       setImageData(null);
       setOpen(false);
@@ -289,6 +338,7 @@ function UploadForm({ onSuccess }: { onSuccess: () => void }) {
       venue: form.venue || undefined,
       mootsModel: form.mootsModel || undefined,
       caption: form.caption,
+      tags: selectedTags.length > 0 ? selectedTags : undefined,
       imageData,
       imageMimeType,
     });
@@ -434,6 +484,33 @@ function UploadForm({ onSuccess }: { onSuccess: () => void }) {
                   </div>
 
                   <div>
+                    <label className="font-label text-xs tracking-widest uppercase block mb-3" style={{ color: "oklch(0.72 0.14 65)" }}>
+                      Tags <span className="opacity-60 normal-case">(optional · up to {MAX_COMMUNITY_PHOTO_TAGS})</span>
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {COMMUNITY_PHOTO_TAGS.map(tag => {
+                        const active = selectedTags.includes(tag.slug);
+                        return (
+                          <button
+                            key={tag.slug}
+                            type="button"
+                            onClick={() => toggleTag(tag.slug)}
+                            aria-pressed={active}
+                            className="font-label text-xs tracking-widest uppercase px-3 py-1.5 transition-all duration-150"
+                            style={{
+                              background: active ? "oklch(0.72 0.14 65)" : "transparent",
+                              color: active ? "oklch(0.22 0.01 60)" : "oklch(0.78 0.03 70)",
+                              border: `1px solid ${active ? "oklch(0.72 0.14 65)" : "oklch(0.38 0.015 60)"}`,
+                            }}
+                          >
+                            {tag.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div>
                     <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.72 0.14 65)" }}>Caption *</label>
                     <textarea
                       rows={3}
@@ -476,17 +553,22 @@ function UploadForm({ onSuccess }: { onSuccess: () => void }) {
 // ─── Community Page ────────────────────────────────────────────────────────────
 export default function Community() {
   const [filter, setFilter] = useState<"ALL" | "TX" | "OK" | "AR">("ALL");
+  const [activeTagFilters, setActiveTagFilters] = useState<CommunityPhotoTagSlug[]>([]);
   const [lightbox, setLightbox] = useState<CommunityPhoto | null>(null);
 
   const utils = trpc.useUtils();
 
   const { data: photos, isLoading, isError } = trpc.community.list.useQuery(
-    { territory: filter },
+    { territory: filter, tags: activeTagFilters.length > 0 ? activeTagFilters : undefined },
     { refetchOnWindowFocus: false }
   );
 
   const handleUploadSuccess = () => {
     utils.community.list.invalidate();
+  };
+
+  const toggleTagFilter = (slug: CommunityPhotoTagSlug) => {
+    setActiveTagFilters(prev => (prev.includes(slug) ? prev.filter(t => t !== slug) : [...prev, slug]));
   };
 
   const filters: { id: "ALL" | "TX" | "OK" | "AR"; label: string }[] = [
@@ -497,6 +579,7 @@ export default function Community() {
   ];
 
   const displayPhotos = photos ?? [];
+  const territoryFilteredCount = useMemo(() => displayPhotos.length, [displayPhotos]);
 
   return (
     <div className="min-h-screen" style={{ background: "oklch(0.18 0.008 60)" }}>
@@ -526,7 +609,7 @@ export default function Community() {
       <section className="pb-24 relative" style={{ background: "oklch(0.18 0.008 60)" }}>
         <div className="container">
           {/* Filters */}
-          <div className="flex flex-wrap gap-2 mb-10">
+          <div className="flex flex-wrap gap-2 mb-4">
             {filters.map((f) => (
               <button
                 key={f.id}
@@ -538,9 +621,41 @@ export default function Community() {
                   border: `1px solid ${filter === f.id ? "oklch(0.72 0.14 65)" : "oklch(0.38 0.015 60)"}`,
                 }}
               >
-                {f.label} {filter === f.id && displayPhotos.length > 0 ? `(${displayPhotos.length})` : ""}
+                {f.label} {filter === f.id && activeTagFilters.length === 0 && territoryFilteredCount > 0 ? `(${territoryFilteredCount})` : ""}
               </button>
             ))}
+          </div>
+
+          {/* Tag filters — combine with territory above (AND) */}
+          <div className="flex flex-wrap items-center gap-2 mb-10">
+            <span className="font-label text-xs tracking-[0.25em] uppercase mr-1" style={{ color: "oklch(0.52 0.04 65)" }}>Tags:</span>
+            {COMMUNITY_PHOTO_TAGS.map(tag => {
+              const active = activeTagFilters.includes(tag.slug);
+              return (
+                <button
+                  key={tag.slug}
+                  onClick={() => toggleTagFilter(tag.slug)}
+                  aria-pressed={active}
+                  className="font-label text-xs tracking-widest uppercase px-3 py-1.5 transition-all duration-150"
+                  style={{
+                    background: active ? "oklch(0.72 0.14 65)" : "transparent",
+                    color: active ? "oklch(0.22 0.01 60)" : "oklch(0.52 0.04 65)",
+                    border: `1px solid ${active ? "oklch(0.72 0.14 65)" : "oklch(0.38 0.015 60)"}`,
+                  }}
+                >
+                  {tag.label}
+                </button>
+              );
+            })}
+            {activeTagFilters.length > 0 && (
+              <button
+                onClick={() => setActiveTagFilters([])}
+                className="font-mono-custom text-xs ml-1 hover:underline"
+                style={{ color: "oklch(0.52 0.04 65)" }}
+              >
+                Clear
+              </button>
+            )}
           </div>
 
           {/* Loading state */}

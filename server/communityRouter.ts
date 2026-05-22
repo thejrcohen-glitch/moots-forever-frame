@@ -6,13 +6,36 @@ import { getDb } from "./db";
 import { publicProcedure, router } from "./_core/trpc";
 import { notifyOwner } from "./_core/notification";
 import { sendEmail, communityUploadAcknowledgmentEmail } from "./_core/email";
+import {
+  COMMUNITY_PHOTO_TAG_SLUGS,
+  MAX_COMMUNITY_PHOTO_TAGS,
+  parseCommunityPhotoTags,
+  type CommunityPhotoTagSlug,
+} from "../shared/const";
+
+const tagSlugSchema = z.enum(
+  COMMUNITY_PHOTO_TAG_SLUGS as unknown as [CommunityPhotoTagSlug, ...CommunityPhotoTagSlug[]]
+);
+
+// Project DB rows into a list-friendly shape with a decoded tags array. Keeps
+// the existing row shape intact except tags is now an array of slugs (always
+// present, possibly empty) instead of a raw JSON string.
+function projectPhotoRow<T extends { tags: string | null }>(row: T): Omit<T, "tags"> & { tags: CommunityPhotoTagSlug[] } {
+  const { tags, ...rest } = row;
+  return { ...rest, tags: parseCommunityPhotoTags(tags) };
+}
 
 export const communityRouter = router({
-  // List all approved photos, optionally filtered by territory
+  // List all approved photos, optionally filtered by territory and/or tags.
+  // Tag filter semantics: a row matches when its tag set intersects the
+  // requested tag set (OR-match). Filtering happens in JS because tags are
+  // stored as a JSON string, not a relational join — the result set is
+  // capped at 100 so this stays cheap.
   list: publicProcedure
     .input(
       z.object({
         territory: z.enum(["TX", "OK", "AR", "ALL"]).optional().default("ALL"),
+        tags: z.array(tagSlugSchema).max(MAX_COMMUNITY_PHOTO_TAGS).optional(),
       })
     )
     .query(async ({ input }) => {
@@ -34,7 +57,11 @@ export const communityRouter = router({
         .orderBy(desc(communityPhotos.createdAt))
         .limit(100);
 
-      return rows;
+      const projected = rows.map(projectPhotoRow);
+      if (!input.tags || input.tags.length === 0) return projected;
+
+      const wanted = new Set<string>(input.tags);
+      return projected.filter(p => p.tags.some(t => wanted.has(t)));
     }),
 
   // Upload a new community photo
@@ -48,6 +75,7 @@ export const communityRouter = router({
         mootsModel: z.string().max(128).optional(),
         caption: z.string().max(500).optional(),
         email: z.string().email().optional(), // Optional — for acknowledgment email
+        tags: z.array(tagSlugSchema).max(MAX_COMMUNITY_PHOTO_TAGS).optional(),
         // Base64-encoded image data with data URI prefix
         imageData: z.string().min(1),
         imageMimeType: z.enum(["image/jpeg", "image/png", "image/webp", "image/gif"]),
@@ -72,6 +100,13 @@ export const communityRouter = router({
       // Upload to S3
       const { key, url } = await storagePut(relKey, imageBuffer, input.imageMimeType);
 
+      // Dedupe + sort tags so storage shape is deterministic regardless of
+      // client ordering. Empty array stored as null to match legacy rows.
+      const normalizedTags = input.tags
+        ? Array.from(new Set(input.tags)).sort()
+        : [];
+      const tagsColumn = normalizedTags.length > 0 ? JSON.stringify(normalizedTags) : null;
+
       // Save metadata to database
       await db.insert(communityPhotos).values({
         riderName: input.riderName,
@@ -82,6 +117,7 @@ export const communityRouter = router({
         caption: input.caption ?? null,
         imageUrl: url,
         imageKey: key,
+        tags: tagsColumn,
         approved: "pending", // Requires admin moderation before appearing on the wall
       });
 
