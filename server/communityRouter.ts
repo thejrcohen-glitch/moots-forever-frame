@@ -1,6 +1,6 @@
 import { and, desc, eq } from "drizzle-orm";
 import { z } from "zod";
-import { communityPhotos } from "../drizzle/schema";
+import { communityPhotos, photoTags } from "../drizzle/schema";
 import { storagePut } from "./storage";
 import { getDb } from "./db";
 import { publicProcedure, router } from "./_core/trpc";
@@ -8,11 +8,11 @@ import { notifyOwner } from "./_core/notification";
 import { sendEmail, communityUploadAcknowledgmentEmail } from "./_core/email";
 
 export const communityRouter = router({
-  // List all approved photos, optionally filtered by territory
+  // List all approved photos, optionally filtered by territory (with tags)
   list: publicProcedure
     .input(
       z.object({
-        territory: z.enum(["TX", "OK", "AR", "ALL"]).optional().default("ALL"),
+        territory: z.enum(["TX", "OK", "AR", "CH", "ALL"]).optional().default("ALL"),
       })
     )
     .query(async ({ input }) => {
@@ -27,14 +27,28 @@ export const communityRouter = router({
           input.territory === "ALL"
             ? eq(communityPhotos.approved, "approved")
             : and(
-                eq(communityPhotos.territory, input.territory),
+                eq(communityPhotos.territory, input.territory as "TX" | "OK" | "AR" | "CH"),
                 eq(communityPhotos.approved, "approved")
               )
         )
         .orderBy(desc(communityPhotos.createdAt))
         .limit(100);
 
-      return rows;
+      // Fetch tags for each photo
+      const photosWithTags = await Promise.all(
+        rows.map(async (photo) => {
+          const tags = await db
+            .select({ tagName: photoTags.tagName })
+            .from(photoTags)
+            .where(eq(photoTags.photoId, photo.id));
+          return {
+            ...photo,
+            tags: tags.map((t) => t.tagName),
+          };
+        })
+      );
+
+      return photosWithTags;
     }),
 
   // Upload a new community photo
@@ -42,12 +56,13 @@ export const communityRouter = router({
     .input(
       z.object({
         riderName: z.string().min(1).max(128),
-        territory: z.enum(["TX", "OK", "AR"]),
+        territory: z.enum(["TX", "OK", "AR", "CH"]),
         location: z.string().min(1).max(256),
         venue: z.string().max(256).optional(),
         mootsModel: z.string().max(128).optional(),
         caption: z.string().max(500).optional(),
         email: z.string().email().optional(), // Optional — for acknowledgment email
+        tags: z.array(z.string()).optional(), // Photo tags (e.g., "bikepacking", "coffee_stop")
         // Base64-encoded image data with data URI prefix
         imageData: z.string().min(1),
         imageMimeType: z.enum(["image/jpeg", "image/png", "image/webp", "image/gif"]),
@@ -73,7 +88,7 @@ export const communityRouter = router({
       const { key, url } = await storagePut(relKey, imageBuffer, input.imageMimeType);
 
       // Save metadata to database
-      await db.insert(communityPhotos).values({
+      const result = await db.insert(communityPhotos).values({
         riderName: input.riderName,
         territory: input.territory,
         location: input.location,
@@ -84,6 +99,20 @@ export const communityRouter = router({
         imageKey: key,
         approved: "pending", // Requires admin moderation before appearing on the wall
       });
+
+      // Get the inserted photo ID
+      const photoId = (result as any).insertId || (result as any).lastInsertRowid;
+
+      // Save tags if provided
+      if (input.tags && input.tags.length > 0) {
+        const { photoTags: photoTagsTable } = await import("../drizzle/schema");
+        await db.insert(photoTagsTable).values(
+          input.tags.map((tagName) => ({
+            photoId: Number(photoId),
+            tagName,
+          }))
+        );
+      }
 
       // Notify Ian that a new photo is waiting for moderation
       await notifyOwner({
@@ -98,11 +127,11 @@ export const communityRouter = router({
           subject: `Photo Submitted — Moots Community Wall`,
           html: communityUploadAcknowledgmentEmail({
             riderName: input.riderName,
-            territory: { TX: "Texas", OK: "Oklahoma", AR: "Arkansas" }[input.territory] ?? input.territory,
+            territory: { TX: "Texas", OK: "Oklahoma", AR: "Arkansas", CH: "Switzerland" }[input.territory] ?? input.territory,
           }),
         }).catch(() => {/* non-blocking */});
       }
 
-      return { success: true, url };
+      return { success: true, url, photoId: Number(photoId) };
     }),
 });

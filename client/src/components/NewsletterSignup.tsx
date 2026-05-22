@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Mail, Check, AlertCircle } from "lucide-react";
+import { Mail, Check } from "lucide-react";
+import { trpc } from "@/lib/trpc";
 
 interface NewsletterSignupProps {
   variant?: "footer" | "modal" | "inline";
@@ -12,9 +13,8 @@ interface NewsletterSignupProps {
 /**
  * Newsletter Signup Component
  * 
- * Phase 1: Captures email, first name, and region.
- * Stores in newsletter_subscribers table.
- * Phase 2: Will integrate with email marketing automation.
+ * Phase 2: Wired to trpc.newsletter.subscribe procedure
+ * Captures email and territory, stores in newsletter_subscribers table
  */
 export default function NewsletterSignup({ variant = "footer", onSuccess }: NewsletterSignupProps) {
   const [email, setEmail] = useState("");
@@ -34,14 +34,14 @@ export default function NewsletterSignup({ variant = "footer", onSuccess }: News
     setIsLoading(true);
 
     try {
-      // Phase 1: Store in database
-      // TODO: Wire to trpc.newsletter.subscribe procedure in Phase 2
-      
-      // Simulated success for now
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      // Wire to trpc.newsletter.subscribe procedure
+      await trpc.newsletter.subscribe.mutate({
+        email,
+        territory: region as any,
+      });
 
       setSubmitted(true);
-      toast.success("Thanks for subscribing! Check your email.");
+      toast.success("Successfully subscribed! Check your email for updates.");
       setEmail("");
       setFirstName("");
       setRegion("ALL");
@@ -53,8 +53,12 @@ export default function NewsletterSignup({ variant = "footer", onSuccess }: News
         setSubmitted(false);
       }, 3000);
     } catch (error) {
-      toast.error("Failed to subscribe. Please try again.");
-      console.error(error);
+      console.error("Newsletter subscription error:", error);
+      if (error instanceof Error && error.message.includes("already subscribed")) {
+        toast.info("You're already subscribed!");
+      } else {
+        toast.error("Failed to subscribe. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }

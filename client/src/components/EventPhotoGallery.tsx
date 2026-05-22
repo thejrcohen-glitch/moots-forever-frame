@@ -11,6 +11,7 @@ interface EventPhoto {
   eventDate: string;
   territory: string;
   tags: string[];
+  bikeModel?: string; // e.g., "Routt 45", "Vamoots RSL"
   uploadedBy?: string;
   moderationStatus: "approved" | "pending" | "rejected";
 }
@@ -30,20 +31,23 @@ export default function EventPhotoGallery({ photos = DEFAULT_PHOTOS, onUploadCli
   const [selectedTerritories, setSelectedTerritories] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
+  const [selectedModels, setSelectedModels] = useState<string[]>([]);
 
   // Get unique values for filters
   const territories = Array.from(new Set(photos.map((p) => p.territory)));
   const events = Array.from(new Set(photos.map((p) => p.eventName)));
   const allTags = Array.from(new Set(photos.flatMap((p) => p.tags)));
+  const bikeModels = Array.from(new Set(photos.filter((p) => p.bikeModel).map((p) => p.bikeModel!)));
 
   // Filter photos
   const filteredPhotos = photos.filter((photo) => {
     const territoryMatch = selectedTerritories.length === 0 || selectedTerritories.includes(photo.territory);
     const eventMatch = !selectedEvent || photo.eventName === selectedEvent;
     const tagMatch = selectedTags.length === 0 || selectedTags.some((tag) => photo.tags.includes(tag));
+    const modelMatch = selectedModels.length === 0 || (photo.bikeModel && selectedModels.includes(photo.bikeModel));
     const statusMatch = photo.moderationStatus === "approved";
 
-    return territoryMatch && eventMatch && tagMatch && statusMatch;
+    return territoryMatch && eventMatch && tagMatch && modelMatch && statusMatch;
   });
 
   const toggleTerritory = (territory: string) => {
@@ -55,6 +59,12 @@ export default function EventPhotoGallery({ photos = DEFAULT_PHOTOS, onUploadCli
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) =>
       prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    );
+  };
+
+  const toggleModel = (model: string) => {
+    setSelectedModels((prev) =>
+      prev.includes(model) ? prev.filter((m) => m !== model) : [...prev, model]
     );
   };
 
@@ -117,7 +127,7 @@ export default function EventPhotoGallery({ photos = DEFAULT_PHOTOS, onUploadCli
           </div>
 
           {/* Tag Filter */}
-          <div>
+          <div className="mb-6">
             <label className="text-sm font-semibold mb-3 block">Tags</label>
             <div className="flex flex-wrap gap-2">
               {allTags.map((tag) => (
@@ -136,13 +146,36 @@ export default function EventPhotoGallery({ photos = DEFAULT_PHOTOS, onUploadCli
             </div>
           </div>
 
+          {/* Bike Model Filter */}
+          {bikeModels.length > 0 && (
+            <div className="mb-6">
+              <label className="text-sm font-semibold mb-3 block">Bike Model</label>
+              <div className="flex flex-wrap gap-2">
+                {bikeModels.map((model) => (
+                  <button
+                    key={model}
+                    onClick={() => toggleModel(model)}
+                    className={`px-3 py-1 rounded text-xs transition-all ${
+                      selectedModels.includes(model)
+                        ? "bg-green-600 text-white"
+                        : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                    }`}
+                  >
+                    {model}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Clear Filters */}
-          {(selectedTerritories.length > 0 || selectedTags.length > 0 || selectedEvent) && (
+          {(selectedTerritories.length > 0 || selectedTags.length > 0 || selectedEvent || selectedModels.length > 0) && (
             <button
               onClick={() => {
                 setSelectedTerritories([]);
                 setSelectedTags([]);
                 setSelectedEvent(null);
+                setSelectedModels([]);
               }}
               className="mt-4 text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1"
             >

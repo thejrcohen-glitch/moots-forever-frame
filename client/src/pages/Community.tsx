@@ -231,7 +231,7 @@ function UploadForm({ onSuccess }: { onSuccess: () => void }) {
   const [form, setForm] = useState({
     riderName: "",
     location: "",
-    territory: "" as "TX" | "OK" | "AR" | "",
+    territory: "" as "TX" | "OK" | "AR" | "CH" | "",
     venue: "",
     caption: "",
     mootsModel: "",
@@ -239,12 +239,14 @@ function UploadForm({ onSuccess }: { onSuccess: () => void }) {
   const [preview, setPreview] = useState<string | null>(null);
   const [imageData, setImageData] = useState<string | null>(null);
   const [imageMimeType, setImageMimeType] = useState<"image/jpeg" | "image/png" | "image/webp">("image/jpeg");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const uploadMutation = trpc.community.upload.useMutation({
     onSuccess: () => {
       toast.success("Your photo has been added to the community gallery.");
       setForm({ riderName: "", location: "", territory: "", venue: "", caption: "", mootsModel: "" });
+      setSelectedTags([]);
       setPreview(null);
       setImageData(null);
       setOpen(false);
@@ -290,6 +292,7 @@ function UploadForm({ onSuccess }: { onSuccess: () => void }) {
       venue: form.venue || undefined,
       mootsModel: form.mootsModel || undefined,
       caption: form.caption,
+      tags: selectedTags.length > 0 ? selectedTags : undefined,
       imageData,
       imageMimeType,
     });
@@ -380,12 +383,13 @@ function UploadForm({ onSuccess }: { onSuccess: () => void }) {
                         className={inputClass}
                         style={{ ...inputStyle, appearance: "none" as const }}
                         value={form.territory}
-                        onChange={(e) => setForm({ ...form, territory: e.target.value as "TX" | "OK" | "AR" | "" })}
+                        onChange={(e) => setForm({ ...form, territory: e.target.value as "TX" | "OK" | "AR" | "CH" | "" })}
                       >
-                        <option value="">Select state...</option>
+                        <option value="">Select territory...</option>
                         <option value="TX">Texas (TX)</option>
                         <option value="AR">Arkansas (AR)</option>
                         <option value="OK">Oklahoma (OK)</option>
+                        <option value="CH">Switzerland (CH)</option>
                       </select>
                     </div>
                   </div>
@@ -444,6 +448,38 @@ function UploadForm({ onSuccess }: { onSuccess: () => void }) {
                       value={form.caption}
                       onChange={(e) => setForm({ ...form, caption: e.target.value })}
                     />
+                  </div>
+
+                  <div>
+                    <label className="font-label text-xs tracking-widest uppercase block mb-3" style={{ color: "oklch(0.72 0.14 65)" }}>Photo Tags (Optional)</label>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                      {[
+                        { id: "bikepacking", label: "Bikepacking" },
+                        { id: "coffee_stop", label: "Coffee Stop" },
+                        { id: "gravel_grinder", label: "Gravel Grinder" },
+                        { id: "pass_sign_2000m", label: "High Pass (2000m+)" },
+                        { id: "scenic_vista", label: "Scenic Vista" },
+                        { id: "titanium_vs_texture", label: "Titanium Focus" },
+                        { id: "trail_network", label: "Trail Network" },
+                      ].map((tag) => (
+                        <label key={tag.id} className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={selectedTags.includes(tag.id)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedTags([...selectedTags, tag.id]);
+                              } else {
+                                setSelectedTags(selectedTags.filter((t) => t !== tag.id));
+                              }
+                            }}
+                            className="w-4 h-4 rounded cursor-pointer"
+                            style={{ accentColor: "oklch(0.72 0.14 65)" }}
+                          />
+                          <span className="font-mono-custom text-xs" style={{ color: "oklch(0.78 0.03 70)" }}>{tag.label}</span>
+                        </label>
+                      ))}
+                    </div>
                   </div>
 
                   <div className="flex items-center gap-6 pt-2">
