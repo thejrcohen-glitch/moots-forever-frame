@@ -168,6 +168,37 @@ export function bookingConfirmationEmail(opts: {
   `;
 }
 
+export function newsletterWelcomeEmail(opts: {
+  territory?: "TX" | "OK" | "AR";
+}): string {
+  const territoryLabel = opts.territory
+    ? { TX: "Texas", OK: "Oklahoma", AR: "Arkansas" }[opts.territory]
+    : null;
+  return `
+    <div style="${BASE_STYLE}">
+      <p style="${LABEL_STYLE}">Moots Forever Frame · You're on the list</p>
+      <h1 style="${HEADER_STYLE}">Welcome to the campaign.</h1>
+      <hr style="${DIVIDER_STYLE}" />
+      <p style="${BODY_STYLE}">
+        Thanks for subscribing${territoryLabel ? ` from <strong>${territoryLabel}</strong>` : ""}.
+        You'll hear from us when ride calendar dates, pop-up events, dealer testimonials,
+        and new Moots stories drop across TX, OK, and AR territory.
+      </p>
+      <p style="${BODY_STYLE}">
+        No spam. No noise. Just signals worth your time.
+      </p>
+      <a href="https://mootsframe.com" style="${CTA_STYLE}">
+        Back to the Campaign →
+      </a>
+      <hr style="${DIVIDER_STYLE}" />
+      <p style="${FOOTER_STYLE}">
+        Moots Forever Frame · TX · OK · AR Territory<br />
+        Questions? Reply to this email or contact Ian at <strong>ianzak@mac.com</strong> · <strong>917-578-7687</strong>
+      </p>
+    </div>
+  `;
+}
+
 export function communityUploadAcknowledgmentEmail(opts: {
   riderName: string;
   territory: string;
