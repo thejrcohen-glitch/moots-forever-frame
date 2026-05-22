@@ -1715,6 +1715,104 @@ function BookingForm() {
   );
 }
 
+// ─── Newsletter Signup ─────────────────────────────────────────────────────────
+function NewsletterSignup() {
+  const [email, setEmail] = useState("");
+  const [territory, setTerritory] = useState<"" | "TX" | "OK" | "AR">("");
+  const [submitted, setSubmitted] = useState(false);
+
+  const subscribeMutation = trpc.newsletter.subscribe.useMutation({
+    onSuccess: (data) => {
+      setSubmitted(true);
+      if (data.alreadySubscribed) {
+        toast.success("You're already on the list. Watch your inbox.");
+      } else if (data.resubscribed) {
+        toast.success("Welcome back. You're resubscribed.");
+      } else {
+        toast.success("You're on the list. Check your inbox for a welcome.");
+      }
+    },
+    onError: (err) => {
+      toast.error(err.message || "Could not subscribe. Please try again.");
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (IS_STATIC_SITE) {
+      toast.info("Newsletter signup is unavailable on the static site. Email ianzak@mac.com to be added.");
+      return;
+    }
+    if (!email) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+    subscribeMutation.mutate({
+      email,
+      territory: territory || undefined,
+      source: "home-footer",
+    });
+  };
+
+  return (
+    <section id="newsletter" className="py-20 relative" style={{ background: "oklch(0.92 0.022 78)" }}>
+      <div className="container">
+        <div className="max-w-3xl mx-auto text-center">
+          <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: "oklch(0.52 0.12 45)" }}>Signals · Not Spam</p>
+          <h2 className="font-display text-4xl md:text-5xl font-bold leading-tight mb-4" style={{ color: "oklch(0.22 0.01 60)" }}>
+            Stay on the <em className="italic" style={{ color: "oklch(0.52 0.12 45)" }}>list.</em>
+          </h2>
+          <div className="h-px w-24 mx-auto mb-6" style={{ background: "oklch(0.78 0.03 70)" }} />
+          <p className="font-mono-custom text-sm leading-loose mb-8" style={{ color: "oklch(0.52 0.04 65)" }}>
+            Ride calendar, pop-up dates, dealer testimonials, and Moots stories from TX, OK, and AR. Sent only when there's something worth sending.
+          </p>
+
+          {submitted ? (
+            <p className="font-mono-custom text-sm" style={{ color: "oklch(0.38 0.015 60)" }}>
+              Subscription received. Welcome to the campaign.
+            </p>
+          ) : (
+            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto items-stretch">
+              <input
+                type="email"
+                required
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="flex-1 font-mono-custom text-sm px-4 py-3 border-0 border-b-2 bg-transparent outline-none transition-colors duration-200"
+                style={{ borderBottomColor: "oklch(0.78 0.03 70)", color: "oklch(0.22 0.01 60)" }}
+              />
+              <select
+                value={territory}
+                onChange={(e) => setTerritory(e.target.value as "" | "TX" | "OK" | "AR")}
+                className="font-mono-custom text-sm px-4 py-3 border-0 border-b-2 bg-transparent outline-none"
+                style={{ borderBottomColor: "oklch(0.78 0.03 70)", color: "oklch(0.22 0.01 60)", appearance: "none" as const }}
+              >
+                <option value="">Territory (optional)</option>
+                <option value="TX">Texas</option>
+                <option value="OK">Oklahoma</option>
+                <option value="AR">Arkansas</option>
+              </select>
+              <button
+                type="submit"
+                disabled={subscribeMutation.isPending}
+                className="font-label text-sm tracking-[0.2em] uppercase px-8 py-3.5 transition-all duration-300 hover:opacity-80 disabled:opacity-40"
+                style={{ background: "oklch(0.22 0.01 60)", color: "oklch(0.945 0.018 78)" }}
+              >
+                {subscribeMutation.isPending ? "Subscribing..." : "Subscribe"}
+              </button>
+            </form>
+          )}
+
+          <p className="font-mono-custom text-xs mt-6" style={{ color: "oklch(0.52 0.04 65)" }}>
+            Prefer email? Reach Ian directly at <a href="mailto:ianzak@mac.com" className="hover:underline" style={{ color: "oklch(0.38 0.015 60)" }}>ianzak@mac.com</a>.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ─── Footer ────────────────────────────────────────────────────────────────────
 function Footer() {
   return (
@@ -1760,6 +1858,7 @@ export default function Home() {
       <WarrantyTradeUpSection />
       <RideCalendar />
       <BookingForm />
+      <NewsletterSignup />
       <Footer />
     </div>
   );
