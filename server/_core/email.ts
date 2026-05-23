@@ -141,20 +141,61 @@ export function rsvpConfirmationEmail(opts: {
 export function bookingConfirmationEmail(opts: {
   name: string;
   territory: string;
+  city?: string;
   date?: string;
 }): string {
+  const locationLine = opts.city ? `${opts.city} (${opts.territory})` : opts.territory;
   return `
     <div style="${BASE_STYLE}">
       <p style="${LABEL_STYLE}">Moots Forever Frame · Pop-Up Request Received</p>
       <h1 style="${HEADER_STYLE}">Got it, ${opts.name}.</h1>
       <hr style="${DIVIDER_STYLE}" />
       <p style="${BODY_STYLE}">
-        Your pop-up booking request for <strong>${opts.territory}</strong>${opts.date ? ` around <strong>${opts.date}</strong>` : ""} has been received.
-        Ian Zakrocki will review your request and follow up within 2 business days.
+        Your pop-up booking request for <strong>${locationLine}</strong>${opts.date ? ` around <strong>${opts.date}</strong>` : ""} has been received.
+        Status: <strong>Pending review</strong>.
+      </p>
+      <p style="${BODY_STYLE}">
+        <strong>What happens next</strong><br />
+        1. Ian Zakrocki will review your request within 2 business days.<br />
+        2. He'll reply to <strong>${opts.name}</strong> at the email you submitted to confirm the date,
+        venue, and demo fleet — or to propose an alternate window if the date is unavailable.<br />
+        3. Once confirmed, you'll get a second email with the final lineup and arrival window.
       </p>
       <p style="${BODY_STYLE}">
         Pop-up events are free to attend and open to all riders. Bring your current bike,
         your questions, and your appetite for titanium.
+      </p>
+      <a href="https://mootsframe.com" style="${CTA_STYLE}">
+        Back to the Campaign →
+      </a>
+      <hr style="${DIVIDER_STYLE}" />
+      <p style="${FOOTER_STYLE}">
+        Moots Forever Frame · TX · OK · AR Territory<br />
+        Questions? Reply to this email or contact Ian at <strong>ianzak@mac.com</strong> · <strong>917-578-7687</strong>.
+        Please don't share other contact details — Ian is the sole rep for this territory.
+      </p>
+    </div>
+  `;
+}
+
+export function newsletterWelcomeEmail(opts: {
+  territory?: "TX" | "OK" | "AR";
+}): string {
+  const territoryLabel = opts.territory
+    ? { TX: "Texas", OK: "Oklahoma", AR: "Arkansas" }[opts.territory]
+    : null;
+  return `
+    <div style="${BASE_STYLE}">
+      <p style="${LABEL_STYLE}">Moots Forever Frame · You're on the list</p>
+      <h1 style="${HEADER_STYLE}">Welcome to the campaign.</h1>
+      <hr style="${DIVIDER_STYLE}" />
+      <p style="${BODY_STYLE}">
+        Thanks for subscribing${territoryLabel ? ` from <strong>${territoryLabel}</strong>` : ""}.
+        You'll hear from us when ride calendar dates, pop-up events, dealer testimonials,
+        and new Moots stories drop across TX, OK, and AR territory.
+      </p>
+      <p style="${BODY_STYLE}">
+        No spam. No noise. Just signals worth your time.
       </p>
       <a href="https://mootsframe.com" style="${CTA_STYLE}">
         Back to the Campaign →

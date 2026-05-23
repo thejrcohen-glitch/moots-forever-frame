@@ -8,7 +8,6 @@ import { moderationRouter } from "./moderationRouter";
 import { rsvpRouter } from "./rsvpRouter";
 import { configuratorRouter } from "./configuratorRouter";
 import { analyticsRouter } from "./analyticsRouter";
-import { notificationRouter } from "./notificationRouter";
 import { newsletterRouter } from "./newsletterRouter";
 
 export const appRouter = router({
@@ -31,7 +30,6 @@ export const appRouter = router({
   rsvp: rsvpRouter,
   configurator: configuratorRouter,
   analytics: analyticsRouter,
-  notification: notificationRouter,
   newsletter: newsletterRouter,
 
   // TODO: add feature routers here, e.g.

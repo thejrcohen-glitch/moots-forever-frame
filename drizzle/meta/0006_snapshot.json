@@ -1,127 +1,9 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "7f1e4b43-4789-47bb-830d-427db9738104",
-  "prevId": "4b2b2b93-4ec8-42fa-a675-40ab9e4cae65",
+  "id": "a8b9c0d1-e2f3-4567-89ab-cdef01234567",
+  "prevId": "0705e025-1305-48c3-a0f9-d9eaeaaf6be0",
   "tables": {
-    "bike_models": {
-      "name": "bike_models",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
-        },
-        "modelId": {
-          "name": "modelId",
-          "type": "varchar(50)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "category": {
-          "name": "category",
-          "type": "enum('gravel','adventure','legacy')",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "useCase": {
-          "name": "useCase",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "terrainFocus": {
-          "name": "terrainFocus",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "keyFeatures": {
-          "name": "keyFeatures",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "priceUsd": {
-          "name": "priceUsd",
-          "type": "varchar(32)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "imageUrl": {
-          "name": "imageUrl",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "imageKey": {
-          "name": "imageKey",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "onUpdate": true,
-          "default": "(now())"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "bike_models_id": {
-          "name": "bike_models_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {
-        "bike_models_modelId_unique": {
-          "name": "bike_models_modelId_unique",
-          "columns": [
-            "modelId"
-          ]
-        }
-      },
-      "checkConstraint": {}
-    },
     "bookings": {
       "name": "bookings",
       "columns": {
@@ -148,9 +30,23 @@
         },
         "territory": {
           "name": "territory",
-          "type": "enum('TX','OK','AR','CH')",
+          "type": "enum('TX','OK','AR')",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "popUpCity": {
+          "name": "popUpCity",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "popUpVenue": {
+          "name": "popUpVenue",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         },
         "popUpDate": {
@@ -166,6 +62,14 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "enum('pending','confirmed','cancelled')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'pending'"
         },
         "createdAt": {
           "name": "createdAt",
@@ -208,7 +112,7 @@
         },
         "territory": {
           "name": "territory",
-          "type": "enum('TX','OK','AR','CH')",
+          "type": "enum('TX','OK','AR')",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -263,6 +167,13 @@
           "autoincrement": false,
           "default": "'pending'"
         },
+        "tags": {
+          "name": "tags",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "createdAt": {
           "name": "createdAt",
           "type": "timestamp",
@@ -311,7 +222,7 @@
         },
         "territory": {
           "name": "territory",
-          "type": "enum('TX','OK','AR','CH')",
+          "type": "enum('TX','OK','AR')",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -406,7 +317,7 @@
         },
         "territory": {
           "name": "territory",
-          "type": "enum('TX','OK','AR','CH')",
+          "type": "enum('TX','OK','AR')",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -446,556 +357,6 @@
       "compositePrimaryKeys": {
         "event_rsvps_id": {
           "name": "event_rsvps_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraint": {}
-    },
-    "newsletter_subscribers": {
-      "name": "newsletter_subscribers",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
-        },
-        "email": {
-          "name": "email",
-          "type": "varchar(320)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "territory": {
-          "name": "territory",
-          "type": "enum('TX','OK','AR','CH','ALL')",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'ALL'"
-        },
-        "subscribed": {
-          "name": "subscribed",
-          "type": "tinyint",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 1
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
-        },
-        "unsubscribedAt": {
-          "name": "unsubscribedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "newsletter_subscribers_id": {
-          "name": "newsletter_subscribers_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {
-        "newsletter_subscribers_email_unique": {
-          "name": "newsletter_subscribers_email_unique",
-          "columns": [
-            "email"
-          ]
-        }
-      },
-      "checkConstraint": {}
-    },
-    "notification_preferences": {
-      "name": "notification_preferences",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
-        },
-        "userId": {
-          "name": "userId",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "emailNotifications": {
-          "name": "emailNotifications",
-          "type": "tinyint",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 1
-        },
-        "inAppNotifications": {
-          "name": "inAppNotifications",
-          "type": "tinyint",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 1
-        },
-        "territory": {
-          "name": "territory",
-          "type": "enum('TX','OK','AR','ALL')",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'ALL'"
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "onUpdate": true,
-          "default": "(now())"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "notification_preferences_userId_users_id_fk": {
-          "name": "notification_preferences_userId_users_id_fk",
-          "tableFrom": "notification_preferences",
-          "tableTo": "users",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "notification_preferences_id": {
-          "name": "notification_preferences_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraint": {}
-    },
-    "notifications": {
-      "name": "notifications",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
-        },
-        "type": {
-          "name": "type",
-          "type": "enum('rsvp','booking','community_upload','lead','admin_message','event_reminder','dealer_announcement')",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "title": {
-          "name": "title",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "message": {
-          "name": "message",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "territory": {
-          "name": "territory",
-          "type": "enum('TX','OK','AR','ALL')",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'ALL'"
-        },
-        "relatedId": {
-          "name": "relatedId",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "readAt": {
-          "name": "readAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "notifications_id": {
-          "name": "notifications_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraint": {}
-    },
-    "photo_tags": {
-      "name": "photo_tags",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
-        },
-        "photoId": {
-          "name": "photoId",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "tagName": {
-          "name": "tagName",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "photo_tags_photoId_community_photos_id_fk": {
-          "name": "photo_tags_photoId_community_photos_id_fk",
-          "tableFrom": "photo_tags",
-          "tableTo": "community_photos",
-          "columnsFrom": [
-            "photoId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "photo_tags_id": {
-          "name": "photo_tags_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraint": {}
-    },
-    "routes": {
-      "name": "routes",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
-        },
-        "routeId": {
-          "name": "routeId",
-          "type": "varchar(50)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "territory": {
-          "name": "territory",
-          "type": "enum('TX','OK','AR','CH')",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "region": {
-          "name": "region",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "distanceKm": {
-          "name": "distanceKm",
-          "type": "varchar(32)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "elevationGainM": {
-          "name": "elevationGainM",
-          "type": "varchar(32)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "terrainType": {
-          "name": "terrainType",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "gpxSourceUrl": {
-          "name": "gpxSourceUrl",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "mootsInsiderTip": {
-          "name": "mootsInsiderTip",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "verificationStatus": {
-          "name": "verificationStatus",
-          "type": "enum('unverified','verified','disputed')",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'unverified'"
-        },
-        "verifiedBy": {
-          "name": "verifiedBy",
-          "type": "varchar(128)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "verifiedAt": {
-          "name": "verifiedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "verificationNotes": {
-          "name": "verificationNotes",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "sourceUrl": {
-          "name": "sourceUrl",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "sourceAttribution": {
-          "name": "sourceAttribution",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "onUpdate": true,
-          "default": "(now())"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "routes_id": {
-          "name": "routes_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
-      "uniqueConstraints": {
-        "routes_routeId_unique": {
-          "name": "routes_routeId_unique",
-          "columns": [
-            "routeId"
-          ]
-        }
-      },
-      "checkConstraint": {}
-    },
-    "testimonials": {
-      "name": "testimonials",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
-        },
-        "dealerName": {
-          "name": "dealerName",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "company": {
-          "name": "company",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "territory": {
-          "name": "territory",
-          "type": "enum('TX','OK','AR','CH')",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "quote": {
-          "name": "quote",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "imageUrl": {
-          "name": "imageUrl",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "imageKey": {
-          "name": "imageKey",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "featured": {
-          "name": "featured",
-          "type": "tinyint",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 0
-        },
-        "displayOrder": {
-          "name": "displayOrder",
-          "type": "varchar(32)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'0'"
-        },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
-        },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "onUpdate": true,
-          "default": "(now())"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "testimonials_id": {
-          "name": "testimonials_id",
           "columns": [
             "id"
           ]

@@ -40,15 +40,15 @@
     {
       "idx": 5,
       "version": "5",
-      "when": 1779124467705,
-      "tag": "0005_narrow_wild_pack",
+      "when": 1779475172813,
+      "tag": "0005_booking_status_and_city",
       "breakpoints": true
     },
     {
       "idx": 6,
       "version": "5",
-      "when": 1779159151110,
-      "tag": "0006_fluffy_ser_duncan",
+      "when": 1779494400000,
+      "tag": "0006_add_community_photo_tags",
       "breakpoints": true
     }
   ]

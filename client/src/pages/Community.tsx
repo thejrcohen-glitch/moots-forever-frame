@@ -8,14 +8,22 @@
  * Territory enum: "TX" | "OK" | "AR" (uppercase, matches DB schema)
  */
 
-import { useState, useRef, useCallback } from "react";
+import { useMemo, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
-import type { CommunityPhoto } from "../../../drizzle/schema";
-import EventPhotoGallery from "@/components/EventPhotoGallery";
-import NewsletterSignup from "@/components/NewsletterSignup";
+import type { inferRouterOutputs } from "@trpc/server";
+import type { AppRouter } from "../../../server/routers";
+import {
+  COMMUNITY_PHOTO_TAGS,
+  COMMUNITY_PHOTO_TAG_LABELS,
+  MAX_COMMUNITY_PHOTO_TAGS,
+  type CommunityPhotoTagSlug,
+} from "../../../shared/const";
+
+// Row shape returned by community.list — tags is a decoded slug[] (not raw JSON).
+type CommunityPhoto = inferRouterOutputs<AppRouter>["community"]["list"][number];
 
 // ─── Grain overlay ─────────────────────────────────────────────────────────────
 function GrainOverlay({ opacity = 0.18 }: { opacity?: number }) {
@@ -160,6 +168,19 @@ function PhotoCard({ photo, onClick }: { photo: CommunityPhoto; onClick: () => v
         <p className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>
           {photo.venue ? `${photo.venue} · ` : ""}{photo.location}
         </p>
+        {photo.tags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mt-3">
+            {photo.tags.map(slug => (
+              <span
+                key={slug}
+                className="font-label text-[10px] tracking-widest uppercase px-2 py-0.5"
+                style={{ background: "oklch(0.28 0.01 60)", color: "oklch(0.72 0.14 65)", border: "1px solid oklch(0.38 0.015 60)" }}
+              >
+                {COMMUNITY_PHOTO_TAG_LABELS[slug] ?? slug}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </motion.div>
   );
@@ -220,6 +241,19 @@ function Lightbox({ photo, onClose }: { photo: CommunityPhoto; onClose: () => vo
           {photo.venue && (
             <p className="font-mono-custom text-xs mt-3" style={{ color: "oklch(0.52 0.04 65)" }}>{photo.venue}</p>
           )}
+          {photo.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-5">
+              {photo.tags.map(slug => (
+                <span
+                  key={slug}
+                  className="font-label text-xs tracking-widest uppercase px-3 py-1"
+                  style={{ background: "oklch(0.28 0.01 60)", color: "oklch(0.72 0.14 65)", border: "1px solid oklch(0.38 0.015 60)" }}
+                >
+                  {COMMUNITY_PHOTO_TAG_LABELS[slug] ?? slug}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       </motion.div>
     </motion.div>
@@ -232,20 +266,31 @@ function UploadForm({ onSuccess }: { onSuccess: () => void }) {
   const [form, setForm] = useState({
     riderName: "",
     location: "",
-    territory: "" as "TX" | "OK" | "AR" | "CH" | "",
+    territory: "" as "TX" | "OK" | "AR" | "",
     venue: "",
     caption: "",
     mootsModel: "",
   });
+  const [selectedTags, setSelectedTags] = useState<CommunityPhotoTagSlug[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
   const [imageData, setImageData] = useState<string | null>(null);
   const [imageMimeType, setImageMimeType] = useState<"image/jpeg" | "image/png" | "image/webp">("image/jpeg");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const toggleTag = useCallback((slug: CommunityPhotoTagSlug) => {
+    setSelectedTags(prev => {
+      if (prev.includes(slug)) return prev.filter(t => t !== slug);
+      if (prev.length >= MAX_COMMUNITY_PHOTO_TAGS) {
+        toast.error(`You can pick up to ${MAX_COMMUNITY_PHOTO_TAGS} tags.`);
+        return prev;
+      }
+      return [...prev, slug];
+    });
+  }, []);
 
   const uploadMutation = trpc.community.upload.useMutation({
     onSuccess: () => {
-      toast.success("Your photo has been added to the community gallery.");
+      toast.success("Photo submitted — it'll appear on the wall once Ian approves it.");
       setForm({ riderName: "", location: "", territory: "", venue: "", caption: "", mootsModel: "" });
       setSelectedTags([]);
       setPreview(null);
@@ -384,13 +429,12 @@ function UploadForm({ onSuccess }: { onSuccess: () => void }) {
                         className={inputClass}
                         style={{ ...inputStyle, appearance: "none" as const }}
                         value={form.territory}
-                        onChange={(e) => setForm({ ...form, territory: e.target.value as "TX" | "OK" | "AR" | "CH" | "" })}
+                        onChange={(e) => setForm({ ...form, territory: e.target.value as "TX" | "OK" | "AR" | "" })}
                       >
-                        <option value="">Select territory...</option>
+                        <option value="">Select state...</option>
                         <option value="TX">Texas (TX)</option>
                         <option value="AR">Arkansas (AR)</option>
                         <option value="OK">Oklahoma (OK)</option>
-                        <option value="CH">Switzerland (CH)</option>
                       </select>
                     </div>
                   </div>
@@ -440,6 +484,33 @@ function UploadForm({ onSuccess }: { onSuccess: () => void }) {
                   </div>
 
                   <div>
+                    <label className="font-label text-xs tracking-widest uppercase block mb-3" style={{ color: "oklch(0.72 0.14 65)" }}>
+                      Tags <span className="opacity-60 normal-case">(optional · up to {MAX_COMMUNITY_PHOTO_TAGS})</span>
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {COMMUNITY_PHOTO_TAGS.map(tag => {
+                        const active = selectedTags.includes(tag.slug);
+                        return (
+                          <button
+                            key={tag.slug}
+                            type="button"
+                            onClick={() => toggleTag(tag.slug)}
+                            aria-pressed={active}
+                            className="font-label text-xs tracking-widest uppercase px-3 py-1.5 transition-all duration-150"
+                            style={{
+                              background: active ? "oklch(0.72 0.14 65)" : "transparent",
+                              color: active ? "oklch(0.22 0.01 60)" : "oklch(0.78 0.03 70)",
+                              border: `1px solid ${active ? "oklch(0.72 0.14 65)" : "oklch(0.38 0.015 60)"}`,
+                            }}
+                          >
+                            {tag.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div>
                     <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.72 0.14 65)" }}>Caption *</label>
                     <textarea
                       rows={3}
@@ -449,38 +520,6 @@ function UploadForm({ onSuccess }: { onSuccess: () => void }) {
                       value={form.caption}
                       onChange={(e) => setForm({ ...form, caption: e.target.value })}
                     />
-                  </div>
-
-                  <div>
-                    <label className="font-label text-xs tracking-widest uppercase block mb-3" style={{ color: "oklch(0.72 0.14 65)" }}>Photo Tags (Optional)</label>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                      {[
-                        { id: "bikepacking", label: "Bikepacking" },
-                        { id: "coffee_stop", label: "Coffee Stop" },
-                        { id: "gravel_grinder", label: "Gravel Grinder" },
-                        { id: "pass_sign_2000m", label: "High Pass (2000m+)" },
-                        { id: "scenic_vista", label: "Scenic Vista" },
-                        { id: "titanium_vs_texture", label: "Titanium Focus" },
-                        { id: "trail_network", label: "Trail Network" },
-                      ].map((tag) => (
-                        <label key={tag.id} className="flex items-center gap-2 cursor-pointer">
-                          <input
-                            type="checkbox"
-                            checked={selectedTags.includes(tag.id)}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setSelectedTags([...selectedTags, tag.id]);
-                              } else {
-                                setSelectedTags(selectedTags.filter((t) => t !== tag.id));
-                              }
-                            }}
-                            className="w-4 h-4 rounded cursor-pointer"
-                            style={{ accentColor: "oklch(0.72 0.14 65)" }}
-                          />
-                          <span className="font-mono-custom text-xs" style={{ color: "oklch(0.78 0.03 70)" }}>{tag.label}</span>
-                        </label>
-                      ))}
-                    </div>
                   </div>
 
                   <div className="flex items-center gap-6 pt-2">
@@ -513,14 +552,14 @@ function UploadForm({ onSuccess }: { onSuccess: () => void }) {
 
 // ─── Community Page ────────────────────────────────────────────────────────────
 export default function Community() {
-  const [filter, setFilter] = useState<"ALL" | "TX" | "OK" | "AR" | "CH">("ALL");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [filter, setFilter] = useState<"ALL" | "TX" | "OK" | "AR">("ALL");
+  const [activeTagFilters, setActiveTagFilters] = useState<CommunityPhotoTagSlug[]>([]);
   const [lightbox, setLightbox] = useState<CommunityPhoto | null>(null);
 
   const utils = trpc.useUtils();
 
   const { data: photos, isLoading, isError } = trpc.community.list.useQuery(
-    { territory: filter },
+    { territory: filter, tags: activeTagFilters.length > 0 ? activeTagFilters : undefined },
     { refetchOnWindowFocus: false }
   );
 
@@ -528,40 +567,19 @@ export default function Community() {
     utils.community.list.invalidate();
   };
 
-  const filters: { id: "ALL" | "TX" | "OK" | "AR" | "CH"; label: string }[] = [
+  const toggleTagFilter = (slug: CommunityPhotoTagSlug) => {
+    setActiveTagFilters(prev => (prev.includes(slug) ? prev.filter(t => t !== slug) : [...prev, slug]));
+  };
+
+  const filters: { id: "ALL" | "TX" | "OK" | "AR"; label: string }[] = [
     { id: "ALL", label: "All States" },
     { id: "TX", label: "Texas" },
     { id: "AR", label: "Arkansas" },
     { id: "OK", label: "Oklahoma" },
-    { id: "CH", label: "Switzerland" },
   ];
 
-  // Available tags for filtering
-  const availableTags = [
-    { id: "bikepacking", label: "Bikepacking" },
-    { id: "coffee_stop", label: "Coffee Stop" },
-    { id: "gravel_grinder", label: "Gravel Grinder" },
-    { id: "pass_sign_2000m", label: "Pass Sign 2000m+" },
-    { id: "scenic_vista", label: "Scenic Vista" },
-    { id: "titanium_vs_texture", label: "Titanium" },
-    { id: "trail_network", label: "Trail Network" },
-  ];
-
-  // Filter photos by tags
-  const displayPhotos = (photos ?? []).filter((photo) => {
-    if (selectedTags.length === 0) return true;
-    return photo.tags?.some((tag: any) => selectedTags.includes(tag.tagName));
-  });
-
-  const toggleTag = (tagId: string) => {
-    setSelectedTags((prev) =>
-      prev.includes(tagId) ? prev.filter((t) => t !== tagId) : [...prev, tagId]
-    );
-  };
-
-  const clearFilters = () => {
-    setSelectedTags([]);
-  };
+  const displayPhotos = photos ?? [];
+  const territoryFilteredCount = useMemo(() => displayPhotos.length, [displayPhotos]);
 
   return (
     <div className="min-h-screen" style={{ background: "oklch(0.18 0.008 60)" }}>
@@ -587,63 +605,57 @@ export default function Community() {
         </div>
       </section>
 
-      {/* Event Photo Gallery */}
-      <EventPhotoGallery />
-
       {/* Filter + Gallery */}
       <section className="pb-24 relative" style={{ background: "oklch(0.18 0.008 60)" }}>
         <div className="container">
-          {/* Territory Filters */}
-          <div className="mb-8">
-            <p className="font-label text-xs tracking-widest uppercase mb-3" style={{ color: "oklch(0.72 0.14 65)" }}>Territory</p>
-            <div className="flex flex-wrap gap-2 mb-6">
-              {filters.map((f) => (
-                <button
-                  key={f.id}
-                  onClick={() => setFilter(f.id)}
-                  className="font-label text-xs tracking-widest uppercase px-5 py-2.5 transition-all duration-200"
-                  style={{
-                    background: filter === f.id ? "oklch(0.72 0.14 65)" : "transparent",
-                    color: filter === f.id ? "oklch(0.22 0.01 60)" : "oklch(0.52 0.04 65)",
-                    border: `1px solid ${filter === f.id ? "oklch(0.72 0.14 65)" : "oklch(0.38 0.015 60)"}`,
-                  }}
-                >
-                  {f.label} {filter === f.id && displayPhotos.length > 0 ? `(${displayPhotos.length})` : ""}
-                </button>
-              ))}
-            </div>
+          {/* Filters */}
+          <div className="flex flex-wrap gap-2 mb-4">
+            {filters.map((f) => (
+              <button
+                key={f.id}
+                onClick={() => setFilter(f.id)}
+                className="font-label text-xs tracking-widest uppercase px-5 py-2.5 transition-all duration-200"
+                style={{
+                  background: filter === f.id ? "oklch(0.72 0.14 65)" : "transparent",
+                  color: filter === f.id ? "oklch(0.22 0.01 60)" : "oklch(0.52 0.04 65)",
+                  border: `1px solid ${filter === f.id ? "oklch(0.72 0.14 65)" : "oklch(0.38 0.015 60)"}`,
+                }}
+              >
+                {f.label} {filter === f.id && activeTagFilters.length === 0 && territoryFilteredCount > 0 ? `(${territoryFilteredCount})` : ""}
+              </button>
+            ))}
           </div>
 
-          {/* Tag Filters */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-3">
-              <p className="font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.72 0.14 65)" }}>Tags</p>
-              {selectedTags.length > 0 && (
+          {/* Tag filters — combine with territory above (AND) */}
+          <div className="flex flex-wrap items-center gap-2 mb-10">
+            <span className="font-label text-xs tracking-[0.25em] uppercase mr-1" style={{ color: "oklch(0.52 0.04 65)" }}>Tags:</span>
+            {COMMUNITY_PHOTO_TAGS.map(tag => {
+              const active = activeTagFilters.includes(tag.slug);
+              return (
                 <button
-                  onClick={clearFilters}
-                  className="font-mono-custom text-xs hover:underline"
-                  style={{ color: "oklch(0.52 0.04 65)" }}
-                >
-                  Clear all
-                </button>
-              )}
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {availableTags.map((tag) => (
-                <button
-                  key={tag.id}
-                  onClick={() => toggleTag(tag.id)}
-                  className="font-label text-xs tracking-widest uppercase px-4 py-2 transition-all duration-200"
+                  key={tag.slug}
+                  onClick={() => toggleTagFilter(tag.slug)}
+                  aria-pressed={active}
+                  className="font-label text-xs tracking-widest uppercase px-3 py-1.5 transition-all duration-150"
                   style={{
-                    background: selectedTags.includes(tag.id) ? "oklch(0.45 0.15 145)" : "transparent",
-                    color: selectedTags.includes(tag.id) ? "oklch(0.22 0.01 60)" : "oklch(0.52 0.04 65)",
-                    border: `1px solid ${selectedTags.includes(tag.id) ? "oklch(0.45 0.15 145)" : "oklch(0.38 0.015 60)"}`,
+                    background: active ? "oklch(0.72 0.14 65)" : "transparent",
+                    color: active ? "oklch(0.22 0.01 60)" : "oklch(0.52 0.04 65)",
+                    border: `1px solid ${active ? "oklch(0.72 0.14 65)" : "oklch(0.38 0.015 60)"}`,
                   }}
                 >
                   {tag.label}
                 </button>
-              ))}
-            </div>
+              );
+            })}
+            {activeTagFilters.length > 0 && (
+              <button
+                onClick={() => setActiveTagFilters([])}
+                className="font-mono-custom text-xs ml-1 hover:underline"
+                style={{ color: "oklch(0.52 0.04 65)" }}
+              >
+                Clear
+              </button>
+            )}
           </div>
 
           {/* Loading state */}
@@ -733,16 +745,13 @@ export default function Community() {
       <footer className="py-12 relative overflow-hidden" style={{ background: "oklch(0.15 0.006 60)" }}>
         <GrainOverlay opacity={0.15} />
         <div className="container relative z-20">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
             <div>
               <Link href="/"><p className="font-display text-2xl font-bold mb-1 cursor-pointer hover:opacity-80" style={{ color: "oklch(0.945 0.018 78)" }}>Moots</p></Link>
               <p className="font-mono-custom text-xs" style={{ color: "oklch(0.52 0.04 65)" }}>Handbuilt in Steamboat Springs, CO since 1981</p>
             </div>
-            <div className="md:col-span-1">
-              <NewsletterSignup variant="footer" />
-            </div>
             <div className="flex flex-col gap-1 text-right">
-              <p className="font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>Territory Rep · TX · OK · AR · CH</p>
+              <p className="font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>Territory Rep · TX · OK · AR</p>
               <a href="mailto:ianzak@mac.com" className="font-mono-custom text-sm hover:underline" style={{ color: "oklch(0.88 0.025 75)" }}>ianzak@mac.com</a>
             </div>
           </div>
