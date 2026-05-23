@@ -7,7 +7,6 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import { MAPS_INTERACTIVE_ENABLED, MapView } from "@/components/Map";
 import { IS_STATIC_SITE } from "@/const";
 import { Link } from "wouter";
-import SharedFooter from "@/components/SharedFooter";
 
 // ─── Dealer Data ───────────────────────────────────────────────────────────────
 const DEALERS = [
@@ -351,11 +350,6 @@ function Dealers() {
           </a>
         </div>
       </div>
-      <SharedFooter showLinks={true} links={[
-        { label: "Home", href: "/" },
-        { label: "Community", href: "/community" },
-        { label: "Engineering", href: "/engineering" },
-      ]} />
     </div>
   );
 }
