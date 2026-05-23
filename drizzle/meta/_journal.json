@@ -50,6 +50,20 @@
       "when": 1779494400000,
       "tag": "0006_add_community_photo_tags",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1779567993333,
+      "tag": "0007_many_arclight",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1779568098410,
+      "tag": "0008_watery_lake",
+      "breakpoints": true
     }
   ]
 }

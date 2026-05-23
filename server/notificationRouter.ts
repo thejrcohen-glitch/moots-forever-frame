@@ -99,7 +99,6 @@ export const notificationRouter = router({
         title: input.title,
         message: input.message,
         territory: input.territory,
-        relatedId: input.relatedId,
       });
       return { success: true };
     }),
