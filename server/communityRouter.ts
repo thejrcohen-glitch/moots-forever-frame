@@ -36,7 +36,6 @@ export const communityRouter = router({
       z.object({
         territory: z.enum(["TX", "OK", "AR", "ALL"]).optional().default("ALL"),
         tags: z.array(tagSlugSchema).max(MAX_COMMUNITY_PHOTO_TAGS).optional(),
-        models: z.array(z.string()).optional(),
       })
     )
     .query(async ({ input }) => {
@@ -59,21 +58,10 @@ export const communityRouter = router({
         .limit(100);
 
       const projected = rows.map(projectPhotoRow);
-      
-      // Apply tag filtering (OR-match)
-      let filtered = projected;
-      if (input.tags && input.tags.length > 0) {
-        const wanted = new Set<string>(input.tags);
-        filtered = filtered.filter(p => p.tags.some(t => wanted.has(t)));
-      }
-      
-      // Apply model filtering (OR-match)
-      if (input.models && input.models.length > 0) {
-        const wantedModels = new Set<string>(input.models);
-        filtered = filtered.filter(p => p.mootsModel && wantedModels.has(p.mootsModel));
-      }
-      
-      return filtered;
+      if (!input.tags || input.tags.length === 0) return projected;
+
+      const wanted = new Set<string>(input.tags);
+      return projected.filter(p => p.tags.some(t => wanted.has(t)));
     }),
 
   // Upload a new community photo

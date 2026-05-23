@@ -10,7 +10,6 @@ import { trpc } from "@/lib/trpc";
 import { IS_STATIC_SITE } from "@/const";
 import { toast } from "sonner";
 import { Link } from "wouter";
-import SharedFooter from "@/components/SharedFooter";
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 type UseCase = "gravel" | "road" | "adventure" | "commute";
@@ -493,11 +492,6 @@ export default function BuildConfigurator() {
           </AnimatePresence>
         </div>
       </div>
-      <SharedFooter showLinks={true} links={[
-        { label: "Home", href: "/" },
-        { label: "Community", href: "/community" },
-        { label: "Dealers", href: "/dealers" },
-      ]} />
     </div>
   );
 }
