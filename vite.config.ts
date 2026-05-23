@@ -187,6 +187,9 @@ function vitePluginManusDebugCollector(): Plugin {
 // they're listed so that local `vite preview` against a prod-like host
 // header also works.
 //
+// Note: Vite always permits loopback hosts (localhost / 127.0.0.1 / ::1)
+// regardless of this list, so they are not enumerated here.
+//
 // To allow an extra host without editing this file, set the
 // VITE_ALLOWED_HOSTS env var to a comma-separated list, e.g.:
 //   VITE_ALLOWED_HOSTS="3000-foo.us2.manus.computer,my.tunnel.dev"
@@ -201,9 +204,6 @@ function buildAllowedHosts(): string[] {
     // Production custom domains.
     "mootsframe.com",
     ".mootsframe.com",
-    // Local dev.
-    "localhost",
-    "127.0.0.1",
   ];
 
   const extra = (process.env.VITE_ALLOWED_HOSTS ?? "")
