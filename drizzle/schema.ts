@@ -129,3 +129,22 @@ export const notificationPreferences = mysqlTable("notification_preferences", {
 
 export type NotificationPreference = typeof notificationPreferences.$inferSelect;
 export type InsertNotificationPreference = typeof notificationPreferences.$inferInsert;
+
+export const testimonials = mysqlTable("testimonials", {
+  id: int("id").autoincrement().primaryKey(),
+  personName: varchar("personName", { length: 128 }).notNull(),
+  organization: varchar("organization", { length: 256 }).notNull(),
+  territory: mysqlEnum("territory", ["TX", "OK", "AR", "CH"]).notNull(),
+  quote: text("quote").notNull(),
+  imageUrl: text("imageUrl"),
+  imageKey: text("imageKey"),
+  status: mysqlEnum("status", ["pending", "verified", "rejected"]).default("pending").notNull(),
+  displayOrder: int("displayOrder").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  verifiedAt: timestamp("verifiedAt"),
+  verifiedBy: varchar("verifiedBy", { length: 64 }), // openId of admin who verified
+});
+
+export type Testimonial = typeof testimonials.$inferSelect;
+export type InsertTestimonial = typeof testimonials.$inferInsert;
