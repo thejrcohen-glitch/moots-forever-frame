@@ -155,6 +155,9 @@ importers:
       input-otp:
         specifier: ^1.4.2
         version: 1.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      instafeed.js:
+        specifier: ^2.1.0
+        version: 2.1.0
       jose:
         specifier: 6.1.0
         version: 6.1.0
@@ -231,6 +234,9 @@ importers:
       '@types/google.maps':
         specifier: ^3.58.1
         version: 3.64.1
+      '@types/instafeed.js':
+        specifier: ^2.0.1
+        version: 2.0.1
       '@types/node':
         specifier: ^24.7.0
         version: 24.12.4
@@ -1866,6 +1872,9 @@ packages:
   '@types/http-errors@2.0.5':
     resolution: {integrity: sha512-r8Tayk8HJnX0FztbZN7oVqGccWgw98T/0neJphO91KkmOzug1KkofZURD4UaD5uH8AqcFLfdPErnBod0u71/qg==}
 
+  '@types/instafeed.js@2.0.1':
+    resolution: {integrity: sha512-6+wksdhG98vC7189R4zHkZkkka3R/fIQiFPZxg+93NsXCeGq6pYiTt38zGLmMvu2cYHNl6n07brdjzt4kwucmA==}
+
   '@types/katex@0.16.8':
     resolution: {integrity: sha512-trgaNyfU+Xh2Tc+ABIb44a5AYUpicB3uwirOioeOkNPPbmgRNtcWyDeeFRzjPZENO9Vq8gvVqfhaaXWLlevVwg==}
 
@@ -2752,6 +2761,9 @@ packages:
     peerDependencies:
       react: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
       react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
+
+  instafeed.js@2.1.0:
+    resolution: {integrity: sha512-vrpoduBYAi6vJ810UKNA6UB2xGFAfrXFl8bSPTDR/C5b02Bl7yv7b/6fFUl2UfekYHzlCI9MNYcQBmnb/4EjWg==}
 
   internmap@1.0.1:
     resolution: {integrity: sha512-lDB5YccMydFBtasVtxnZ3MRBHuaoE8GKsppq+EchKL2U4nK/DmEpPHNH8MZe5HkMtpSiTSOZwfN0tzYjO/lJEw==}
@@ -5545,6 +5557,8 @@ snapshots:
 
   '@types/http-errors@2.0.5': {}
 
+  '@types/instafeed.js@2.0.1': {}
+
   '@types/katex@0.16.8': {}
 
   '@types/mdast@4.0.4':
@@ -6475,6 +6489,8 @@ snapshots:
     dependencies:
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
+
+  instafeed.js@2.1.0: {}
 
   internmap@1.0.1: {}
 
