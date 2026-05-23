@@ -26,6 +26,22 @@ export const COMMUNITY_PHOTO_TAG_LABELS: Record<CommunityPhotoTagSlug, string> =
   Object.fromEntries(COMMUNITY_PHOTO_TAGS.map(t => [t.slug, t.label])) as Record<CommunityPhotoTagSlug, string>;
 export const MAX_COMMUNITY_PHOTO_TAGS = 5;
 
+// Canonical Moots model list shared between the upload form, the community
+// wall model filter, and BikeModelsShowcase. The `name` is the user-facing
+// label and is also what we store in community_photos.mootsModel — so the
+// list filter compares against these strings directly.
+export const MOOTS_MODELS = [
+  { name: "Routt 45", category: "gravel" },
+  { name: "Routt RSL", category: "gravel" },
+  { name: "Vamoots RSL", category: "adventure" },
+  { name: "Routt ESC", category: "adventure" },
+  { name: "Routt Legacy", category: "legacy" },
+  { name: "Vamoots Legacy", category: "legacy" },
+] as const;
+
+export type MootsModelName = (typeof MOOTS_MODELS)[number]["name"];
+export const MOOTS_MODEL_NAMES = MOOTS_MODELS.map(m => m.name) as readonly MootsModelName[];
+
 /** Parse the JSON-encoded tags column into a safe slug array (drops unknown values). */
 export function parseCommunityPhotoTags(raw: string | null | undefined): CommunityPhotoTagSlug[] {
   if (!raw) return [];

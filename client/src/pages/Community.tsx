@@ -8,7 +8,7 @@
  * Territory enum: "TX" | "OK" | "AR" (uppercase, matches DB schema)
  */
 
-import { useMemo, useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "wouter";
 import { toast } from "sonner";
@@ -19,7 +19,9 @@ import {
   COMMUNITY_PHOTO_TAGS,
   COMMUNITY_PHOTO_TAG_LABELS,
   MAX_COMMUNITY_PHOTO_TAGS,
+  MOOTS_MODELS,
   type CommunityPhotoTagSlug,
+  type MootsModelName,
 } from "../../../shared/const";
 
 // Row shape returned by community.list — tags is a decoded slug[] (not raw JSON).
@@ -460,13 +462,9 @@ function UploadForm({ onSuccess }: { onSuccess: () => void }) {
                         onChange={(e) => setForm({ ...form, mootsModel: e.target.value })}
                       >
                         <option value="">Select model...</option>
-                        <option value="Routt RSL">Routt RSL</option>
-                        <option value="Routt 45">Routt 45</option>
-                        <option value="Routt 60">Routt 60</option>
-                        <option value="Vamoots RSL">Vamoots RSL</option>
-                        <option value="Vamoots DR">Vamoots DR</option>
-                        <option value="Psychlo X RSL">Psychlo X RSL</option>
-                        <option value="Mooto X RSL">Mooto X RSL</option>
+                        {MOOTS_MODELS.map(m => (
+                          <option key={m.name} value={m.name}>{m.name}</option>
+                        ))}
                       </select>
                     </div>
                   </div>
@@ -554,18 +552,8 @@ function UploadForm({ onSuccess }: { onSuccess: () => void }) {
 export default function Community() {
   const [filter, setFilter] = useState<"ALL" | "TX" | "OK" | "AR">("ALL");
   const [activeTagFilters, setActiveTagFilters] = useState<CommunityPhotoTagSlug[]>([]);
-  const [selectedModels, setSelectedModels] = useState<string[]>([]);
+  const [selectedModels, setSelectedModels] = useState<MootsModelName[]>([]);
   const [lightbox, setLightbox] = useState<CommunityPhoto | null>(null);
-
-  const mootsModels = [
-    { id: "Routt 45", label: "Routt 45" },
-    { id: "Routt RSL", label: "Routt RSL" },
-    { id: "Routt CRD", label: "Routt CRD" },
-    { id: "Routt YBB", label: "Routt YBB" },
-    { id: "Scrambler", label: "Scrambler" },
-    { id: "Womble MXC", label: "Womble MXC" },
-    { id: "Legacy", label: "Legacy" },
-  ];
 
   const utils = trpc.useUtils();
 
@@ -586,7 +574,7 @@ export default function Community() {
     setActiveTagFilters(prev => (prev.includes(slug) ? prev.filter(t => t !== slug) : [...prev, slug]));
   };
 
-  const toggleModelFilter = (model: string) => {
+  const toggleModelFilter = (model: MootsModelName) => {
     setSelectedModels(prev => (prev.includes(model) ? prev.filter(m => m !== model) : [...prev, model]));
   };
 
@@ -602,13 +590,8 @@ export default function Community() {
     { id: "OK", label: "Oklahoma" },
   ];
 
-  const displayPhotos = useMemo(() => {
-    if (!photos) return [];
-    if (selectedModels.length === 0) return photos;
-    return photos.filter(photo => photo.mootsModel && selectedModels.includes(photo.mootsModel));
-  }, [photos, selectedModels]);
-
-  const territoryFilteredCount = useMemo(() => displayPhotos.length, [displayPhotos]);
+  const displayPhotos = photos ?? [];
+  const territoryFilteredCount = displayPhotos.length;
 
   return (
     <div className="min-h-screen" style={{ background: "oklch(0.18 0.008 60)" }}>
@@ -661,12 +644,12 @@ export default function Community() {
               <p className="font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.72 0.14 65)" }}>Bike Model</p>
             </div>
             <div className="flex flex-wrap gap-2">
-              {mootsModels.map((model) => {
-                const active = selectedModels.includes(model.id);
+              {MOOTS_MODELS.map((model) => {
+                const active = selectedModels.includes(model.name);
                 return (
                   <button
-                    key={model.id}
-                    onClick={() => toggleModelFilter(model.id)}
+                    key={model.name}
+                    onClick={() => toggleModelFilter(model.name)}
                     aria-pressed={active}
                     className="font-label text-xs tracking-widest uppercase px-4 py-2 transition-all duration-200"
                     style={{
@@ -675,7 +658,7 @@ export default function Community() {
                       border: `1px solid ${active ? "oklch(0.55 0.13 145)" : "oklch(0.38 0.015 60)"}`,
                     }}
                   >
-                    {model.label}
+                    {model.name}
                   </button>
                 );
               })}

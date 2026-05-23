@@ -59,6 +59,88 @@ describe("community.list", () => {
     const result = await caller.community.list({});
     expect(Array.isArray(result)).toBe(true);
   });
+
+  it("accepts a valid models filter", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.community.list({
+      territory: "ALL",
+      models: ["Routt 45", "Routt RSL"],
+    });
+    expect(Array.isArray(result)).toBe(true);
+  });
+
+  it("rejects unknown moots model names in the filter", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    await expect(
+      // @ts-expect-error testing invalid model name
+      caller.community.list({ territory: "ALL", models: ["Not A Real Bike"] })
+    ).rejects.toThrow();
+  });
+
+  it("accepts a combined territory + tags + models filter", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.community.list({
+      territory: "TX",
+      tags: ["gravel"],
+      models: ["Routt 45"],
+    });
+    expect(Array.isArray(result)).toBe(true);
+  });
+});
+
+// The router applies tag and model filtering in JS over the DB rows, so we
+// exercise that path directly by stubbing getDb to return a fake select
+// chain. This protects the OR-match + moderation-gate semantics without
+// needing a real database.
+describe("community.list model filter (in-memory)", () => {
+  it("filters by model OR-match and combines with tags (AND across filters)", async () => {
+    const fakeRows = [
+      { id: 1, riderName: "A", territory: "TX", location: "Austin", venue: null, mootsModel: "Routt 45", caption: null, imageUrl: "u1", imageKey: "k1", approved: "approved", tags: '["gravel","coffee"]', createdAt: new Date() },
+      { id: 2, riderName: "B", territory: "TX", location: "Austin", venue: null, mootsModel: "Routt RSL", caption: null, imageUrl: "u2", imageKey: "k2", approved: "approved", tags: '["road"]', createdAt: new Date() },
+      { id: 3, riderName: "C", territory: "TX", location: "Austin", venue: null, mootsModel: "Vamoots RSL", caption: null, imageUrl: "u3", imageKey: "k3", approved: "approved", tags: '["gravel"]', createdAt: new Date() },
+      { id: 4, riderName: "D", territory: "TX", location: "Austin", venue: null, mootsModel: null, caption: null, imageUrl: "u4", imageKey: "k4", approved: "approved", tags: '["gravel"]', createdAt: new Date() },
+    ];
+    const limit = vi.fn().mockResolvedValue(fakeRows);
+    const orderBy = vi.fn(() => ({ limit }));
+    const where = vi.fn(() => ({ orderBy }));
+    const from = vi.fn(() => ({ where }));
+    const select = vi.fn(() => ({ from }));
+    const { getDb } = await import("./db");
+    (getDb as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce({ select });
+
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.community.list({
+      territory: "TX",
+      tags: ["gravel"],
+      models: ["Routt 45", "Vamoots RSL"],
+    });
+    // Row 1 (Routt 45 + gravel) and Row 3 (Vamoots RSL + gravel) match.
+    // Row 2 fails tags. Row 4 fails models (null mootsModel).
+    expect(result.map(r => r.id).sort()).toEqual([1, 3]);
+  });
+
+  it("returns all rows from the DB query when no model filter is provided", async () => {
+    const fakeRows = [
+      { id: 1, riderName: "A", territory: "TX", location: "Austin", venue: null, mootsModel: "Routt 45", caption: null, imageUrl: "u1", imageKey: "k1", approved: "approved", tags: null, createdAt: new Date() },
+      { id: 2, riderName: "B", territory: "TX", location: "Austin", venue: null, mootsModel: null, caption: null, imageUrl: "u2", imageKey: "k2", approved: "approved", tags: null, createdAt: new Date() },
+    ];
+    const limit = vi.fn().mockResolvedValue(fakeRows);
+    const orderBy = vi.fn(() => ({ limit }));
+    const where = vi.fn(() => ({ orderBy }));
+    const from = vi.fn(() => ({ where }));
+    const select = vi.fn(() => ({ from }));
+    const { getDb } = await import("./db");
+    (getDb as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce({ select });
+
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.community.list({ territory: "TX" });
+    expect(result).toHaveLength(2);
+  });
 });
 
 describe("community.upload", () => {

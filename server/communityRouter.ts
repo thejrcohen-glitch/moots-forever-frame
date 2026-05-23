@@ -9,12 +9,18 @@ import { sendEmail, communityUploadAcknowledgmentEmail } from "./_core/email";
 import {
   COMMUNITY_PHOTO_TAG_SLUGS,
   MAX_COMMUNITY_PHOTO_TAGS,
+  MOOTS_MODEL_NAMES,
   parseCommunityPhotoTags,
   type CommunityPhotoTagSlug,
+  type MootsModelName,
 } from "../shared/const";
 
 const tagSlugSchema = z.enum(
   COMMUNITY_PHOTO_TAG_SLUGS as unknown as [CommunityPhotoTagSlug, ...CommunityPhotoTagSlug[]]
+);
+
+const mootsModelSchema = z.enum(
+  MOOTS_MODEL_NAMES as unknown as [MootsModelName, ...MootsModelName[]]
 );
 
 // Project DB rows into a list-friendly shape with a decoded tags array. Keeps
@@ -26,17 +32,17 @@ function projectPhotoRow<T extends { tags: string | null }>(row: T): Omit<T, "ta
 }
 
 export const communityRouter = router({
-  // List all approved photos, optionally filtered by territory and/or tags.
-  // Tag filter semantics: a row matches when its tag set intersects the
-  // requested tag set (OR-match). Filtering happens in JS because tags are
-  // stored as a JSON string, not a relational join — the result set is
-  // capped at 100 so this stays cheap.
+  // List all approved photos, optionally filtered by territory, tags, and/or
+  // bike models. Tag and model filters use OR-match semantics within a filter
+  // and AND across filters (e.g. (gravel OR coffee) AND (Routt RSL OR Routt 45)).
+  // Filtering happens in JS because tags are stored as a JSON string, not a
+  // relational join — the result set is capped at 100 so this stays cheap.
   list: publicProcedure
     .input(
       z.object({
         territory: z.enum(["TX", "OK", "AR", "ALL"]).optional().default("ALL"),
         tags: z.array(tagSlugSchema).max(MAX_COMMUNITY_PHOTO_TAGS).optional(),
-        models: z.array(z.string()).optional(),
+        models: z.array(mootsModelSchema).max(MOOTS_MODEL_NAMES.length).optional(),
       })
     )
     .query(async ({ input }) => {
