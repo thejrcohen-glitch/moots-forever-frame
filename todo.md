@@ -205,7 +205,7 @@
 - [x] Add testimonials table to drizzle/schema.ts with verification-first model
 - [x] Create testimonialsRouter.ts with admin procedures (list, create, update, verify, reject, delete)
 - [x] Register testimonialsRouter in server/routers.ts
-- [ ] Create Testimonials.tsx page with public testimonials display
+- [x] Create Testimonials.tsx page with public testimonials display
 - [ ] Add testimonials admin panel to Admin.tsx
 - [ ] Create testimonial submission form (dealer/person name, quote, territory, context)
 - [ ] Wire testimonial notifications to notifyOwner
