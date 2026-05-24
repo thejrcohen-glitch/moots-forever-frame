@@ -9,6 +9,9 @@ import { rsvpRouter } from "./rsvpRouter";
 import { configuratorRouter } from "./configuratorRouter";
 import { analyticsRouter } from "./analyticsRouter";
 import { newsletterRouter } from "./newsletterRouter";
+import { testimonialsRouter } from "./testimonialsRouter";
+import { notificationsRouter } from "./notificationsRouter";
+import { swissRoutesRouter } from "./swissRoutesRouter";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -31,6 +34,9 @@ export const appRouter = router({
   configurator: configuratorRouter,
   analytics: analyticsRouter,
   newsletter: newsletterRouter,
+  testimonials: testimonialsRouter,
+  notifications: notificationsRouter,
+  swissRoutes: swissRoutesRouter,
 
   // TODO: add feature routers here, e.g.
   // todo: router({

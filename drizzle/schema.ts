@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { boolean, decimal, int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -104,3 +104,70 @@ export const newsletterSubscribers = mysqlTable("newsletter_subscribers", {
 
 export type NewsletterSubscriber = typeof newsletterSubscribers.$inferSelect;
 export type InsertNewsletterSubscriber = typeof newsletterSubscribers.$inferInsert;
+export const testimonials = mysqlTable("testimonials", {
+  id: int("id").autoincrement().primaryKey(),
+  dealerName: varchar("dealerName", { length: 256 }).notNull(),
+  personName: varchar("personName", { length: 256 }).notNull(),
+  territory: mysqlEnum("territory", ["TX", "OK", "AR"]).notNull(),
+  quote: text("quote").notNull(),
+  context: varchar("context", { length: 256 }), // e.g., "Dealer Owner", "Mechanic", "Rider"
+  status: mysqlEnum("status", ["pending", "verified", "rejected"]).default("pending").notNull(),
+  verifiedBy: varchar("verifiedBy", { length: 64 }), // Admin openId who verified
+  verifiedAt: timestamp("verifiedAt"),
+  rejectionReason: text("rejectionReason"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Testimonial = typeof testimonials.$inferSelect;
+export type InsertTestimonial = typeof testimonials.$inferInsert;
+
+export const notifications = mysqlTable("notifications", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  title: varchar("title", { length: 256 }).notNull(),
+  content: text("content").notNull(),
+  type: varchar("type", { length: 64 }).notNull(), // e.g., "booking_confirmed", "photo_approved", "testimonial_verified"
+  read: boolean("read").default(false).notNull(),
+  actionUrl: varchar("actionUrl", { length: 512 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Notification = typeof notifications.$inferSelect;
+export type InsertNotification = typeof notifications.$inferInsert;
+
+export const notificationPreferences = mysqlTable("notification_preferences", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().unique().references(() => users.id, { onDelete: "cascade" }),
+  emailOnBooking: boolean("emailOnBooking").default(true).notNull(),
+  emailOnPhotoApproved: boolean("emailOnPhotoApproved").default(true).notNull(),
+  emailOnTestimonialVerified: boolean("emailOnTestimonialVerified").default(true).notNull(),
+  pushNotifications: boolean("pushNotifications").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type NotificationPreference = typeof notificationPreferences.$inferSelect;
+export type InsertNotificationPreference = typeof notificationPreferences.$inferInsert;
+
+export const swissRoutes = mysqlTable("swiss_routes", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 256 }).notNull(),
+  description: text("description"),
+  distance: decimal("distance", { precision: 8, scale: 2 }), // km
+  elevationGain: int("elevationGain"), // meters
+  difficulty: varchar("difficulty", { length: 64 }), // e.g., "easy", "moderate", "hard"
+  bikeModels: text("bikeModels"), // JSON array of recommended models
+  routeUrl: varchar("routeUrl", { length: 512 }), // Link to route (Komoot, etc.)
+  imageUrl: text("imageUrl"),
+  imageKey: text("imageKey"),
+  status: mysqlEnum("status", ["pending", "verified", "rejected"]).default("pending").notNull(),
+  verifiedBy: varchar("verifiedBy", { length: 64 }), // Admin openId who verified
+  verifiedAt: timestamp("verifiedAt"),
+  rejectionReason: text("rejectionReason"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SwissRoute = typeof swissRoutes.$inferSelect;
+export type InsertSwissRoute = typeof swissRoutes.$inferInsert;
