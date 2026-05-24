@@ -76,9 +76,8 @@
 
 /// <reference types="@types/google.maps" />
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { IS_STATIC_SITE } from "@/const";
-import { usePersistFn } from "@/hooks/usePersistFn";
 import { appendUrlPath, normalizeOptionalEnvVar, parseAllowedHosts, parseTrustedUrl } from "@/lib/urlSafety";
 import { cn } from "@/lib/utils";
 
@@ -172,33 +171,62 @@ export function MapView({
 
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<google.maps.Map | null>(null);
-
-  const init = usePersistFn(async () => {
-    const mapReady = await loadMapScript();
-    if (!mapReady || !window.google?.maps) {
-      return;
-    }
-    if (!mapContainer.current) {
-      console.error("Map container not found");
-      return;
-    }
-    map.current = new window.google.maps.Map(mapContainer.current, {
-      zoom: initialZoom,
-      center: initialCenter,
-      mapTypeControl: true,
-      fullscreenControl: true,
-      zoomControl: true,
-      streetViewControl: true,
-      mapId: "DEMO_MAP_ID",
-    });
-    if (onMapReady) {
-      onMapReady(map.current);
-    }
-  });
+  const [mapLoadFailed, setMapLoadFailed] = useState(false);
 
   useEffect(() => {
-    init();
-  }, [init]);
+    let cancelled = false;
+
+    (async () => {
+      setMapLoadFailed(false);
+      const mapReady = await loadMapScript();
+      if (cancelled) return;
+      if (!mapReady || !window.google?.maps) {
+        if (!cancelled) setMapLoadFailed(true);
+        return;
+      }
+      if (!mapContainer.current) {
+        console.error("Map container not found");
+        if (!cancelled) setMapLoadFailed(true);
+        return;
+      }
+      map.current = new window.google.maps.Map(mapContainer.current, {
+        zoom: initialZoom,
+        center: initialCenter,
+        mapTypeControl: true,
+        fullscreenControl: true,
+        zoomControl: true,
+        streetViewControl: true,
+        mapId: "DEMO_MAP_ID",
+      });
+      if (onMapReady) {
+        onMapReady(map.current);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialCenter, initialZoom, onMapReady]);
+
+  if (mapLoadFailed) {
+    return (
+      <div
+        className={cn(
+          "w-full h-[500px] flex flex-col items-center justify-center gap-2 text-center",
+          className,
+        )}
+      >
+        {fallback ?? (
+          <>
+            <p className="text-sm font-medium">Map unavailable</p>
+            <p className="text-xs opacity-75 max-w-md">
+              Failed to load the interactive map. Please try again later.
+            </p>
+          </>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div ref={mapContainer} className={cn("w-full h-[500px]", className)} />

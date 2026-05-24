@@ -13,9 +13,11 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { toast } from "sonner";
 import { Link } from "wouter";
 import { getLoginUrl } from "@/const";
+import { COMMUNITY_PHOTO_TAG_LABELS } from "../../../shared/const";
 
 type StatusFilter = "pending" | "approved" | "rejected" | "all";
-type AdminTab = "photos" | "rsvps" | "leads" | "analytics";
+type BookingStatusFilter = "pending" | "confirmed" | "cancelled" | "all";
+type AdminTab = "photos" | "rsvps" | "bookings" | "leads" | "analytics";
 
 const TERRITORY_COLORS: Record<string, string> = {
   TX: "oklch(0.52 0.12 45)",
@@ -27,6 +29,7 @@ export default function Admin() {
   const { user, loading } = useAuth();
   const [activeTab, setActiveTab] = useState<AdminTab>("photos");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("pending");
+  const [bookingStatusFilter, setBookingStatusFilter] = useState<BookingStatusFilter>("pending");
   const utils = trpc.useUtils();
 
   const { data: photos = [], isLoading: photosLoading, error: photosError } = trpc.moderation.listAll.useQuery(undefined, {
@@ -35,6 +38,18 @@ export default function Admin() {
 
   const { data: rsvps = [], isLoading: rsvpsLoading } = trpc.rsvp.listAll.useQuery(undefined, {
     enabled: !!user && user.role === "admin",
+  });
+
+  const { data: bookings = [], isLoading: bookingsLoading } = trpc.booking.listAll.useQuery(undefined, {
+    enabled: !!user && user.role === "admin",
+  });
+
+  const setBookingStatusMutation = trpc.booking.setStatus.useMutation({
+    onSuccess: () => {
+      toast.success("Booking status updated.");
+      utils.booking.listAll.invalidate();
+    },
+    onError: (err) => toast.error(err.message || "Failed to update booking status."),
   });
 
   const { data: analytics, isLoading: analyticsLoading } = trpc.analytics.summary.useQuery(undefined, {
@@ -134,6 +149,7 @@ export default function Admin() {
           {([
             { id: "photos" as AdminTab, label: `Photos (${photoCounts.pending} pending)` },
             { id: "rsvps" as AdminTab, label: `RSVPs (${rsvps.length})` },
+            { id: "bookings" as AdminTab, label: `Bookings (${bookings.filter(b => b.status === "pending").length} pending)` },
             { id: "analytics" as AdminTab, label: "Analytics" },
           ]).map(tab => (
             <button
@@ -213,6 +229,19 @@ export default function Admin() {
                       <p className="font-display text-base font-bold mb-1" style={{ color: "oklch(0.945 0.018 78)" }}>{photo.riderName}</p>
                       {photo.mootsModel && <p className="font-mono-custom text-xs mb-2" style={{ color: "oklch(0.72 0.14 65)" }}>{photo.mootsModel}</p>}
                       {photo.caption && <p className="font-mono-custom text-xs leading-relaxed mb-3" style={{ color: "oklch(0.52 0.04 65)" }}>"{photo.caption}"</p>}
+                      {photo.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mb-3">
+                          {photo.tags.map(slug => (
+                            <span
+                              key={slug}
+                              className="font-label text-[10px] tracking-widest uppercase px-2 py-0.5"
+                              style={{ background: "oklch(0.22 0.01 60)", color: "oklch(0.72 0.14 65)", border: "1px solid oklch(0.38 0.015 60)" }}
+                            >
+                              {COMMUNITY_PHOTO_TAG_LABELS[slug] ?? slug}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                       <p className="font-mono-custom text-xs mb-4" style={{ color: "oklch(0.38 0.015 60)" }}>
                         {new Date(photo.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                       </p>
@@ -313,6 +342,135 @@ export default function Admin() {
             )}
           </>
         )}
+
+        {/* ── BOOKINGS TAB ── */}
+        {activeTab === "bookings" && (() => {
+          const bookingCounts = {
+            pending: bookings.filter(b => b.status === "pending").length,
+            confirmed: bookings.filter(b => b.status === "confirmed").length,
+            cancelled: bookings.filter(b => b.status === "cancelled").length,
+            all: bookings.length,
+          };
+          const filteredBookings = bookings.filter(b =>
+            bookingStatusFilter === "all" || b.status === bookingStatusFilter
+          );
+          const statusBg: Record<string, string> = {
+            pending: "oklch(0.72 0.14 65)",
+            confirmed: "oklch(0.35 0.06 145)",
+            cancelled: "oklch(0.38 0.015 60)",
+          };
+          return (
+            <>
+              <div className="flex gap-2 mb-8 flex-wrap">
+                {(["pending", "confirmed", "cancelled", "all"] as BookingStatusFilter[]).map(s => (
+                  <button
+                    key={s}
+                    onClick={() => setBookingStatusFilter(s)}
+                    className="font-label text-xs tracking-[0.2em] uppercase px-5 py-2.5 transition-all duration-200"
+                    style={{
+                      background: bookingStatusFilter === s ? "oklch(0.52 0.12 45)" : "transparent",
+                      color: bookingStatusFilter === s ? "oklch(0.945 0.018 78)" : "oklch(0.52 0.04 65)",
+                      border: `1px solid ${bookingStatusFilter === s ? "oklch(0.52 0.12 45)" : "oklch(0.38 0.015 60)"}`,
+                    }}
+                  >
+                    {s === "all" ? "All" : s.charAt(0).toUpperCase() + s.slice(1)} ({bookingCounts[s]})
+                  </button>
+                ))}
+              </div>
+
+              {bookingsLoading && (
+                <div className="flex items-center gap-3 py-12">
+                  <div className="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: "oklch(0.52 0.12 45)", borderTopColor: "transparent" }} />
+                  <span className="font-mono-custom text-sm" style={{ color: "oklch(0.52 0.04 65)" }}>Loading bookings...</span>
+                </div>
+              )}
+              {!bookingsLoading && filteredBookings.length === 0 && (
+                <div className="py-20 text-center">
+                  <p className="font-display text-2xl font-bold mb-2" style={{ color: "oklch(0.945 0.018 78)" }}>
+                    {bookingStatusFilter === "pending" ? "Inbox is clear." : "No bookings here."}
+                  </p>
+                  <p className="font-mono-custom text-sm" style={{ color: "oklch(0.52 0.04 65)" }}>
+                    {bookingStatusFilter === "pending"
+                      ? "All pop-up requests have been triaged."
+                      : `No ${bookingStatusFilter} bookings found.`}
+                  </p>
+                </div>
+              )}
+              {!bookingsLoading && filteredBookings.length > 0 && (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left">
+                    <thead>
+                      <tr style={{ borderBottom: "1px solid oklch(0.38 0.015 60 / 0.3)" }}>
+                        {["Status", "Rider", "Email", "Territory", "City / Venue", "Date", "Notes", "Received", "Actions"].map(h => (
+                          <th key={h} className="font-label text-xs tracking-[0.2em] uppercase pb-3 pr-4" style={{ color: "oklch(0.52 0.04 65)" }}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredBookings.map(b => (
+                        <tr key={b.id} style={{ borderBottom: "1px solid oklch(0.38 0.015 60 / 0.2)" }}>
+                          <td className="py-3 pr-4">
+                            <span className="font-label text-xs tracking-widest uppercase px-2 py-1" style={{ background: statusBg[b.status] ?? "oklch(0.38 0.015 60)", color: "oklch(0.945 0.018 78)" }}>
+                              {b.status}
+                            </span>
+                          </td>
+                          <td className="font-mono-custom text-sm py-3 pr-4" style={{ color: "oklch(0.945 0.018 78)" }}>{b.riderName}</td>
+                          <td className="font-mono-custom text-sm py-3 pr-4" style={{ color: "oklch(0.72 0.14 65)" }}>
+                            <a href={`mailto:${b.email}`} className="hover:underline">{b.email}</a>
+                          </td>
+                          <td className="font-mono-custom text-xs py-3 pr-4" style={{ color: TERRITORY_COLORS[b.territory] ?? "oklch(0.52 0.12 45)" }}>{b.territory}</td>
+                          <td className="font-mono-custom text-xs py-3 pr-4" style={{ color: "oklch(0.88 0.025 75)" }}>
+                            <div>{b.popUpCity ?? "—"}</div>
+                            {b.popUpVenue && <div style={{ color: "oklch(0.52 0.04 65)" }}>{b.popUpVenue}</div>}
+                          </td>
+                          <td className="font-mono-custom text-xs py-3 pr-4" style={{ color: "oklch(0.52 0.04 65)" }}>{b.popUpDate}</td>
+                          <td className="font-mono-custom text-xs py-3 pr-4 max-w-xs" style={{ color: "oklch(0.52 0.04 65)" }}>{b.notes ?? "—"}</td>
+                          <td className="font-mono-custom text-xs py-3 pr-4" style={{ color: "oklch(0.38 0.015 60)" }}>
+                            {new Date(b.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                          </td>
+                          <td className="py-3">
+                            <div className="flex gap-2">
+                              {b.status !== "confirmed" && (
+                                <button
+                                  onClick={() => setBookingStatusMutation.mutate({ id: b.id, status: "confirmed" })}
+                                  disabled={setBookingStatusMutation.isPending}
+                                  className="font-label text-xs tracking-[0.15em] uppercase px-3 py-1.5 transition-all hover:opacity-80 disabled:opacity-40"
+                                  style={{ background: "oklch(0.35 0.06 145)", color: "oklch(0.945 0.018 78)" }}
+                                >
+                                  Confirm
+                                </button>
+                              )}
+                              {b.status !== "cancelled" && (
+                                <button
+                                  onClick={() => setBookingStatusMutation.mutate({ id: b.id, status: "cancelled" })}
+                                  disabled={setBookingStatusMutation.isPending}
+                                  className="font-label text-xs tracking-[0.15em] uppercase px-3 py-1.5 transition-all hover:opacity-80 disabled:opacity-40"
+                                  style={{ background: "oklch(0.38 0.015 60)", color: "oklch(0.945 0.018 78)" }}
+                                >
+                                  Cancel
+                                </button>
+                              )}
+                              {b.status !== "pending" && (
+                                <button
+                                  onClick={() => setBookingStatusMutation.mutate({ id: b.id, status: "pending" })}
+                                  disabled={setBookingStatusMutation.isPending}
+                                  className="font-label text-xs tracking-[0.15em] uppercase px-3 py-1.5 transition-all hover:opacity-80 disabled:opacity-40"
+                                  style={{ background: "transparent", color: "oklch(0.72 0.14 65)", border: "1px solid oklch(0.72 0.14 65)" }}
+                                >
+                                  Reopen
+                                </button>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </>
+          );
+        })()}
 
         {/* ── ANALYTICS TAB ── */}
         {activeTab === "analytics" && (

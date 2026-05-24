@@ -4,6 +4,12 @@ import { router, protectedProcedure } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { getDb } from "./db";
 import { communityPhotos } from "../drizzle/schema";
+import { parseCommunityPhotoTags, type CommunityPhotoTagSlug } from "../shared/const";
+
+function projectPhotoRow<T extends { tags: string | null }>(row: T): Omit<T, "tags"> & { tags: CommunityPhotoTagSlug[] } {
+  const { tags, ...rest } = row;
+  return { ...rest, tags: parseCommunityPhotoTags(tags) };
+}
 
 // Helper: enforce admin role
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
@@ -18,21 +24,23 @@ export const moderationRouter = router({
   listPending: adminProcedure.query(async () => {
     const db = await getDb();
     if (!db) return [];
-    return db
+    const rows = await db
       .select()
       .from(communityPhotos)
       .where(eq(communityPhotos.approved, "pending"))
       .orderBy(communityPhotos.createdAt);
+    return rows.map(projectPhotoRow);
   }),
 
   /** List all photos with any status (admin only) */
   listAll: adminProcedure.query(async () => {
     const db = await getDb();
     if (!db) return [];
-    return db
+    const rows = await db
       .select()
       .from(communityPhotos)
       .orderBy(communityPhotos.createdAt);
+    return rows.map(projectPhotoRow);
   }),
 
   /** Approve a photo */

@@ -178,6 +178,42 @@ function vitePluginManusDebugCollector(): Plugin {
   };
 }
 
+// Hostnames the Vite dev/preview server will accept in the Host header.
+// Leading-dot entries match any subdomain (e.g. ".manus.computer" matches
+// "3000-abc.us2.manus.computer"). Manus-hosted preview URLs rotate per
+// session, so we cover every known Manus zone here. Production custom
+// domains (mootsframe.com, www.MootsFrame.com) are served via static
+// hosting / GitHub Pages and do not pass through this Vite server, but
+// they're listed so that local `vite preview` against a prod-like host
+// header also works.
+//
+// Note: Vite always permits loopback hosts (localhost / 127.0.0.1 / ::1)
+// regardless of this list, so they are not enumerated here.
+//
+// To allow an extra host without editing this file, set the
+// VITE_ALLOWED_HOSTS env var to a comma-separated list, e.g.:
+//   VITE_ALLOWED_HOSTS="3000-foo.us2.manus.computer,my.tunnel.dev"
+function buildAllowedHosts(): string[] {
+  const baseHosts = [
+    // Manus preview zones (leading dot = match any subdomain).
+    ".manuspre.computer",
+    ".manus.computer",
+    ".manus-asia.computer",
+    ".manuscomputer.ai",
+    ".manusvm.computer",
+    // Production custom domains.
+    "mootsframe.com",
+    ".mootsframe.com",
+  ];
+
+  const extra = (process.env.VITE_ALLOWED_HOSTS ?? "")
+    .split(",")
+    .map((h) => h.trim())
+    .filter(Boolean);
+
+  return Array.from(new Set([...baseHosts, ...extra]));
+}
+
 export default defineConfig(({ mode }) => {
   const isProduction = mode === "production";
 
@@ -205,19 +241,15 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       host: true,
-      allowedHosts: [
-        ".manuspre.computer",
-        ".manus.computer",
-        ".manus-asia.computer",
-        ".manuscomputer.ai",
-        ".manusvm.computer",
-        "localhost",
-        "127.0.0.1",
-      ],
+      allowedHosts: buildAllowedHosts(),
       fs: {
         strict: true,
         deny: ["**/.*"],
       },
+    },
+    preview: {
+      host: true,
+      allowedHosts: buildAllowedHosts(),
     },
   };
 });

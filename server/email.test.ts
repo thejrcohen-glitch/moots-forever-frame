@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll } from "vitest";
-import { sendEmail, rsvpConfirmationEmail } from "./_core/email";
+import { sendEmail, rsvpConfirmationEmail, bookingConfirmationEmail } from "./_core/email";
 
 describe("Email System", () => {
   it("should not require RESEND_API_KEY in test/CI", async () => {
@@ -34,6 +34,28 @@ describe("Email System", () => {
     expect(html).toContain("Austin, TX");
     expect(html).toContain("ianzak@mac.com");
     expect(html).toContain("917-578-7687");
+  });
+
+  it("booking confirmation includes city, status, contact constraints", () => {
+    const html = bookingConfirmationEmail({
+      name: "Jane Rider",
+      territory: "Arkansas",
+      city: "Bentonville, AR",
+      date: "Saturday, April 25, 2026",
+    });
+    expect(html).toContain("Jane Rider");
+    expect(html).toContain("Bentonville, AR");
+    expect(html).toContain("Pending review");
+    expect(html).toContain("ianzak@mac.com");
+    expect(html).toContain("917-578-7687");
+    // Ensure no stray contact info crept in
+    expect(html).not.toMatch(/[\w.+-]+@(?!mac\.com|email\.mootsframe\.com)[\w.-]+/);
+  });
+
+  it("booking confirmation works without a city", () => {
+    const html = bookingConfirmationEmail({ name: "Jane", territory: "Texas" });
+    expect(html).toContain("Texas");
+    expect(html).toContain("ianzak@mac.com");
   });
 
   it("should handle sendEmail gracefully with valid config", async () => {
