@@ -1,14 +1,17 @@
 # External GTM / AI / Outreach Extraction
 
 **Date:** May 18, 2026  
+**Updated:** May 23, 2026  
 **Status:** Reference layer only. Not execution.  
 **Project:** Moots Forever Frame
 
 ## Governance Note
 
-These notes are extracted from external GTM, AI, sales, ABM, LinkedIn, landing-page, and outbound materials uploaded for review.
+These notes are extracted from external GTM, AI, sales, ABM, LinkedIn, landing-page, AEO/GEO, and outbound materials uploaded for review.
 
-They do not override the existing Moots governance layer:
+Only ideas that improve `https://mootsframe.com/` are retained here. Broader Marketing Lab, portfolio, AEO consulting, local SEO, SaaS, and generic sales-training material is intentionally excluded.
+
+These notes do not override the existing Moots governance layer:
 
 - `docs/DOCTRINE.md`
 - `docs/TERRITORY_AUTHORITY.md`
@@ -37,6 +40,10 @@ For Moots, this maps cleanly to the existing operating system:
 This reinforces the existing motto:
 
 **Signals create awareness. Systems determine action.**
+
+Moots-specific interpretation:
+
+**Architecture beats activity.** The site should not become a pile of disconnected pages, posts, forms, and automations. Everything should route through the same system: territory, doctrine, signal, execution.
 
 ---
 
@@ -75,8 +82,8 @@ Useful site-review rules:
 - Page speed, mobile behavior, accessibility, and clean hierarchy matter.
 - Scripts should be lazy-loaded where possible.
 - Hero imagery should not be lazy-loaded.
-- Navigation is no longer automatically bad on landing pages; it can help users find the right information and reduce dead ends.
-- Ad/page/message fit matters: the promise that brought someone to the page must match the page experience.
+- Navigation can help users find the right information and reduce dead ends.
+- Message/page fit matters: the promise that brought someone to the page must match the page experience.
 
 Moots application:
 
@@ -85,10 +92,11 @@ Moots application:
 - Make form outcomes clear.
 - Avoid adding visual noise.
 - Keep the site calm, fast, and specific.
+- Preserve the production-hosting model: build in GitHub, publish/host in Manus.
 
 ---
 
-## 4. Buyer / Rider Trust Extraction
+## 4. Rider Trust Extraction
 
 The comparison-page material is useful even though Moots is not SaaS.
 
@@ -104,7 +112,7 @@ For Moots, this means:
 - Let the rider self-select.
 - Use permanence, service life, ride intent, terrain, and trust as the frame.
 
-A future comparison/education page could be framed around:
+Future education-page concept, only after production validation:
 
 - Lifetime ownership vs replacement cycles
 - Titanium permanence vs trend-driven replacement
@@ -119,7 +127,7 @@ Do not create this page until production validation is complete.
 
 ## 5. Territory Signal Capture Extraction
 
-The account-signal and ABM material strongly supports a structured territory signal process.
+The account-signal and ABM material supports a structured territory signal process.
 
 For Moots, signal capture should track:
 
@@ -167,9 +175,9 @@ Moots doctrine adjustment:
 
 ---
 
-## 7. Email Sequence Extraction
+## 7. Email / Notification Extraction
 
-Useful sequence structure for later:
+Useful structure for later, after production validation:
 
 1. Intro / relevance
 2. Context or useful content
@@ -178,11 +186,12 @@ Useful sequence structure for later:
 
 Moots adaptation:
 
-- Sequence must be sparse.
+- Email should remain sparse.
 - Each email should have one reason to exist.
 - Use restrained subject lines.
 - Replies should route cleanly to Ian.
 - Sender configuration should remain branded and human.
+- Notifications should confirm action, not feel like marketing automation.
 
 Recommended production email standard remains:
 
@@ -191,7 +200,7 @@ Recommended production email standard remains:
 
 ---
 
-## 8. LinkedIn / Instagram / Social System Extraction
+## 8. Instagram / Social System Extraction
 
 Useful social principle:
 
@@ -218,26 +227,32 @@ Do not turn social into a promotional feed.
 
 ---
 
-## 9. Weekly Operating Digest Extraction
+## 9. Weekly Status / Operating Digest Extraction
 
-A useful future workflow is a weekly internal digest.
+A weekly status-report structure is useful for internal continuity.
 
-Possible format:
+Moots application:
 
+- Use only for internal reporting.
+- Do not create new reporting automation yet.
+- Do not add another workflow until production flows are verified.
+
+Possible internal digest format:
+
+- Current status
 - What changed this week
+- Production validation results
+- Open blockers
 - Territory signal worth watching
-- Production/site issue
 - Dealer or partner note
-- Content opportunity
 - This week's decision
+- Next validation action
 
-This should be internal-only at first.
-
-Do not automate until the Signals Hub and CRM inputs are stable.
+This supports governance continuity without expanding public execution.
 
 ---
 
-## 10. Agentic AI Readiness Extraction
+## 10. AI / Automation Readiness Extraction
 
 The agentic AI material reinforces caution.
 
@@ -277,8 +292,29 @@ Avoid:
 - "book a demo" style language
 - overbuilt automation before validation
 - funnel language in public-facing Moots copy
+- broad Marketing Lab/AEO/GEO consulting language
+- local SEO/restaurant marketing language
+- claims about AI citations or AI search visibility
 
 These materials are useful for structure, not voice.
+
+---
+
+## 12. Discarded for Moots
+
+The following uploaded ideas are not needed for `mootsframe.com` right now:
+
+- J.R. portfolio positioning
+- Marketing Lab playbooks
+- local business/restaurant AEO frameworks
+- broad SEO/GEO/AEO consulting packages
+- SaaS comparison-page execution
+- LinkedIn lead-generation systems
+- generic cold-call scripts
+- new automation skills
+- client reporting systems unrelated to Moots production validation
+
+These may belong elsewhere, but not in the Moots repo unless directly connected to the Moots operating model.
 
 ---
 
