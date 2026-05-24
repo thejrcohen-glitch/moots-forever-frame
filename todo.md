@@ -198,3 +198,46 @@
 - [x] Update og:url and canonical tags if needed
 - [x] Verify all email links use ianzak@mac.com
 - [x] Verify all phone numbers display 917-578-7687
+
+## Feature Batch 8 — Phase 3 Systems (Testimonials, Notifications, Swiss Routes)
+
+### Testimonials System
+- [x] Add testimonials table to drizzle/schema.ts with verification-first model
+- [x] Create testimonialsRouter.ts with admin procedures (list, create, update, verify, reject, delete)
+- [x] Register testimonialsRouter in server/routers.ts
+- [ ] Create Testimonials.tsx page with public testimonials display
+- [ ] Add testimonials admin panel to Admin.tsx
+- [ ] Create testimonial submission form (dealer/person name, quote, territory, context)
+- [ ] Wire testimonial notifications to notifyOwner
+
+### Notifications System
+- [x] Add notifications and notificationPreferences tables to drizzle/schema.ts
+- [x] Create notificationsRouter.ts with user procedures (list, unreadCount, markAsRead, preferences)
+- [x] Register notificationsRouter in server/routers.ts
+- [ ] Create NotificationCenter.tsx component with real-time updates
+- [ ] Add notification bell icon to nav with unread count badge
+- [ ] Integrate notifications with booking confirmations
+- [ ] Integrate notifications with photo approval workflow
+- [ ] Add notification preferences UI to user settings
+
+### Switzerland Route Verification
+- [x] Add swissRoutes table to drizzle/schema.ts with verification status
+- [x] Create swissRoutesRouter.ts with admin procedures (list, create, update, verify, reject, delete)
+- [x] Register swissRoutesRouter in server/routers.ts
+- [ ] Create Switzerland.tsx page with verified routes map
+- [ ] Add routes admin panel to Admin.tsx
+- [ ] Create route submission form (name, distance, elevation, difficulty, bike models)
+- [ ] Integrate Google Maps for route visualization
+- [ ] Add route verification workflow
+
+### Database Migrations
+- [ ] Apply pnpm db:push to sync testimonials, notifications, and swissRoutes tables
+- [ ] Verify all migrations applied successfully in production database
+
+### Testing & Validation
+- [ ] Write unit tests for testimonialsRouter procedures
+- [ ] Write unit tests for notificationsRouter procedures
+- [ ] Write unit tests for swissRoutesRouter procedures
+- [ ] Run pnpm test to verify all tests pass
+- [ ] Run pnpm check for TypeScript validation
+- [ ] Run pnpm build for production build
