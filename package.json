@@ -10,7 +10,8 @@
     "check": "tsc --noEmit",
     "format": "prettier --write .",
     "test": "vitest run",
-    "db:push": "drizzle-kit generate && drizzle-kit migrate"
+    "db:push": "drizzle-kit generate && drizzle-kit migrate",
+    "zapier:mcp": "npx @zapier/mcp"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.693.0",
@@ -78,7 +79,8 @@
     "vaul": "^1.1.2",
     "wouter": "3.7.1",
     "zod": "^4.1.12",
-    "express-rate-limit": "^8.5.2"
+    "express-rate-limit": "^8.5.2",
+    "@zapier/sdk": "^13.3.3"
   },
   "devDependencies": {
     "@builder.io/vite-plugin-jsx-loc": "^0.1.1",
