@@ -15,6 +15,7 @@ import BuildConfigurator from "@/pages/BuildConfigurator";
 import Admin from "@/pages/Admin";
 import Comparison from "@/pages/Comparison";
 import Testimonials from "@/pages/Testimonials";
+import Switzerland from "@/pages/Switzerland";
 
 const ANALYTICS_ENDPOINT = import.meta.env.VITE_ANALYTICS_ENDPOINT;
 const ANALYTICS_WEBSITE_ID = import.meta.env.VITE_ANALYTICS_WEBSITE_ID;
@@ -74,6 +75,7 @@ function Router() {
       <Route path={"/admin"} component={IS_STATIC_SITE ? StaticUnavailablePage : Admin} />
       <Route path={"/comparison"} component={Comparison} />
       <Route path={"/testimonials"} component={IS_STATIC_SITE ? StaticUnavailablePage : Testimonials} />
+      <Route path={"/switzerland"} component={IS_STATIC_SITE ? StaticUnavailablePage : Switzerland} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

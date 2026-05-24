@@ -224,7 +224,7 @@
 - [x] Add swissRoutes table to drizzle/schema.ts with verification status
 - [x] Create swissRoutesRouter.ts with admin procedures (list, create, update, verify, reject, delete)
 - [x] Register swissRoutesRouter in server/routers.ts
-- [ ] Create Switzerland.tsx page with verified routes map
+- [x] Create Switzerland.tsx page with verified routes map
 - [ ] Add routes admin panel to Admin.tsx
 - [ ] Create route submission form (name, distance, elevation, difficulty, bike models)
 - [ ] Integrate Google Maps for route visualization
