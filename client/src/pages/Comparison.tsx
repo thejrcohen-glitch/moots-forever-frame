@@ -7,7 +7,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "wouter";
-import SharedFooter from "@/components/SharedFooter";
 
 // ─── Model Data ────────────────────────────────────────────────────────────────
 interface ModelRec {
@@ -320,11 +319,6 @@ export default function Comparison() {
           </div>
         )}
       </div>
-      <SharedFooter showLinks={true} links={[
-        { label: "Home", href: "/" },
-        { label: "Build", href: "/build" },
-        { label: "Community", href: "/community" },
-      ]} />
     </div>
   );
 }

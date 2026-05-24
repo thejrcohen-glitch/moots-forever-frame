@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, tinyint } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -104,47 +104,3 @@ export const newsletterSubscribers = mysqlTable("newsletter_subscribers", {
 
 export type NewsletterSubscriber = typeof newsletterSubscribers.$inferSelect;
 export type InsertNewsletterSubscriber = typeof newsletterSubscribers.$inferInsert;
-export const notifications = mysqlTable("notifications", {
-  id: int("id").autoincrement().primaryKey(),
-  type: mysqlEnum("type", ["rsvp", "booking", "upload", "lead"]).notNull(),
-  title: varchar("title", { length: 256 }).notNull(),
-  message: text("message").notNull(),
-  territory: mysqlEnum("territory", ["TX", "OK", "AR", "CH", "ALL"]).default("ALL").notNull(),
-  readAt: timestamp("readAt"),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-});
-
-export type Notification = typeof notifications.$inferSelect;
-export type InsertNotification = typeof notifications.$inferInsert;
-
-export const notificationPreferences = mysqlTable("notification_preferences", {
-  id: int("id").autoincrement().primaryKey(),
-  userId: int("userId").notNull(),
-  emailNotifications: tinyint("emailNotifications").default(1).notNull(),
-  inAppNotifications: tinyint("inAppNotifications").default(1).notNull(),
-  territory: mysqlEnum("territory", ["TX", "OK", "AR", "CH", "ALL"]).default("ALL").notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-});
-
-export type NotificationPreference = typeof notificationPreferences.$inferSelect;
-export type InsertNotificationPreference = typeof notificationPreferences.$inferInsert;
-
-export const testimonials = mysqlTable("testimonials", {
-  id: int("id").autoincrement().primaryKey(),
-  personName: varchar("personName", { length: 128 }).notNull(),
-  organization: varchar("organization", { length: 256 }).notNull(),
-  territory: mysqlEnum("territory", ["TX", "OK", "AR", "CH"]).notNull(),
-  quote: text("quote").notNull(),
-  imageUrl: text("imageUrl"),
-  imageKey: text("imageKey"),
-  status: mysqlEnum("status", ["pending", "verified", "rejected"]).default("pending").notNull(),
-  displayOrder: int("displayOrder").default(0).notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-  verifiedAt: timestamp("verifiedAt"),
-  verifiedBy: varchar("verifiedBy", { length: 64 }), // openId of admin who verified
-});
-
-export type Testimonial = typeof testimonials.$inferSelect;
-export type InsertTestimonial = typeof testimonials.$inferInsert;

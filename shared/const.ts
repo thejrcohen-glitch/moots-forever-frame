@@ -45,3 +45,20 @@ export function parseCommunityPhotoTags(raw: string | null | undefined): Communi
     return [];
   }
 }
+
+// Canonical bike model vocabulary for community photo submissions.
+// Kept here so frontend filter UI, upload form, and backend filtering share one source.
+export const MOOTS_BIKE_MODELS = [
+  { slug: "routt-rsl", label: "Routt RSL" },
+  { slug: "routt-45", label: "Routt 45" },
+  { slug: "routt-60", label: "Routt 60" },
+  { slug: "vamoots-rsl", label: "Vamoots RSL" },
+  { slug: "vamoots-dr", label: "Vamoots DR" },
+  { slug: "psychlo-x-rsl", label: "Psychlo X RSL" },
+  { slug: "mooto-x-rsl", label: "Mooto X RSL" },
+] as const;
+
+export type MootsBikeModelSlug = (typeof MOOTS_BIKE_MODELS)[number]["slug"];
+export const MOOTS_BIKE_MODEL_SLUGS = MOOTS_BIKE_MODELS.map(m => m.slug) as readonly MootsBikeModelSlug[];
+export const MOOTS_BIKE_MODEL_LABELS: Record<MootsBikeModelSlug, string> =
+  Object.fromEntries(MOOTS_BIKE_MODELS.map(m => [m.slug, m.label])) as Record<MootsBikeModelSlug, string>;

@@ -11,10 +11,16 @@ import {
   MAX_COMMUNITY_PHOTO_TAGS,
   parseCommunityPhotoTags,
   type CommunityPhotoTagSlug,
+  MOOTS_BIKE_MODEL_SLUGS,
+  type MootsBikeModelSlug,
 } from "../shared/const";
 
 const tagSlugSchema = z.enum(
   COMMUNITY_PHOTO_TAG_SLUGS as unknown as [CommunityPhotoTagSlug, ...CommunityPhotoTagSlug[]]
+);
+
+const bikeModelSlugSchema = z.enum(
+  MOOTS_BIKE_MODEL_SLUGS as unknown as [MootsBikeModelSlug, ...MootsBikeModelSlug[]]
 );
 
 // Project DB rows into a list-friendly shape with a decoded tags array. Keeps
@@ -26,9 +32,10 @@ function projectPhotoRow<T extends { tags: string | null }>(row: T): Omit<T, "ta
 }
 
 export const communityRouter = router({
-  // List all approved photos, optionally filtered by territory and/or tags.
+  // List all approved photos, optionally filtered by territory, tags, and/or bike models.
   // Tag filter semantics: a row matches when its tag set intersects the
-  // requested tag set (OR-match). Filtering happens in JS because tags are
+  // requested tag set (OR-match). Model filter: a row matches when its mootsModel
+  // is in the requested set (OR-match). Filtering happens in JS because tags are
   // stored as a JSON string, not a relational join — the result set is
   // capped at 100 so this stays cheap.
   list: publicProcedure
@@ -36,7 +43,7 @@ export const communityRouter = router({
       z.object({
         territory: z.enum(["TX", "OK", "AR", "ALL"]).optional().default("ALL"),
         tags: z.array(tagSlugSchema).max(MAX_COMMUNITY_PHOTO_TAGS).optional(),
-        models: z.array(z.string()).optional(),
+        models: z.array(bikeModelSlugSchema).optional(),
       })
     )
     .query(async ({ input }) => {
@@ -59,20 +66,34 @@ export const communityRouter = router({
         .limit(100);
 
       const projected = rows.map(projectPhotoRow);
-      
-      // Apply tag filtering (OR-match)
+
+      // Apply tag filter (OR-match: row's tags intersect requested tags)
       let filtered = projected;
       if (input.tags && input.tags.length > 0) {
         const wanted = new Set<string>(input.tags);
         filtered = filtered.filter(p => p.tags.some(t => wanted.has(t)));
       }
-      
-      // Apply model filtering (OR-match)
+
+      // Apply model filter (OR-match: row's mootsModel is in requested models)
       if (input.models && input.models.length > 0) {
-        const wantedModels = new Set<string>(input.models);
+        // Map slug back to display label for comparison
+        const modelLabels = new Map<string, string>([
+          ["routt-rsl", "Routt RSL"],
+          ["routt-45", "Routt 45"],
+          ["routt-60", "Routt 60"],
+          ["vamoots-rsl", "Vamoots RSL"],
+          ["vamoots-dr", "Vamoots DR"],
+          ["psychlo-x-rsl", "Psychlo X RSL"],
+          ["mooto-x-rsl", "Mooto X RSL"],
+        ]);
+        const wantedModels = new Set<string>();
+        for (const slug of input.models) {
+          const label = modelLabels.get(slug);
+          if (label) wantedModels.add(label);
+        }
         filtered = filtered.filter(p => p.mootsModel && wantedModels.has(p.mootsModel));
       }
-      
+
       return filtered;
     }),
 

@@ -20,6 +20,9 @@ import {
   COMMUNITY_PHOTO_TAG_LABELS,
   MAX_COMMUNITY_PHOTO_TAGS,
   type CommunityPhotoTagSlug,
+  MOOTS_BIKE_MODELS,
+  MOOTS_BIKE_MODEL_LABELS,
+  type MootsBikeModelSlug,
 } from "../../../shared/const";
 
 // Row shape returned by community.list — tags is a decoded slug[] (not raw JSON).
@@ -550,28 +553,18 @@ function UploadForm({ onSuccess }: { onSuccess: () => void }) {
   );
 }
 
-// ─── Community Page ────────────────────────────────────────────────────────────
+// // ─── Community Page ────────────────────────────────────────────────────────
 export default function Community() {
   const [filter, setFilter] = useState<"ALL" | "TX" | "OK" | "AR">("ALL");
   const [activeTagFilters, setActiveTagFilters] = useState<CommunityPhotoTagSlug[]>([]);
-  const [selectedModels, setSelectedModels] = useState<string[]>([]);
-  const [lightbox, setLightbox] = useState<CommunityPhoto | null>(null);
-
-  const mootsModels = [
-    { id: "Routt 45", label: "Routt 45" },
-    { id: "Routt RSL", label: "Routt RSL" },
-    { id: "Routt CRD", label: "Routt CRD" },
-    { id: "Routt YBB", label: "Routt YBB" },
-    { id: "Scrambler", label: "Scrambler" },
-    { id: "Womble MXC", label: "Womble MXC" },
-    { id: "Legacy", label: "Legacy" },
-  ];
+  const [selectedModels, setSelectedModels] = useState<MootsBikeModelSlug[]>([]);
+  const [lightbox, setLightbox] = useState<CommunityPhoto | null>(null);;
 
   const utils = trpc.useUtils();
 
   const { data: photos, isLoading, isError } = trpc.community.list.useQuery(
-    { 
-      territory: filter, 
+    {
+      territory: filter,
       tags: activeTagFilters.length > 0 ? activeTagFilters : undefined,
       models: selectedModels.length > 0 ? selectedModels : undefined,
     },
@@ -586,13 +579,8 @@ export default function Community() {
     setActiveTagFilters(prev => (prev.includes(slug) ? prev.filter(t => t !== slug) : [...prev, slug]));
   };
 
-  const toggleModelFilter = (model: string) => {
-    setSelectedModels(prev => (prev.includes(model) ? prev.filter(m => m !== model) : [...prev, model]));
-  };
-
-  const clearAllFilters = () => {
-    setActiveTagFilters([]);
-    setSelectedModels([]);
+  const toggleModelFilter = (slug: MootsBikeModelSlug) => {
+    setSelectedModels(prev => (prev.includes(slug) ? prev.filter(m => m !== slug) : [...prev, slug]));
   };
 
   const filters: { id: "ALL" | "TX" | "OK" | "AR"; label: string }[] = [
@@ -602,12 +590,7 @@ export default function Community() {
     { id: "OK", label: "Oklahoma" },
   ];
 
-  const displayPhotos = useMemo(() => {
-    if (!photos) return [];
-    if (selectedModels.length === 0) return photos;
-    return photos.filter(photo => photo.mootsModel && selectedModels.includes(photo.mootsModel));
-  }, [photos, selectedModels]);
-
+  const displayPhotos = photos ?? [];
   const territoryFilteredCount = useMemo(() => displayPhotos.length, [displayPhotos]);
 
   return (
@@ -656,30 +639,35 @@ export default function Community() {
           </div>
 
           {/* Bike Model filters */}
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-3">
-              <p className="font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.72 0.14 65)" }}>Bike Model</p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {mootsModels.map((model) => {
-                const active = selectedModels.includes(model.id);
-                return (
-                  <button
-                    key={model.id}
-                    onClick={() => toggleModelFilter(model.id)}
-                    aria-pressed={active}
-                    className="font-label text-xs tracking-widest uppercase px-4 py-2 transition-all duration-200"
-                    style={{
-                      background: active ? "oklch(0.55 0.13 145)" : "transparent",
-                      color: active ? "oklch(0.22 0.01 60)" : "oklch(0.52 0.04 65)",
-                      border: `1px solid ${active ? "oklch(0.55 0.13 145)" : "oklch(0.38 0.015 60)"}`,
-                    }}
-                  >
-                    {model.label}
-                  </button>
-                );
-              })}
-            </div>
+          <div className="flex flex-wrap items-center gap-2 mb-6">
+            <span className="font-label text-xs tracking-[0.25em] uppercase mr-1" style={{ color: "oklch(0.52 0.04 65)" }}>Models:</span>
+            {MOOTS_BIKE_MODELS.map(model => {
+              const active = selectedModels.includes(model.slug);
+              return (
+                <button
+                  key={model.slug}
+                  onClick={() => toggleModelFilter(model.slug)}
+                  aria-pressed={active}
+                  className="font-label text-xs tracking-widest uppercase px-3 py-1.5 transition-all duration-150"
+                  style={{
+                    background: active ? "oklch(0.45 0.15 145)" : "transparent",
+                    color: active ? "oklch(0.22 0.01 60)" : "oklch(0.52 0.04 65)",
+                    border: `1px solid ${active ? "oklch(0.45 0.15 145)" : "oklch(0.38 0.015 60)"}`,
+                  }}
+                >
+                  {model.label}
+                </button>
+              );
+            })}
+            {selectedModels.length > 0 && (
+              <button
+                onClick={() => setSelectedModels([])}
+                className="font-mono-custom text-xs ml-1 hover:underline"
+                style={{ color: "oklch(0.52 0.04 65)" }}
+              >
+                Clear
+              </button>
+            )}
           </div>
 
           {/* Tag filters — combine with territory above (AND) */}
@@ -703,13 +691,13 @@ export default function Community() {
                 </button>
               );
             })}
-            {(activeTagFilters.length > 0 || selectedModels.length > 0) && (
+            {activeTagFilters.length > 0 && (
               <button
-                onClick={clearAllFilters}
+                onClick={() => setActiveTagFilters([])}
                 className="font-mono-custom text-xs ml-1 hover:underline"
                 style={{ color: "oklch(0.52 0.04 65)" }}
               >
-                Clear all
+                Clear
               </button>
             )}
           </div>
@@ -756,7 +744,7 @@ export default function Community() {
           {!isLoading && !isError && displayPhotos.length === 0 && (
             <div className="py-24 text-center">
               <p className="font-mono-custom text-sm" style={{ color: "oklch(0.52 0.04 65)" }}>
-                {(activeTagFilters.length > 0 || selectedModels.length > 0)
+                {activeTagFilters.length > 0 || selectedModels.length > 0
                   ? "No photos match your filters. Try adjusting your selection."
                   : "No photos yet for this territory. Be the first to share yours."}
               </p>
