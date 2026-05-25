@@ -133,6 +133,7 @@ function BuildNav() {
   const close = () => setMenuOpen(false);
   const navLinks = [
     { label: "← Home", href: "/" },
+    { label: "Bikes", href: "/bikes" },
     { label: "Compare Models", href: "/comparison" },
     { label: "Dealers", href: "/dealers" },
     { label: "Community", href: "/community" },

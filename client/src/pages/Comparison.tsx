@@ -98,6 +98,7 @@ function ComparisonNav() {
         </Link>
         <div className="hidden md:flex items-center gap-5">
           <Link href="/" className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>← Home</Link>
+          <Link href="/bikes" className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>Bikes</Link>
           <Link href="/build" className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>Build</Link>
           <Link href="/community" className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>Community</Link>
         </div>
@@ -115,6 +116,7 @@ function ComparisonNav() {
         <div className="md:hidden border-t" style={{ background: "oklch(0.28 0.01 60)", borderColor: "oklch(0.38 0.015 60 / 0.4)" }}>
           <div className="container py-6 flex flex-col gap-5">
             <Link href="/" onClick={() => setIsMenuOpen(false)} className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>← Home</Link>
+            <Link href="/bikes" onClick={() => setIsMenuOpen(false)} className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>Bikes</Link>
             <Link href="/build" onClick={() => setIsMenuOpen(false)} className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>Build</Link>
             <Link href="/community" onClick={() => setIsMenuOpen(false)} className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>Community</Link>
           </div>
