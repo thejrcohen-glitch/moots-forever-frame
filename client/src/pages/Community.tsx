@@ -763,7 +763,7 @@ export default function Community() {
       <section className="py-16 relative" style={{ background: "oklch(0.22 0.01 60)" }}>
         <GrainOverlay opacity={0.08} />
         <div className="container relative z-20">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-px" style={{ background: "oklch(0.38 0.015 60)" }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px" style={{ background: "oklch(0.38 0.015 60)" }}>
             <Link href="/engineering">
               <div className="p-8 cursor-pointer hover:opacity-90 transition-opacity" style={{ background: "oklch(0.22 0.01 60)" }}>
                 <p className="font-label text-xs tracking-widest uppercase mb-2" style={{ color: "oklch(0.72 0.14 65)" }}>Learn</p>
@@ -776,10 +776,22 @@ export default function Community() {
               <h3 className="font-display text-2xl font-bold mb-2" style={{ color: "oklch(0.945 0.018 78)" }}>Book a Pop-Up →</h3>
               <p className="font-mono-custom text-xs" style={{ color: "oklch(0.52 0.04 65)" }}>Demo a Moots at your local coffee shop</p>
             </a>
-            <a href="mailto:ianzak@mac.com" className="p-8 hover:opacity-90 transition-opacity" style={{ background: "oklch(0.22 0.01 60)" }}>
+            <a href="mailto:ianzak@mac.com" className="p-8 hover:opacity-90 transition-opacity focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" style={{ background: "oklch(0.22 0.01 60)" }}>
               <p className="font-label text-xs tracking-widest uppercase mb-2" style={{ color: "oklch(0.72 0.14 65)" }}>Own</p>
               <h3 className="font-display text-2xl font-bold mb-2" style={{ color: "oklch(0.945 0.018 78)" }}>Start a Build →</h3>
               <p className="font-mono-custom text-xs" style={{ color: "oklch(0.52 0.04 65)" }}>ianzak@mac.com — Ian Zakrocki, TX · OK · AR</p>
+            </a>
+            <a
+              href="https://www.instagram.com/MootsFrames"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Follow @MootsFrames on Instagram (opens in a new tab)"
+              className="p-8 hover:opacity-90 transition-opacity focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              style={{ background: "oklch(0.25 0.01 60)" }}
+            >
+              <p className="font-label text-xs tracking-widest uppercase mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>Follow</p>
+              <h3 className="font-display text-2xl font-bold mb-2" style={{ color: "oklch(0.945 0.018 78)" }}>@MootsFrames ↗</h3>
+              <p className="font-mono-custom text-xs" style={{ color: "oklch(0.52 0.04 65)" }}>Real bikes, real riders, on Instagram</p>
             </a>
           </div>
         </div>
@@ -801,9 +813,19 @@ export default function Community() {
           </div>
           <div className="mt-8 pt-8 border-t flex flex-col md:flex-row items-center justify-between gap-4" style={{ borderColor: "oklch(0.38 0.015 60 / 0.4)" }}>
             <p className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>© 2026 Moots Bicycle. The Forever Frame Campaign.</p>
-            <div className="flex gap-6">
+            <div className="flex gap-6 items-center">
               <Link href="/engineering"><span className="font-mono-custom text-xs hover:underline cursor-pointer" style={{ color: "oklch(0.38 0.015 60)" }}>Engineering</span></Link>
               <Link href="/"><span className="font-mono-custom text-xs hover:underline cursor-pointer" style={{ color: "oklch(0.38 0.015 60)" }}>Home</span></Link>
+              <a
+                href="https://www.instagram.com/MootsFrames"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Follow @MootsFrames on Instagram (opens in a new tab)"
+                className="font-mono-custom text-xs hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                style={{ color: "oklch(0.72 0.14 65)" }}
+              >
+                @MootsFrames ↗
+              </a>
             </div>
           </div>
         </div>

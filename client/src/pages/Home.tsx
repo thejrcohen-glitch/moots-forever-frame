@@ -294,6 +294,7 @@ function Nav() {
     { label: "Engineering", href: "/engineering" },
     { label: "Community", href: "/community" },
     { label: "Dealers", href: "/dealers" },
+    { label: "@MootsFrames", href: "#follow-the-vibe" },
   ];
 
   return (
@@ -1873,6 +1874,49 @@ function NewsletterSignup() {
   );
 }
 
+// ─── Follow the Vibe (Instagram) ──────────────────────────────────────────────
+function FollowTheVibe() {
+  return (
+    <section
+      id="follow-the-vibe"
+      aria-labelledby="follow-the-vibe-heading"
+      className="py-20 relative overflow-hidden"
+      style={{ background: "oklch(0.22 0.01 60)" }}
+    >
+      <GrainOverlay opacity={0.12} />
+      <div className="container relative z-20">
+        <div className="max-w-2xl mx-auto text-center">
+          <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: "oklch(0.72 0.14 65)" }}>
+            Follow the Frame
+          </p>
+          <h2 id="follow-the-vibe-heading" className="font-display text-4xl md:text-5xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>
+            <span style={{ color: "oklch(0.72 0.14 65)" }}>@MootsFrames</span>
+          </h2>
+          <div className="h-px w-24 mx-auto my-6" style={{ background: "oklch(0.38 0.015 60)" }} />
+          <p className="font-mono-custom text-sm leading-loose mb-8" style={{ color: "oklch(0.78 0.03 70)" }}>
+            Pop-up dates, trailhead snapshots, and titanium in the wild from Bentonville, Austin, and OKC. Hand-curated — no bots, no AI, just real bikes and real riders.
+          </p>
+          <a
+            href="https://www.instagram.com/MootsFrames"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Follow @MootsFrames on Instagram (opens in a new tab)"
+            className="inline-block font-label text-sm tracking-[0.2em] uppercase px-8 py-3.5 transition-all duration-300 hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            style={{ background: "oklch(0.72 0.14 65)", color: "oklch(0.22 0.01 60)" }}
+          >
+            Follow @MootsFrames on Instagram ↗
+          </a>
+          <p className="font-mono-custom text-xs mt-6" style={{ color: "oklch(0.52 0.04 65)" }}>
+            Prefer to ride first? Reach Ian at{" "}
+            <a href="mailto:ianzak@mac.com" className="hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" style={{ color: "oklch(0.72 0.14 65)" }}>ianzak@mac.com</a>
+            {" "}or call <a href="tel:+19175787687" className="hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" style={{ color: "oklch(0.72 0.14 65)" }}>917-578-7687</a>.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ─── Footer ────────────────────────────────────────────────────────────────────
 function Footer() {
   return (
@@ -1886,7 +1930,7 @@ function Footer() {
           </div>
           <div className="flex flex-col gap-1 text-right">
             <p className="font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>Territory Rep · TX · OK · AR</p>
-            <a href="mailto:ianzak@mac.com" className="font-mono-custom text-sm hover:underline" style={{ color: "oklch(0.88 0.025 75)" }}>
+            <a href="mailto:ianzak@mac.com" className="font-mono-custom text-sm hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" style={{ color: "oklch(0.88 0.025 75)" }}>
               ianzak@mac.com
             </a>
             <p className="font-mono-custom text-xs" style={{ color: "oklch(0.52 0.04 65)" }}>Ian Zakrocki — Dealer & Individual Orders</p>
@@ -1894,6 +1938,16 @@ function Footer() {
         </div>
         <div className="mt-8 pt-8 border-t flex flex-col md:flex-row items-center justify-between gap-4" style={{ borderColor: "oklch(0.38 0.015 60 / 0.4)" }}>
           <p className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>© 2026 Moots Bicycle. The Forever Frame Campaign.</p>
+          <a
+            href="https://www.instagram.com/MootsFrames"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Follow @MootsFrames on Instagram (opens in a new tab)"
+            className="font-mono-custom text-xs hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            style={{ color: "oklch(0.72 0.14 65)" }}
+          >
+            Follow @MootsFrames on Instagram ↗
+          </a>
           <p className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>Built in Colorado. Proven in the Ozarks.</p>
         </div>
       </div>
@@ -1919,6 +1973,7 @@ export default function Home() {
       <RideCalendar />
       <BookingForm />
       <NewsletterSignup />
+      <FollowTheVibe />
       <Footer />
     </div>
   );
