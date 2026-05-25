@@ -42,6 +42,7 @@ function Nav() {
   const close = () => setMenuOpen(false);
   const navLinks = [
     { label: "← Home", href: "/" },
+    { label: "Bikes", href: "/bikes" },
     { label: "Community", href: "/community" },
     { label: "Dealers", href: "/dealers" },
     { label: "Build a Moots", href: "/build" },
