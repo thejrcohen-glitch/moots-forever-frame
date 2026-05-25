@@ -134,6 +134,7 @@ function BuildNav() {
   const navLinks = [
     { label: "← Home", href: "/" },
     { label: "Bikes", href: "/bikes" },
+    { label: "Races", href: "/races" },
     { label: "Compare Models", href: "/comparison" },
     { label: "Dealers", href: "/dealers" },
     { label: "Community", href: "/community" },

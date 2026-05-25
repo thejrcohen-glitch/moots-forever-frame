@@ -99,6 +99,7 @@ function ComparisonNav() {
         <div className="hidden md:flex items-center gap-5">
           <Link href="/" className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>← Home</Link>
           <Link href="/bikes" className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>Bikes</Link>
+          <Link href="/races" className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>Races</Link>
           <Link href="/build" className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>Build</Link>
           <Link href="/community" className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>Community</Link>
         </div>
@@ -117,6 +118,7 @@ function ComparisonNav() {
           <div className="container py-6 flex flex-col gap-5">
             <Link href="/" onClick={() => setIsMenuOpen(false)} className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>← Home</Link>
             <Link href="/bikes" onClick={() => setIsMenuOpen(false)} className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>Bikes</Link>
+            <Link href="/races" onClick={() => setIsMenuOpen(false)} className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>Races</Link>
             <Link href="/build" onClick={() => setIsMenuOpen(false)} className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>Build</Link>
             <Link href="/community" onClick={() => setIsMenuOpen(false)} className="font-label text-xs tracking-widest uppercase hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)" }}>Community</Link>
           </div>
