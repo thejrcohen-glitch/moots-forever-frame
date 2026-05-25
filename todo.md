@@ -214,11 +214,11 @@
 - [x] Add notifications and notificationPreferences tables to drizzle/schema.ts
 - [x] Create notificationsRouter.ts with user procedures (list, unreadCount, markAsRead, preferences)
 - [x] Register notificationsRouter in server/routers.ts
-- [ ] Create NotificationCenter.tsx component with real-time updates
-- [ ] Add notification bell icon to nav with unread count badge
+- [x] Create NotificationCenter.tsx component with real-time updates
+- [x] Add notification bell icon to nav with unread count badge
+- [x] Create NotificationPreferences.tsx page for user settings
 - [ ] Integrate notifications with booking confirmations
 - [ ] Integrate notifications with photo approval workflow
-- [ ] Add notification preferences UI to user settings
 
 ### Switzerland Route Verification
 - [x] Add swissRoutes table to drizzle/schema.ts with verification status
