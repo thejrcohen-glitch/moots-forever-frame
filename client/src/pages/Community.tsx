@@ -706,11 +706,15 @@ export default function Community() {
 
           {/* Loading state */}
           {isLoading && (
-            <div className="py-24 flex justify-center">
+            <div className="py-24 flex flex-col items-center justify-center gap-4" role="status" aria-live="polite">
               <div
                 className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin"
                 style={{ borderColor: "oklch(0.72 0.14 65)", borderTopColor: "transparent" }}
+                aria-hidden="true"
               />
+              <p className="font-mono-custom text-xs tracking-widest uppercase" style={{ color: "oklch(0.52 0.04 65)" }}>
+                Loading photos…
+              </p>
             </div>
           )}
 
@@ -745,9 +749,15 @@ export default function Community() {
           {/* Empty state */}
           {!isLoading && !isError && displayPhotos.length === 0 && (
             <div className="py-24 text-center">
-              <p className="font-mono-custom text-sm" style={{ color: "oklch(0.52 0.04 65)" }}>
-                No photos yet for this territory. Be the first to share yours.
-              </p>
+              {filter !== "ALL" || activeTagFilters.length > 0 || activeModelFilters.length > 0 ? (
+                <p className="font-mono-custom text-sm" style={{ color: "oklch(0.52 0.04 65)" }}>
+                  No photos match these filters yet. Try clearing a filter or be the first to share yours.
+                </p>
+              ) : (
+                <p className="font-mono-custom text-sm" style={{ color: "oklch(0.52 0.04 65)" }}>
+                  No photos yet. Be the first to share yours.
+                </p>
+              )}
             </div>
           )}
 
