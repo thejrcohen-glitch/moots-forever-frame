@@ -26,6 +26,23 @@ export const COMMUNITY_PHOTO_TAG_LABELS: Record<CommunityPhotoTagSlug, string> =
   Object.fromEntries(COMMUNITY_PHOTO_TAGS.map(t => [t.slug, t.label])) as Record<CommunityPhotoTagSlug, string>;
 export const MAX_COMMUNITY_PHOTO_TAGS = 5;
 
+// Canonical Moots model vocabulary for the Community Wall filter.
+// Stored values in community_photos.mootsModel are free-text (user-typed or
+// upload-form select), so the filter compares using these exact labels.
+// Keep in sync with the model <select> in the upload form.
+export const COMMUNITY_PHOTO_MODELS = [
+  "Routt RSL",
+  "Routt 45",
+  "Routt 60",
+  "Vamoots RSL",
+  "Vamoots DR",
+  "Psychlo X RSL",
+  "Mooto X RSL",
+] as const;
+
+export type CommunityPhotoModel = (typeof COMMUNITY_PHOTO_MODELS)[number];
+export const MAX_COMMUNITY_PHOTO_MODEL_FILTERS = COMMUNITY_PHOTO_MODELS.length;
+
 /** Parse the JSON-encoded tags column into a safe slug array (drops unknown values). */
 export function parseCommunityPhotoTags(raw: string | null | undefined): CommunityPhotoTagSlug[] {
   if (!raw) return [];
