@@ -56,6 +56,7 @@ function Nav() {
   const navLinks = [
     { label: "← Home", href: "/" },
     { label: "Bikes", href: "/bikes" },
+    { label: "Races", href: "/races" },
     { label: "Engineering", href: "/engineering" },
     { label: "Dealers", href: "/dealers" },
     { label: "Build a Moots", href: "/build" },

@@ -148,6 +148,7 @@ function BikesNav() {
   const close = () => setMenuOpen(false);
   const navLinks = [
     { label: "← Home", href: "/" },
+    { label: "Races", href: "/races" },
     { label: "Engineering", href: "/engineering" },
     { label: "Dealers", href: "/dealers" },
     { label: "Build a Moots", href: "/build" },
