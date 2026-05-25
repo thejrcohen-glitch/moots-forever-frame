@@ -59,6 +59,55 @@ describe("community.list", () => {
     const result = await caller.community.list({});
     expect(Array.isArray(result)).toBe(true);
   });
+
+  it("accepts a models filter alongside territory and tags", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.community.list({
+      territory: "TX",
+      tags: ["gravel"],
+      models: ["Routt RSL", "Vamoots RSL"],
+    });
+    expect(Array.isArray(result)).toBe(true);
+  });
+
+  it("rejects empty model strings", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    await expect(
+      caller.community.list({ territory: "ALL", models: [""] })
+    ).rejects.toThrow();
+  });
+
+  it("rejects model strings longer than 128 chars", async () => {
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    await expect(
+      caller.community.list({ territory: "ALL", models: ["x".repeat(129)] })
+    ).rejects.toThrow();
+  });
+
+  it("rejects more than MAX_COMMUNITY_PHOTO_MODEL_FILTERS models", async () => {
+    const { COMMUNITY_PHOTO_MODELS, MAX_COMMUNITY_PHOTO_MODEL_FILTERS } = await import("../shared/const");
+    const ctx = createPublicContext();
+    const caller = appRouter.createCaller(ctx);
+    const tooMany = Array.from(
+      { length: MAX_COMMUNITY_PHOTO_MODEL_FILTERS + 1 },
+      (_, i) => COMMUNITY_PHOTO_MODELS[i % COMMUNITY_PHOTO_MODELS.length] + `_${i}`
+    );
+    await expect(
+      caller.community.list({ territory: "ALL", models: tooMany })
+    ).rejects.toThrow();
+  });
+});
+
+describe("community models vocabulary", () => {
+  it("exports the canonical Moots model list", async () => {
+    const { COMMUNITY_PHOTO_MODELS } = await import("../shared/const");
+    expect(COMMUNITY_PHOTO_MODELS).toContain("Routt RSL");
+    expect(COMMUNITY_PHOTO_MODELS).toContain("Vamoots RSL");
+    expect(COMMUNITY_PHOTO_MODELS.length).toBeGreaterThan(0);
+  });
 });
 
 describe("community.upload", () => {

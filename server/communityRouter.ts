@@ -9,6 +9,7 @@ import { sendEmail, communityUploadAcknowledgmentEmail } from "./_core/email";
 import {
   COMMUNITY_PHOTO_TAG_SLUGS,
   MAX_COMMUNITY_PHOTO_TAGS,
+  MAX_COMMUNITY_PHOTO_MODEL_FILTERS,
   parseCommunityPhotoTags,
   type CommunityPhotoTagSlug,
 } from "../shared/const";
@@ -26,16 +27,20 @@ function projectPhotoRow<T extends { tags: string | null }>(row: T): Omit<T, "ta
 }
 
 export const communityRouter = router({
-  // List all approved photos, optionally filtered by territory and/or tags.
-  // Tag filter semantics: a row matches when its tag set intersects the
-  // requested tag set (OR-match). Filtering happens in JS because tags are
-  // stored as a JSON string, not a relational join — the result set is
-  // capped at 100 so this stays cheap.
+  // List all approved photos, optionally filtered by territory, tags, and/or
+  // Moots model. Tag/model filter semantics: OR-match within each filter,
+  // AND across filters (a row must match every active filter). Filtering of
+  // tags/models happens in JS because tags are JSON-encoded and mootsModel
+  // is free-text — the 100-row cap keeps this cheap.
   list: publicProcedure
     .input(
       z.object({
         territory: z.enum(["TX", "OK", "AR", "ALL"]).optional().default("ALL"),
         tags: z.array(tagSlugSchema).max(MAX_COMMUNITY_PHOTO_TAGS).optional(),
+        models: z
+          .array(z.string().min(1).max(128))
+          .max(MAX_COMMUNITY_PHOTO_MODEL_FILTERS)
+          .optional(),
       })
     )
     .query(async ({ input }) => {
@@ -57,11 +62,19 @@ export const communityRouter = router({
         .orderBy(desc(communityPhotos.createdAt))
         .limit(100);
 
-      const projected = rows.map(projectPhotoRow);
-      if (!input.tags || input.tags.length === 0) return projected;
+      let projected = rows.map(projectPhotoRow);
 
-      const wanted = new Set<string>(input.tags);
-      return projected.filter(p => p.tags.some(t => wanted.has(t)));
+      if (input.tags && input.tags.length > 0) {
+        const wanted = new Set<string>(input.tags);
+        projected = projected.filter(p => p.tags.some(t => wanted.has(t)));
+      }
+
+      if (input.models && input.models.length > 0) {
+        const wantedModels = new Set<string>(input.models);
+        projected = projected.filter(p => p.mootsModel != null && wantedModels.has(p.mootsModel));
+      }
+
+      return projected;
     }),
 
   // Upload a new community photo

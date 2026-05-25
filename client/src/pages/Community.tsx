@@ -19,7 +19,9 @@ import {
   COMMUNITY_PHOTO_TAGS,
   COMMUNITY_PHOTO_TAG_LABELS,
   MAX_COMMUNITY_PHOTO_TAGS,
+  COMMUNITY_PHOTO_MODELS,
   type CommunityPhotoTagSlug,
+  type CommunityPhotoModel,
 } from "../../../shared/const";
 
 // Row shape returned by community.list — tags is a decoded slug[] (not raw JSON).
@@ -554,12 +556,17 @@ function UploadForm({ onSuccess }: { onSuccess: () => void }) {
 export default function Community() {
   const [filter, setFilter] = useState<"ALL" | "TX" | "OK" | "AR">("ALL");
   const [activeTagFilters, setActiveTagFilters] = useState<CommunityPhotoTagSlug[]>([]);
+  const [activeModelFilters, setActiveModelFilters] = useState<CommunityPhotoModel[]>([]);
   const [lightbox, setLightbox] = useState<CommunityPhoto | null>(null);
 
   const utils = trpc.useUtils();
 
   const { data: photos, isLoading, isError } = trpc.community.list.useQuery(
-    { territory: filter, tags: activeTagFilters.length > 0 ? activeTagFilters : undefined },
+    {
+      territory: filter,
+      tags: activeTagFilters.length > 0 ? activeTagFilters : undefined,
+      models: activeModelFilters.length > 0 ? activeModelFilters : undefined,
+    },
     { refetchOnWindowFocus: false }
   );
 
@@ -569,6 +576,10 @@ export default function Community() {
 
   const toggleTagFilter = (slug: CommunityPhotoTagSlug) => {
     setActiveTagFilters(prev => (prev.includes(slug) ? prev.filter(t => t !== slug) : [...prev, slug]));
+  };
+
+  const toggleModelFilter = (model: CommunityPhotoModel) => {
+    setActiveModelFilters(prev => (prev.includes(model) ? prev.filter(m => m !== model) : [...prev, model]));
   };
 
   const filters: { id: "ALL" | "TX" | "OK" | "AR"; label: string }[] = [
@@ -621,7 +632,7 @@ export default function Community() {
                   border: `1px solid ${filter === f.id ? "oklch(0.72 0.14 65)" : "oklch(0.38 0.015 60)"}`,
                 }}
               >
-                {f.label} {filter === f.id && activeTagFilters.length === 0 && territoryFilteredCount > 0 ? `(${territoryFilteredCount})` : ""}
+                {f.label} {filter === f.id && activeTagFilters.length === 0 && activeModelFilters.length === 0 && territoryFilteredCount > 0 ? `(${territoryFilteredCount})` : ""}
               </button>
             ))}
           </div>
@@ -650,6 +661,39 @@ export default function Community() {
             {activeTagFilters.length > 0 && (
               <button
                 onClick={() => setActiveTagFilters([])}
+                className="font-mono-custom text-xs ml-1 hover:underline"
+                style={{ color: "oklch(0.52 0.04 65)" }}
+              >
+                Clear
+              </button>
+            )}
+          </div>
+
+          {/* Model filters — combine with territory + tags above (AND) */}
+          <div className="flex flex-wrap items-center gap-2 mb-10">
+            <span className="font-label text-xs tracking-[0.25em] uppercase mr-1" style={{ color: "oklch(0.52 0.04 65)" }}>Model:</span>
+            {COMMUNITY_PHOTO_MODELS.map(model => {
+              const active = activeModelFilters.includes(model);
+              return (
+                <button
+                  key={model}
+                  onClick={() => toggleModelFilter(model)}
+                  aria-pressed={active}
+                  data-testid={`model-filter-${model}`}
+                  className="font-label text-xs tracking-widest uppercase px-3 py-1.5 transition-all duration-150"
+                  style={{
+                    background: active ? "oklch(0.72 0.14 65)" : "transparent",
+                    color: active ? "oklch(0.22 0.01 60)" : "oklch(0.52 0.04 65)",
+                    border: `1px solid ${active ? "oklch(0.72 0.14 65)" : "oklch(0.38 0.015 60)"}`,
+                  }}
+                >
+                  {model}
+                </button>
+              );
+            })}
+            {activeModelFilters.length > 0 && (
+              <button
+                onClick={() => setActiveModelFilters([])}
                 className="font-mono-custom text-xs ml-1 hover:underline"
                 style={{ color: "oklch(0.52 0.04 65)" }}
               >
