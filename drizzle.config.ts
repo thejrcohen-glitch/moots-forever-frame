@@ -11,5 +11,7 @@ export default defineConfig({
   dialect: "mysql",
   dbCredentials: {
     url: connectionString,
+    // TiDB Cloud Serverless requires TLS. drizzle-kit forwards this to mysql2.
+    ssl: { minVersion: "TLSv1.2", rejectUnauthorized: true },
   },
 });
