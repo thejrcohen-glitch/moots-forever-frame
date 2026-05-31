@@ -19,10 +19,10 @@ if (typeof window !== "undefined") {
 // ─── SEO & Page Setup ──────────────────────────────────────────────────────────────
 
 // ─── Asset URLs ────────────────────────────────────────────────────────────────
-const HERO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663557843772/QUvoVjeKdQzxhUCD9R3yK5/hero-main-4D9bn8NjtqknDj4u5Mioxh.webp";
-const BADGE_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663557843772/QUvoVjeKdQzxhUCD9R3yK5/moots-badge-SsSjrtob5NzC4d8pf8FWPY.webp";
 const HERO_IMG = "https://moots.com/cdn/shop/files/RouttRSLStanley01.jpg";
 const BADGE_IMG = "https://moots.com/cdn/shop/files/Untitled-8-01.jpg?v=1775151937&width=750";
+
+const TERRITORIES = [
   {
     id: "bentonville",
     name: "Bentonville, AR",
@@ -47,7 +47,7 @@ const BADGE_IMG = "https://moots.com/cdn/shop/files/Untitled-8-01.jpg?v=17751519
     coords: "30.2672° N, 97.7431° W",
     lat: 30.2672,
     lon: -97.7431,
-    img: "https://d2xsxph8kpxj0f.cloudfront.net/310519663557843772/QUvoVjeKdQzxhUCD9R3yK5/territory-austin-XyH5opWd6pBGv7sRuNWxEr.webp",
+    img: "https://moots.com/cdn/shop/files/VaMootsRCSAPEX01.jpg",
     coffee: { name: "Flat Track Coffee", address: "1619 E Cesar Chavez St, Austin, TX", url: "https://flattrackcoffee.com", vibe: "Shares space with Cycleast bike shop. The absolute core of Austin's coffee meets chain grease culture." },
     brewery: { name: "Cosmic Coffee + Beer Garden", address: "121 Pickle Rd, Austin, TX", url: "https://cosmichospitalitygroup.com/south-austin/", vibe: "Massive outdoor garden with food trucks, waterfalls, and a mix of coffee and craft beer. Perfect for a post-ride gathering." },
     model: "Vamoots RSL",
@@ -69,7 +69,6 @@ const BADGE_IMG = "https://moots.com/cdn/shop/files/Untitled-8-01.jpg?v=17751519
     color: "oklch(0.38 0.015 60)",
   },
 ];
-
 // ─── Weather helpers ───────────────────────────────────────────────────────────
 interface WeatherDay {
   date: string;
