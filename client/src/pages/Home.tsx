@@ -21,8 +21,8 @@ if (typeof window !== "undefined") {
 // ─── Asset URLs ────────────────────────────────────────────────────────────────
 const HERO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663557843772/QUvoVjeKdQzxhUCD9R3yK5/hero-main-4D9bn8NjtqknDj4u5Mioxh.webp";
 const BADGE_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663557843772/QUvoVjeKdQzxhUCD9R3yK5/moots-badge-SsSjrtob5NzC4d8pf8FWPY.webp";
-
-const TERRITORIES = [
+const HERO_IMG = "https://moots.com/cdn/shop/files/RouttRSLStanley01.jpg";
+const BADGE_IMG = "https://moots.com/cdn/shop/files/Untitled-8-01.jpg?v=1775151937&width=750";
   {
     id: "bentonville",
     name: "Bentonville, AR",
@@ -32,7 +32,7 @@ const TERRITORIES = [
     coords: "36.3729° N, 94.2088° W",
     lat: 36.3729,
     lon: -94.2088,
-    img: "https://d2xsxph8kpxj0f.cloudfront.net/310519663557843772/QUvoVjeKdQzxhUCD9R3yK5/territory-bentonville-iRc4P2FMuTMdoGFoZkMzdq.webp",
+    img: "https://cdn.shopify.com/s/files/1/0049/1612/files/Screenshot2025-10-16at3.32.05PM.png?v=1760650375",
     coffee: { name: "Airship Coffee at Coler", address: "1300 Applegate Trail, Bentonville, AR", url: "https://airshipcoffee.com", vibe: "Open-air concrete café inside the Coler Mountain Bike Preserve. No front door, no Wi-Fi, just swings, espresso, and trail access." },
     brewery: { name: "Bike Rack Brewing Co.", address: "801 SE 8th St, Bentonville, AR", url: "https://bikerackbrewing.com", vibe: "Bentonville's go-to taproom for trail-ready craft beer, deeply embedded in the local cycling community." },
     model: "Routt 45",
@@ -62,7 +62,7 @@ const TERRITORIES = [
     coords: "35.4676° N, 97.5164° W",
     lat: 35.4676,
     lon: -97.5164,
-    img: "https://d2xsxph8kpxj0f.cloudfront.net/310519663557843772/QUvoVjeKdQzxhUCD9R3yK5/territory-okc-UNC9ch2ArK2NfhctY2yUxW.webp",
+    img: "https://cdn.shopify.com/s/files/1/0049/1612/files/YBB_UDH.jpg?v=1762966604",
     coffee: { name: "Elemental Coffee Roasters", address: "815 N Hudson Ave, Oklahoma City, OK", url: "https://elementalcoffee.com", vibe: "A staple of Midtown OKC, known for excellent roasts and a strong connection to the local cycling community." },
     brewery: { name: "Stonecloud Brewing Company", address: "1012 NW 1st St, Oklahoma City, OK", url: "https://stonecloudbrewing.com", vibe: "Housed in a historic renovated laundry building, a short ride from downtown trails." },
     model: "Routt RSL",
