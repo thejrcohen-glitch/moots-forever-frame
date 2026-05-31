@@ -116,6 +116,10 @@ async function main() {
       for (const term of requiredTerms) {
         const present = text.includes(term);
         rows.push(`- ${term}: ${present ? "YES" : "NO"}\n`);
+
+        if (!present) {
+          failures.push(`Missing required content term on ${url}: ${term}`);
+        }
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
@@ -126,7 +130,7 @@ async function main() {
 
   rows.push("\n## Summary\n");
   if (failures.length === 0) {
-    rows.push("PASS: No suspicious unapproved bike images found.\n");
+    rows.push("PASS: No suspicious unapproved bike images found and all required terms were present.\n");
   } else {
     rows.push("FAILURES:\n");
     for (const failure of failures) rows.push(`- ${failure}\n`);
