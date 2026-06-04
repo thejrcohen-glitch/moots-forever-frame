@@ -12,6 +12,7 @@
 - Before changing files, report intended files and wait for confirmation.
 - Do not run broad rewrites.
 - Prefer small, scoped branches and pull requests.
+- Do not reopen closed PRs, recreate deleted branches, resolve review threads, approve reviews, or merge pull requests without explicit owner confirmation for that exact action.
 - Do not touch `package.json` or `pnpm-lock.yaml` unless explicitly instructed.
 - Do not add Playwright, crawlers, workflows, or dependencies without explicit approval.
 
