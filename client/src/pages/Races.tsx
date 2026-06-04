@@ -60,20 +60,6 @@ const CATEGORIES: Category[] = [
     accent: "oklch(0.35 0.06 145)",
     events: [
       {
-        title: "Gravel Locos",
-        date: "Sat May 9, 2026",
-        location: "Hico, TX (near Austin)",
-        blurb:
-          "Texas gravel racing staple. 100 miles of Hill Country dirt. Moots territory.",
-      },
-      {
-        title: "Red Dirt Gravel Grinder",
-        date: "Sat May 23, 2026",
-        location: "Lake Hefner, Oklahoma City, OK",
-        blurb:
-          "OKC's signature gravel event. Flat, fast, and relentless. Routt RSL weather.",
-      },
-      {
         title: "Slaughter Pen Jam",
         date: "Sat Oct 10, 2026",
         location: "Slaughter Pen Trail, Bentonville, AR",
@@ -156,13 +142,6 @@ const CATEGORIES: Category[] = [
     recommendedBikeLabel: "See the mountain lineup",
     accent: "oklch(0.38 0.015 60)",
     events: [
-      {
-        title: "Oz Trails Off-Road",
-        date: "Sat May 2, 2026",
-        location: "Bentonville, AR",
-        blurb:
-          "One of the premier mountain bike events in the Ozarks. Moots will be in the mix.",
-      },
     ],
     ctas: [
       {
