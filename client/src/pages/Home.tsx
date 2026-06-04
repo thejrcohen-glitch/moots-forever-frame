@@ -465,6 +465,9 @@ function Manifesto() {
           <p className="font-mono-custom text-sm md:text-base leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
             Three territories. Three vibes. One frame that outlasts all of them. We're not selling specs. We're selling the feeling of a sunrise gravel ride in the Ozarks, the grit of East Austin asphalt, and the endless Oklahoma horizon. If you know, you know.
           </p>
+          <p className="font-mono-custom text-sm md:text-base leading-loose mt-6" style={{ color: "oklch(0.78 0.03 70)" }}>
+            Titanium doesn't pick a zip code. Whistler is where frames get tested at elevation, in brake dust, weather, and park laps. If you're riding up there, Ian wants to hear about it.
+          </p>
         </div>
         <div className="mt-20 flex flex-col md:flex-row items-center gap-12 max-w-4xl mx-auto">
           <div className="relative w-48 h-48 flex-shrink-0">
@@ -1016,6 +1019,11 @@ const CALENDAR_EVENTS = [
   // OKC
   { id: 11, territory: "okc", territoryName: "Oklahoma City, OK", type: "popup", title: "Moots Pop-Up: Stonecloud Brewing", date: "2026-06-13", time: "3:00 PM – 6:00 PM", location: "Stonecloud Brewing, OKC", description: "Post-ride taproom takeover. Demo bikes outside, cold pints inside.", contact: "917-578-7687" },
   { id: 12, territory: "okc", territoryName: "Oklahoma City, OK", type: "event", title: "Flint Hills Gravel", date: "2026-10-17", time: "All Day", location: "Emporia, KS (near OKC)", description: "Classic Flint Hills gravel riding. The landscape that inspired the campaign.", contact: null },
+  { id: 13, territory: "bentonville", territoryName: "Bentonville, AR", type: "event", title: "Big Sugar Gravel", date: "2026-10-03", time: "All Day", location: "Bentonville, AR", description: "The premier gravel race of the Ozarks. 100+ miles of dirt. Routt RSL and Routt YBB territory.", contact: null },
+  { id: 14, territory: "austin", territoryName: "Austin, TX", type: "popup", title: "Moots Pop-Up: Flat Track Coffee", date: "2026-07-11", time: "7:30 AM – 10:30 AM", location: "Flat Track Coffee, East Austin", description: "Vamoots RSL demo fleet. Cortados, titanium, and no carbon in sight.", contact: "917-578-7687" },
+  { id: 15, territory: "okc", territoryName: "Tulsa, OK", type: "event", title: "Tulsa Tough", date: "2026-06-19", time: "All Day", location: "Tulsa, OK", description: "Three days of criterium racing through Tulsa neighborhoods. Urban grit, titanium frame.", contact: null },
+  { id: 16, territory: "austin", territoryName: "Houston, TX", type: "event", title: "Tour de Houston", date: "2027-03-07", time: "All Day", location: "Houston, TX", description: "The city century. Flat and fast through Houston. Vamoots RCS built for days like this.", contact: null },
+  { id: 17, territory: "bentonville", territoryName: "Whistler, BC", type: "event", title: "Whistler Park Community Ride", date: "2026-08-15", time: "All Day", location: "Whistler, BC", description: "Moots rides the mountain. Whistler Bike Park — where titanium meets elevation.", contact: null },
 ];
 
 // ─── RSVP Modal ───────────────────────────────────────────────────────────────
