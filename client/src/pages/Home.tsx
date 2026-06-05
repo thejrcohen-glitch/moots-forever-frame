@@ -465,9 +465,19 @@ function Manifesto() {
           <p className="font-mono-custom text-sm md:text-base leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
             Three territories. Three vibes. One frame that outlasts all of them. We're not selling specs. We're selling the feeling of a sunrise gravel ride in the Ozarks, the grit of East Austin asphalt, and the endless Oklahoma horizon. If you know, you know.
           </p>
-          <p className="font-mono-custom text-sm md:text-base leading-loose mt-6" style={{ color: "oklch(0.78 0.03 70)" }}>
-            Titanium doesn't pick a zip code. Whistler is where frames get tested at elevation, in brake dust, weather, and park laps. If you're riding up there, Ian wants to hear about it.
-          </p>
+          <div className="mt-10 border-t border-neutral-700 pt-10">
+            <p className="font-label text-xs tracking-[0.35em] uppercase mb-4" style={{ color: "oklch(0.72 0.14 65)" }}>Beyond the Territory</p>
+            {/* PHOTO PLACEHOLDER — replace src with approved Whistler photo URL when available */}
+            <div className="w-full h-64 bg-neutral-800 flex items-center justify-center mb-6 rounded-sm">
+              <p className="font-mono-custom text-xs" style={{ color: "oklch(0.52 0.03 70)" }}>[ Whistler photo — pending approval ]</p>
+            </div>
+            <p className="font-mono-custom text-sm md:text-base leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+              Titanium doesn't pick a zip code. The territory is TX, AR, and OK — but the frame goes wherever riders take it. Whistler Bike Park is where Moots gets tested at elevation, in brake dust, late-season weather, and park laps that earn it.
+            </p>
+            <p className="font-mono-custom text-sm md:text-base leading-loose mt-4" style={{ color: "oklch(0.78 0.03 70)" }}>
+              If you're riding Whistler on a Moots, Ian wants to hear about it. That's the kind of signal that matters.
+            </p>
+          </div>
         </div>
         <div className="mt-20 flex flex-col md:flex-row items-center gap-12 max-w-4xl mx-auto">
           <div className="relative w-48 h-48 flex-shrink-0">
