@@ -28,4 +28,4 @@
 
 ## Deployment
 
-- Manus deployment is currently blocked by stale deploy cache; do not attempt Manus-related work from this repo.
+- Manus is the production host. After code changes are merged to main, trigger Manual Publish from the Manus Management UI.
