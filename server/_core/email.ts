@@ -7,6 +7,7 @@
 import { Resend } from "resend";
 
 const FROM_ADDRESS = "Moots Forever Frame <hello@email.mootsframe.com>";
+const REPLY_TO_ADDRESS = "ianzak@mac.com";
 
 function getResend(): Resend | null {
   const key = process.env.RESEND_API_KEY;
@@ -36,6 +37,7 @@ export async function sendEmail(payload: EmailPayload): Promise<boolean> {
       to: payload.to,
       subject: payload.subject,
       html: payload.html,
+      replyTo: REPLY_TO_ADDRESS,
     });
     if (error) {
       console.error("[email] Resend error:", error);
