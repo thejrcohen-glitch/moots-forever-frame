@@ -502,6 +502,53 @@ function Manifesto() {
             ))}
           </div>
         </div>
+        <div className="mt-12 max-w-3xl mx-auto">
+          <p className="font-label text-xs tracking-[0.35em] uppercase mb-6 text-center" style={{ color: "oklch(0.72 0.14 65)" }}>Arkansas Territory</p>
+          <p className="font-mono-custom text-sm leading-loose text-center mb-8" style={{ color: "oklch(0.65 0.03 70)" }}>
+            Bentonville is the center but Arkansas runs deep. Ozark gravel, river crossings, ridge roads. Routt territory end to end.
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            {[
+              { city: "Bentonville", note: "Mountain biking capital. Coler. OZ Trails." },
+              { city: "Fayetteville", note: "Gravel hub. Rock n Road country." },
+              { city: "Rogers", note: "NWA trail system. Railyard Bike Park." },
+              { city: "Little Rock", note: "1,200 miles of trails. Delta to downhill." },
+              { city: "Eureka Springs", note: "Steep climbs. Ozark ridge roads." },
+              { city: "Hot Springs", note: "LOViT. Womble. Ouachita IMBA Epics." },
+              { city: "Bella Vista", note: "Masterpiece Trail. Cycling is the identity." },
+              { city: "Mena", note: "Talimena Scenic Drive. Ridge-top road." },
+            ].map(({ city, note }) => (
+              <div key={city} className="p-3 border border-neutral-700 rounded-sm">
+                <p className="font-mono-custom text-xs font-semibold mb-1" style={{ color: "oklch(0.88 0.018 78)" }}>{city}</p>
+                <p className="font-mono-custom text-xs" style={{ color: "oklch(0.55 0.03 70)" }}>{note}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-12 max-w-3xl mx-auto">
+          <p className="font-label text-xs tracking-[0.35em] uppercase mb-6 text-center" style={{ color: "oklch(0.72 0.14 65)" }}>Oklahoma Territory</p>
+          <p className="font-mono-custom text-sm leading-loose text-center mb-8" style={{ color: "oklch(0.65 0.03 70)" }}>
+            Red dirt gravel. Ridge-top byways. Urban bike parks. Oklahoma is underrated riding country and Ian knows every mile of it.
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            {[
+              { city: "Oklahoma City", note: "RIVERSPORT Bike Park. Lake Hefner loop." },
+              { city: "Tulsa", note: "Turkey Mountain. Urban singletrack." },
+              { city: "Stillwater", note: "Stillwater 500. 38 miles of singletrack." },
+              { city: "Norman", note: "Lake Thunderbird. MTB with tech." },
+              { city: "Broken Arrow", note: "Liberty Parkway. 9.5mi urban trail." },
+              { city: "Talihina", note: "Talimena Scenic Byway. Best ridge road in OK." },
+              { city: "Guthrie", note: "Red-dirt gravel hub. Central OK." },
+              { city: "Lawton", note: "Wichita Mountains. Ancient granite roads." },
+            ].map(({ city, note }) => (
+              <div key={city} className="p-3 border border-neutral-700 rounded-sm">
+                <p className="font-mono-custom text-xs font-semibold mb-1" style={{ color: "oklch(0.88 0.018 78)" }}>{city}</p>
+                <p className="font-mono-custom text-xs" style={{ color: "oklch(0.55 0.03 70)" }}>{note}</p>
+              </div>
+            ))}
+          </div>
+        </div>
         <div className="mt-20 flex flex-col md:flex-row items-center gap-12 max-w-4xl mx-auto">
           <div className="relative w-48 h-48 flex-shrink-0">
             <img src={BADGE_IMG} alt="Moots titanium badge detail" className="w-full h-full object-cover" style={{ filter: "saturate(0.9)" }} />
