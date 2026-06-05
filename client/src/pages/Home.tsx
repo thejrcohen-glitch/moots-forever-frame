@@ -479,6 +479,29 @@ function Manifesto() {
             </p>
           </div>
         </div>
+        <div className="mt-20 max-w-3xl mx-auto">
+          <p className="font-label text-xs tracking-[0.35em] uppercase mb-6 text-center" style={{ color: "oklch(0.72 0.14 65)" }}>Texas Territory</p>
+          <p className="font-mono-custom text-sm leading-loose text-center mb-8" style={{ color: "oklch(0.65 0.03 70)" }}>
+            Ian covers TX, AR, and OK. Texas alone is 800 miles of riding — from Houston coastal flats to Hill Country gravel to Dallas urban routes. If you're in the territory, there's a Moots conversation to be had.
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            {[
+              { city: "Houston", note: "Coastal flats. Vamoots RCS territory." },
+              { city: "Dallas / Fort Worth", note: "White Rock Lake. Katy Trail. Urban grit." },
+              { city: "San Antonio", note: "Mission trails. 100+ miles of greenway." },
+              { city: "Austin", note: "East Side. Hill Country. Flat Track Coffee." },
+              { city: "Waco", note: "Gateway to central TX gravel." },
+              { city: "Conroe / Woodlands", note: "North Houston. Pine trails." },
+              { city: "Galveston", note: "Coastal cruising. Vamoots flat." },
+              { city: "Hico", note: "Gravel Locos country. Hill Country dirt." },
+            ].map(({ city, note }) => (
+              <div key={city} className="p-3 border border-neutral-700 rounded-sm">
+                <p className="font-mono-custom text-xs font-semibold mb-1" style={{ color: "oklch(0.88 0.018 78)" }}>{city}</p>
+                <p className="font-mono-custom text-xs" style={{ color: "oklch(0.55 0.03 70)" }}>{note}</p>
+              </div>
+            ))}
+          </div>
+        </div>
         <div className="mt-20 flex flex-col md:flex-row items-center gap-12 max-w-4xl mx-auto">
           <div className="relative w-48 h-48 flex-shrink-0">
             <img src={BADGE_IMG} alt="Moots titanium badge detail" className="w-full h-full object-cover" style={{ filter: "saturate(0.9)" }} />
