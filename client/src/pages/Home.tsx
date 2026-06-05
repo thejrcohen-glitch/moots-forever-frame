@@ -467,10 +467,6 @@ function Manifesto() {
           </p>
           <div className="mt-10 border-t border-neutral-700 pt-10">
             <p className="font-label text-xs tracking-[0.35em] uppercase mb-4" style={{ color: "oklch(0.72 0.14 65)" }}>Beyond the Territory</p>
-            {/* PHOTO PLACEHOLDER — replace src with approved Whistler photo URL when available */}
-            <div className="w-full h-64 bg-neutral-800 flex items-center justify-center mb-6 rounded-sm">
-              <p className="font-mono-custom text-xs" style={{ color: "oklch(0.52 0.03 70)" }}>[ Whistler photo — pending approval ]</p>
-            </div>
             <p className="font-mono-custom text-sm md:text-base leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
               Titanium doesn't pick a zip code. The territory is TX, AR, and OK — but the frame goes wherever riders take it. Whistler Bike Park is where Moots gets tested at elevation, in brake dust, late-season weather, and park laps that earn it.
             </p>
