@@ -68,7 +68,7 @@ const CATEGORIES: Category[] = [
         blurb:
           "Three days of criterium racing through Tulsa neighborhoods. Urban grit, titanium frame.",
         url: "https://www.tulsatough.com",
-        note: "Past event",
+        note: "This weekend",
       },
       {
         title: "Big Sugar Gravel",
