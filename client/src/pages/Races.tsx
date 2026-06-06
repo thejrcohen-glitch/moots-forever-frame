@@ -60,6 +60,20 @@ const CATEGORIES: Category[] = [
     accent: "oklch(0.35 0.06 145)",
     events: [
       {
+        title: "Tulsa Tough",
+        date: "Fri–Sun Jun 19–21, 2026",
+        location: "Tulsa, OK",
+        blurb:
+          "Three days of criterium racing through Tulsa neighborhoods. Urban grit, titanium frame.",
+      },
+      {
+        title: "Big Sugar Gravel",
+        date: "Sat Oct 3, 2026",
+        location: "Bentonville, AR",
+        blurb:
+          "The premier Ozarks gravel race. 100+ miles of dirt. Routt RSL and Routt YBB territory.",
+      },
+      {
         title: "Slaughter Pen Jam",
         date: "Sat Oct 10, 2026",
         location: "Slaughter Pen Trail, Bentonville, AR",
@@ -111,6 +125,13 @@ const CATEGORIES: Category[] = [
         blurb:
           "100-mile road century. The Vamoots RSL was built for days like this.",
       },
+      {
+        title: "Tour de Houston",
+        date: "Sat Mar 7, 2027",
+        location: "Houston, TX",
+        blurb:
+          "The city century. Flat and fast through Houston. Vamoots RCS built for days like this.",
+      },
     ],
     ctas: [
       {
@@ -142,6 +163,13 @@ const CATEGORIES: Category[] = [
     recommendedBikeLabel: "See the mountain lineup",
     accent: "oklch(0.38 0.015 60)",
     events: [
+      {
+        title: "Whistler Park Community Ride",
+        date: "Sat Aug 15, 2026",
+        location: "Whistler, BC",
+        blurb:
+          "Moots rides the mountain. Whistler Bike Park — where titanium meets elevation.",
+      },
     ],
     ctas: [
       {
