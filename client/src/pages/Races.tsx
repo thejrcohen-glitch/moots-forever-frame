@@ -21,6 +21,8 @@ interface RaceEvent {
   date: string;
   location: string;
   blurb: string;
+  url?: string;
+  note?: string;
 }
 
 interface CategoryCta {
@@ -61,17 +63,28 @@ const CATEGORIES: Category[] = [
     events: [
       {
         title: "Tulsa Tough",
-        date: "Fri–Sun Jun 19–21, 2026",
+        date: "Fri–Sun Jun 5–7, 2026",
         location: "Tulsa, OK",
         blurb:
           "Three days of criterium racing through Tulsa neighborhoods. Urban grit, titanium frame.",
+        url: "https://www.tulsatough.com",
+        note: "Past event",
       },
       {
         title: "Big Sugar Gravel",
-        date: "Sat Oct 3, 2026",
+        date: "Sat Oct 17, 2026",
         location: "Bentonville, AR",
         blurb:
           "The premier Ozarks gravel race. 100+ miles of dirt. Routt RSL and Routt YBB territory.",
+        url: "https://www.bigsugarclassic.com/gravel/",
+      },
+      {
+        title: "Grassroots Gravel",
+        date: "Sat Oct 10, 2026",
+        location: "Pueblo, CO",
+        blurb:
+          "Pueblo gravel. 15 to 110 miles through the river corridor. Two-day expo, live music, all levels.",
+        url: "https://raceroster.com/events/2026/113078/grassroots-gravel",
       },
       {
         title: "Slaughter Pen Jam",
@@ -86,6 +99,7 @@ const CATEGORIES: Category[] = [
         location: "Emporia, KS (near OKC)",
         blurb:
           "Classic Flint Hills gravel riding. The landscape that inspired the campaign.",
+        url: "https://flinthillsgravelride.com/",
       },
     ],
     ctas: [
@@ -124,13 +138,24 @@ const CATEGORIES: Category[] = [
         location: "Wichita Falls, TX",
         blurb:
           "100-mile road century. The Vamoots RSL was built for days like this.",
+        url: "https://hh100.org/",
       },
       {
         title: "Tour de Houston",
-        date: "Sat Mar 7, 2027",
+        date: "Sun Apr 12, 2026",
         location: "Houston, TX",
         blurb:
           "The city century. Flat and fast through Houston. Vamoots RCS built for days like this.",
+        url: "https://www.tourdehouston.org",
+        note: "Past event",
+      },
+      {
+        title: "Driveway Series",
+        date: "Mar–Oct 2026 (weekly Thursdays)",
+        location: "Austin, TX",
+        blurb:
+          "The longest-running weekly criterium in the country. Closed circuit, 4 miles from downtown.",
+        url: "https://www.bikereg.com/74301",
       },
     ],
     ctas: [
@@ -359,6 +384,25 @@ function EventCard({ event, accent }: { event: RaceEvent; accent: string }) {
       >
         {event.blurb}
       </p>
+      {event.note && (
+        <p
+          className="font-label text-xs tracking-[0.2em] uppercase mt-4"
+          style={{ color: "oklch(0.52 0.04 65)" }}
+        >
+          {event.note}
+        </p>
+      )}
+      {event.url && (
+        <a
+          href={event.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block font-label text-xs tracking-[0.2em] uppercase mt-4 hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
+          style={{ color: accent }}
+        >
+          Event site →
+        </a>
+      )}
     </article>
   );
 }
