@@ -31,6 +31,7 @@ const TERRITORIES = [
     coffee: { name: "Airship Coffee at Coler", address: "1300 Applegate Trail, Bentonville, AR", url: "https://airshipcoffee.com", vibe: "Open-air concrete café inside the Coler Mountain Bike Preserve. No front door, no Wi-Fi, just swings, espresso, and trail access." },
     brewery: { name: "Bike Rack Brewing Co.", address: "801 SE 8th St, Bentonville, AR", url: "https://bikerackbrewing.com", vibe: "Bentonville's go-to taproom for trail-ready craft beer, deeply embedded in the local cycling community." },
     model: "Routt 45",
+    markets: ["Bentonville", "Fayetteville", "Rogers", "Little Rock", "Eureka Springs", "Hot Springs"],
     color: "oklch(0.35 0.06 145)",
   },
   {
@@ -46,6 +47,7 @@ const TERRITORIES = [
     coffee: { name: "Flat Track Coffee", address: "1619 E Cesar Chavez St, Austin, TX", url: "https://flattrackcoffee.com", vibe: "Shares space with Cycleast bike shop. The absolute core of Austin's coffee meets chain grease culture." },
     brewery: { name: "Cosmic Coffee + Beer Garden", address: "121 Pickle Rd, Austin, TX", url: "https://cosmichospitalitygroup.com/south-austin/", vibe: "Massive outdoor garden with food trucks, waterfalls, and a mix of coffee and craft beer. Perfect for a post-ride gathering." },
     model: "Vamoots RSL",
+    markets: ["Dallas / Fort Worth", "Houston", "Austin", "San Antonio", "Waco", "The Woodlands", "Galveston"],
     color: "oklch(0.52 0.12 45)",
   },
   {
@@ -61,6 +63,7 @@ const TERRITORIES = [
     coffee: { name: "Elemental Coffee Roasters", address: "815 N Hudson Ave, Oklahoma City, OK", url: "https://elementalcoffee.com", vibe: "A staple of Midtown OKC, known for excellent roasts and a strong connection to the local cycling community." },
     brewery: { name: "Stonecloud Brewing Company", address: "1012 NW 1st St, Oklahoma City, OK", url: "https://stonecloudbrewing.com", vibe: "Housed in a historic renovated laundry building, a short ride from downtown trails." },
     model: "Routt RSL",
+    markets: ["Oklahoma City", "Tulsa", "Stillwater", "Norman", "Broken Arrow", "Lawton"],
     color: "oklch(0.38 0.015 60)",
   },
 ];
@@ -286,6 +289,7 @@ function Nav() {
     { label: "Community", href: "/community" },
     { label: "Dealers", href: "/dealers" },
     { label: "@MootsFrames", href: "#follow-the-vibe" },
+    { label: "Facebook", href: "https://www.facebook.com/MootsFrame" },
   ];
 
   return (
@@ -315,6 +319,8 @@ function Nav() {
               <a
                 key={link.label}
                 href={link.href}
+                target={link.href.startsWith("http") ? "_blank" : undefined}
+                rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
                 className="font-label text-xs tracking-widest uppercase transition-opacity hover:opacity-70"
                 style={{ color: scrolled ? "oklch(0.38 0.015 60)" : "oklch(0.945 0.018 78)" }}
               >
@@ -371,6 +377,8 @@ function Nav() {
                 <a
                   key={link.label}
                   href={link.href}
+                  target={link.href.startsWith("http") ? "_blank" : undefined}
+                  rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
                   onClick={close}
                   className="font-label text-sm tracking-widest uppercase transition-opacity hover:opacity-60"
                   style={{ color: "oklch(0.22 0.01 60)" }}
@@ -463,6 +471,9 @@ function Manifesto() {
             </p>
             <p className="font-mono-custom text-sm md:text-base leading-loose mt-4" style={{ color: "oklch(0.78 0.03 70)" }}>
               If you're riding Whistler on a Moots, Ian wants to hear about it. That's the kind of signal that matters.
+            </p>
+            <p className="font-mono-custom text-xs mt-4" style={{ color: "oklch(0.52 0.03 70)" }}>
+              Whistler / BC: Whistler
             </p>
           </div>
         </div>
@@ -583,6 +594,16 @@ function TerritoryCard({ territory, index }: { territory: typeof TERRITORIES[0];
             "{territory.caption}"
           </blockquote>
           <p className="font-mono-custom text-xs" style={{ color: "oklch(0.72 0.14 65)" }}>{territory.hashtags}</p>
+          <div className="mt-5">
+            <p className="font-label text-xs tracking-[0.25em] uppercase mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>Markets</p>
+            <div className="flex flex-wrap gap-2">
+              {territory.markets.map((market) => (
+                <span key={market} className="font-mono-custom text-xs px-2 py-1" style={{ color: "oklch(0.38 0.015 60)", background: "oklch(0.88 0.025 75)" }}>
+                  {market}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
         <div className="mt-8 space-y-4">
           <div className="h-px" style={{ background: "oklch(0.78 0.03 70)" }} />
@@ -1081,19 +1102,19 @@ const CALENDAR_EVENTS = [
   // Bentonville
   { id: 4, territory: "bentonville", territoryName: "Bentonville, AR", type: "event", title: "Slaughter Pen Jam", date: "2026-10-10", time: "All Day", location: "Slaughter Pen Trail, Bentonville", description: "Annual gravel and MTB gathering in the Ozarks. Prime demo opportunity.", contact: null },
   // Austin
-  { id: 7, territory: "austin", territoryName: "Austin, TX", type: "popup", title: "Moots Pop-Up: Cosmic Coffee", date: "2026-06-06", time: "8:00 AM – 11:00 AM", location: "Cosmic Coffee + Beer Garden, Austin", description: "Morning espresso pop-up in the garden. Vamoots RSL and Routt RSL on display.", contact: "917-578-7687" },
+  { id: 7, territory: "austin", territoryName: "Austin, TX", type: "popup", title: "Request a Pop-Up: Austin", date: "2026-06-06", time: "Date TBD", location: "Cosmic Coffee + Beer Garden, Austin", description: "Demo fleet available by request. Location TBD.", contact: "917-578-7687" },
   { id: 8, territory: "austin", territoryName: "Austin, TX", type: "event", title: "Hotter 'N Hell Hundred", date: "2026-08-29", time: "All Day", location: "Wichita Falls, TX", description: "100-mile road century. The Vamoots RSL was built for days like this.", contact: null },
   // OKC
-  { id: 11, territory: "okc", territoryName: "Oklahoma City, OK", type: "popup", title: "Moots Pop-Up: Stonecloud Brewing", date: "2026-06-13", time: "3:00 PM – 6:00 PM", location: "Stonecloud Brewing, OKC", description: "Post-ride taproom takeover. Demo bikes outside, cold pints inside.", contact: "917-578-7687" },
+  { id: 11, territory: "okc", territoryName: "Oklahoma City, OK", type: "popup", title: "Request a Pop-Up: Oklahoma City", date: "2026-06-13", time: "Date TBD", location: "Stonecloud Brewing, OKC", description: "Demo fleet available by request. Location TBD.", contact: "917-578-7687" },
   { id: 12, territory: "okc", territoryName: "Oklahoma City, OK", type: "event", title: "Flint Hills Gravel", date: "2026-10-17", time: "All Day", location: "Emporia, KS (near OKC)", description: "Classic Flint Hills gravel riding. The landscape that inspired the campaign.", contact: null },
   { id: 13, territory: "bentonville", territoryName: "Bentonville, AR", type: "event", title: "Big Sugar Gravel", date: "2026-10-03", time: "All Day", location: "Bentonville, AR", description: "The premier gravel race of the Ozarks. 100+ miles of dirt. Routt RSL and Routt YBB territory.", contact: null },
-  { id: 14, territory: "austin", territoryName: "Austin, TX", type: "popup", title: "Moots Pop-Up: Flat Track Coffee", date: "2026-07-11", time: "7:30 AM – 10:30 AM", location: "Flat Track Coffee, East Austin", description: "Vamoots RSL demo fleet. Cortados, titanium, and no carbon in sight.", contact: "917-578-7687" },
+  { id: 14, territory: "austin", territoryName: "Austin, TX", type: "popup", title: "Request a Pop-Up: Austin", date: "2026-07-11", time: "Date TBD", location: "Flat Track Coffee, East Austin", description: "Demo fleet available by request. Location TBD.", contact: "917-578-7687" },
   { id: 15, territory: "tulsa", territoryName: "Tulsa, OK", type: "event", title: "Tulsa Tough", date: "2026-06-19", time: "All Day", location: "Tulsa, OK", description: "Three days of criterium racing through Tulsa neighborhoods. Urban grit, titanium frame.", contact: null },
   { id: 16, territory: "houston", territoryName: "Houston, TX", type: "event", title: "Tour de Houston", date: "2027-03-07", time: "All Day", location: "Houston, TX", description: "The city century. Flat and fast through Houston. Vamoots RCS built for days like this.", contact: null },
   { id: 17, territory: "bentonville", territoryName: "Whistler, BC", type: "event", title: "Whistler Park Community Ride", date: "2026-08-15", time: "All Day", location: "Whistler, BC", description: "Moots rides the mountain. Whistler Bike Park — where titanium meets elevation.", contact: null },
-  { id: 18, territory: "houston", territoryName: "Houston, TX", type: "popup", title: "Moots Pop-Up: Houston", date: "2026-07-18", time: "8:00 AM – 11:00 AM", location: "Houston, TX", description: "Demo fleet in Houston. Vamoots RCS and Routt RSL on display. Location TBD — request a stop.", contact: "917-578-7687" },
-  { id: 19, territory: "dallas", territoryName: "Dallas / Fort Worth, TX", type: "popup", title: "Moots Pop-Up: Dallas / Fort Worth", date: "2026-07-25", time: "8:00 AM – 11:00 AM", location: "Dallas / Fort Worth, TX", description: "Demo fleet in DFW. Location TBD — request a stop.", contact: "917-578-7687" },
-  { id: 20, territory: "tulsa", territoryName: "Tulsa, OK", type: "popup", title: "Moots Pop-Up: Tulsa", date: "2026-08-01", time: "8:00 AM – 11:00 AM", location: "Tulsa, OK", description: "Demo fleet in Tulsa. Location TBD — request a stop.", contact: "917-578-7687" },
+  { id: 18, territory: "houston", territoryName: "Houston, TX", type: "popup", title: "Request a Pop-Up: Houston", date: "2026-07-18", time: "Date TBD", location: "Houston, TX", description: "Demo fleet available by request. Vamoots RCS and Routt RSL on display. Location TBD.", contact: "917-578-7687" },
+  { id: 19, territory: "dallas", territoryName: "Dallas / Fort Worth, TX", type: "popup", title: "Request a Pop-Up: Dallas / Fort Worth", date: "2026-07-25", time: "Date TBD", location: "Dallas / Fort Worth, TX", description: "Demo fleet available by request. Location TBD.", contact: "917-578-7687" },
+  { id: 20, territory: "tulsa", territoryName: "Tulsa, OK", type: "popup", title: "Request a Pop-Up: Tulsa", date: "2026-08-01", time: "Date TBD", location: "Tulsa, OK", description: "Demo fleet available by request. Location TBD.", contact: "917-578-7687" },
 ];
 
 // ─── RSVP Modal ───────────────────────────────────────────────────────────────
@@ -1153,7 +1174,7 @@ function RsvpModal({ event, onClose }: RsvpModalProps) {
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="font-label text-xs tracking-[0.25em] uppercase mb-1" style={{ color: event.type === "popup" ? "oklch(0.72 0.14 65)" : "oklch(0.52 0.12 45)" }}>
-                {event.type === "popup" ? "Moots Pop-Up" : "Gravel Event"} · {event.territoryName}
+                {event.type === "popup" ? "Request a Pop-Up" : "Gravel Event"} · {event.territoryName}
               </p>
               <h3 className="font-display text-xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>{event.title}</h3>
               <p className="font-mono-custom text-xs mt-1" style={{ color: "oklch(0.52 0.04 65)" }}>{event.time} · {event.location}</p>
@@ -1346,7 +1367,7 @@ function RideCalendar() {
                             color: event.type === "popup" ? "oklch(0.72 0.14 65)" : "oklch(0.52 0.12 45)",
                           }}
                         >
-                          {event.type === "popup" ? "Moots Pop-Up" : "Gravel Event"}
+                          {event.type === "popup" ? "Request a Pop-Up" : "Gravel Event"}
                         </span>
                         <span className="font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.38 0.015 60)" }}>
                           {event.territoryName}
@@ -2014,7 +2035,7 @@ function FollowTheVibe() {
           </h2>
           <div className="h-px w-24 mx-auto my-6" style={{ background: "oklch(0.38 0.015 60)" }} />
           <p className="font-mono-custom text-sm leading-loose mb-8" style={{ color: "oklch(0.78 0.03 70)" }}>
-            Pop-up dates, trailhead snapshots, and titanium in the wild from Bentonville, Austin, and OKC. Hand-curated — no bots, no AI, just real bikes and real riders.
+            Field notes, trailhead snapshots, and titanium in the wild from TX, AR, OK, and Whistler.
           </p>
           <a
             href="https://www.instagram.com/MootsFrames"
@@ -2024,7 +2045,17 @@ function FollowTheVibe() {
             className="inline-block font-label text-sm tracking-[0.2em] uppercase px-8 py-3.5 transition-all duration-300 hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
             style={{ background: "oklch(0.72 0.14 65)", color: "oklch(0.22 0.01 60)" }}
           >
-            Follow @MootsFrames on Instagram ↗
+            Follow the field notes on Instagram.
+          </a>
+          <a
+            href="https://www.facebook.com/MootsFrame"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Follow MootsFrame on Facebook (opens in a new tab)"
+            className="inline-block font-label text-sm tracking-[0.2em] uppercase px-8 py-3.5 mt-3 transition-all duration-300 hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            style={{ border: "1px solid oklch(0.72 0.14 65)", color: "oklch(0.72 0.14 65)" }}
+          >
+            Facebook →
           </a>
           <p className="font-mono-custom text-xs mt-6" style={{ color: "oklch(0.52 0.04 65)" }}>
             Prefer to ride first? Reach Ian at{" "}
@@ -2058,16 +2089,28 @@ function Footer() {
         </div>
         <div className="mt-8 pt-8 border-t flex flex-col md:flex-row items-center justify-between gap-4" style={{ borderColor: "oklch(0.38 0.015 60 / 0.4)" }}>
           <p className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>© 2026 Moots Bicycle. The Forever Frame Campaign.</p>
-          <a
-            href="https://www.instagram.com/MootsFrames"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Follow @MootsFrames on Instagram (opens in a new tab)"
-            className="font-mono-custom text-xs hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-            style={{ color: "oklch(0.72 0.14 65)" }}
-          >
-            Follow @MootsFrames on Instagram ↗
-          </a>
+          <div className="flex flex-col md:flex-row items-center gap-3">
+            <a
+              href="https://www.instagram.com/MootsFrames"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Follow @MootsFrames on Instagram (opens in a new tab)"
+              className="font-mono-custom text-xs hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              style={{ color: "oklch(0.72 0.14 65)" }}
+            >
+              Follow the field notes on Instagram.
+            </a>
+            <a
+              href="https://www.facebook.com/MootsFrame"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Follow MootsFrame on Facebook (opens in a new tab)"
+              className="font-mono-custom text-xs hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              style={{ color: "oklch(0.72 0.14 65)" }}
+            >
+              Facebook →
+            </a>
+          </div>
           <p className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>Built in Colorado. Proven in the Ozarks.</p>
         </div>
       </div>
