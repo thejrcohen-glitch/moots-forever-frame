@@ -7,12 +7,8 @@
  * pop-up booking section, build configurator, and direct contact.
  */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "wouter";
-
-if (typeof window !== "undefined") {
-  document.title = "Moots Races & Events — Gravel, Road, Mountain";
-}
 
 type Discipline = "gravel" | "road" | "mountain";
 
@@ -511,6 +507,22 @@ function CategorySection({ category }: { category: Category }) {
 }
 
 export default function Races() {
+  useEffect(() => {
+    const title = "Races & Events — Moots Forever Frame";
+    const description = "Gravel races, criteriums, and rides across TX, AR, and OK. Real events, real dates, direct registration links.";
+    const setMetaContent = (selector: string, content: string) => {
+      document.querySelector(selector)?.setAttribute("content", content);
+    };
+
+    document.title = title;
+    setMetaContent('meta[name="description"]', description);
+    setMetaContent('meta[property="og:title"]', title);
+    setMetaContent('meta[property="og:description"]', description);
+    setMetaContent('meta[property="og:url"]', "https://mootsframe.com/races");
+    setMetaContent('meta[name="twitter:title"]', title);
+    setMetaContent('meta[name="twitter:description"]', description);
+  }, []);
+
   return (
     <div className="min-h-screen" style={{ background: "oklch(0.22 0.01 60)" }}>
       <RacesNav />

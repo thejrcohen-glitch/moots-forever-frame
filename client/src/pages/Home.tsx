@@ -11,11 +11,6 @@ import { IS_STATIC_SITE } from "@/const";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
-// Set page title for SEO
-if (typeof window !== "undefined") {
-  document.title = "Moots Titanium Bikes — The Forever Frame Campaign";
-}
-
 // ─── SEO & Page Setup ──────────────────────────────────────────────────────────────
 
 // ─── Asset URLs ────────────────────────────────────────────────────────────────
@@ -269,10 +264,6 @@ function Nav() {
     const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    document.title = "Moots Titanium Bikes — The Forever Frame Campaign";
   }, []);
 
   // Close menu on ESC
@@ -2086,10 +2077,22 @@ function Footer() {
 
 // ─── Home Page ─────────────────────────────────────────────────────────────────
 export default function Home() {
-  // Set document title on mount
   useEffect(() => {
-    document.title = "Moots Titanium Bikes — The Forever Frame Campaign";
+    const title = "Moots Forever Frame — TX · AR · OK Territory";
+    const description = "Ian Zakrocki represents Moots titanium bikes across Texas, Arkansas, and Oklahoma. Demo rides, pop-up events, and direct access to the full Moots lineup.";
+    const setMetaContent = (selector: string, content: string) => {
+      document.querySelector(selector)?.setAttribute("content", content);
+    };
+
+    document.title = title;
+    setMetaContent('meta[name="description"]', description);
+    setMetaContent('meta[property="og:title"]', title);
+    setMetaContent('meta[property="og:description"]', description);
+    setMetaContent('meta[property="og:url"]', "https://mootsframe.com");
+    setMetaContent('meta[name="twitter:title"]', title);
+    setMetaContent('meta[name="twitter:description"]', description);
   }, []);
+
   return (
     <div className="min-h-screen" style={{ background: "oklch(0.945 0.018 78)" }}>
       <Nav />
