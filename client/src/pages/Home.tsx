@@ -1650,31 +1650,37 @@ function WarrantyTradeUpSection() {
   );
 }
 
-// Territory ID → DB enum mapping. Switzerland ("ch") is reserved for a future
-// territory expansion — it is intentionally not in the DB enum yet, so the
-// form blocks submission and points the rider at Ian by email/phone instead.
-const TERRITORY_MAP: Record<string, "TX" | "OK" | "AR"> = {
-  bentonville: "AR",
-  austin: "TX",
-  okc: "OK",
-};
-
 const TERRITORY_LABEL: Record<string, string> = {
-  bentonville: "Bentonville, AR — The Ozarks",
-  austin: "Austin, TX — The East Side",
-  okc: "Oklahoma City, OK — Urban Grit",
-  ch: "Switzerland (coming soon)",
+  TX: "Texas",
+  AR: "Arkansas",
+  OK: "Oklahoma",
+  CH: "Whistler / BC",
 };
 
-const TERRITORY_CITY: Record<string, string> = {
-  bentonville: "Bentonville, AR",
-  austin: "Austin, TX",
-  okc: "Oklahoma City, OK",
+const TERRITORY_CITY_OPTIONS: Record<string, string[]> = {
+  TX: ["Houston", "Dallas / Fort Worth", "San Antonio", "Austin", "Waco", "Conroe", "Galveston"],
+  AR: ["Bentonville", "Fayetteville", "Rogers", "Little Rock", "Eureka Springs", "Hot Springs"],
+  OK: ["Oklahoma City", "Tulsa", "Stillwater", "Norman", "Broken Arrow", "Lawton"],
+  CH: ["Whistler"],
 };
+
+const WEATHER_TERRITORY_ID: Record<string, string> = {
+  TX: "austin",
+  AR: "bentonville",
+  OK: "okc",
+};
+
+const POPUP_TYPE_OPTIONS = [
+  "Coffee shop / café",
+  "Brewery",
+  "Bike shop",
+  "Race or ride event",
+  "Not sure yet",
+];
 
 // ─── Booking Form ──────────────────────────────────────────────────────────────
 function BookingForm() {
-  const [form, setForm] = useState({ name: "", email: "", shop: "", territory: "", date: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", shop: "", territory: "", city: "", popupType: "", date: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
 
   const submitMutation = trpc.booking.submit.useMutation({
@@ -1690,10 +1696,10 @@ function BookingForm() {
   // Capacity hint — only queried when a real territory + date are picked, and
   // only when running against the live backend (the static site stub returns
   // a graceful null).
-  const mappedTerritory = TERRITORY_MAP[form.territory];
-  const capacityEnabled = !IS_STATIC_SITE && !!mappedTerritory && !!form.date;
+  const selectedWeatherTerritory = WEATHER_TERRITORY_ID[form.territory];
+  const capacityEnabled = !IS_STATIC_SITE && !!form.territory && !!form.date;
   const capacityQuery = trpc.booking.capacityHint.useQuery(
-    { territory: mappedTerritory ?? "TX", date: form.date },
+    { territory: (form.territory || "TX") as "TX" | "OK" | "AR" | "CH", date: form.date },
     { enabled: capacityEnabled, retry: false }
   );
 
@@ -1703,26 +1709,22 @@ function BookingForm() {
       toast.info("Booking requests are unavailable on the static site. Please email ianzak@mac.com or call 917-578-7687.");
       return;
     }
-    if (form.territory === "ch") {
-      toast.info("Switzerland pop-ups aren't bookable here yet. Email ianzak@mac.com or call 917-578-7687 to be the first on the list.");
+    if (!form.name || !form.email || !form.territory || !form.city) {
+      toast.error("Please fill in all required fields.");
       return;
     }
-    if (!form.name || !form.email || !form.territory || form.territory === "other") {
-      toast.error("Please fill in all required fields and select a territory.");
-      return;
-    }
-    if (!mappedTerritory) {
-      toast.error("Please select a valid territory.");
-      return;
-    }
+    const messageParts = [
+      form.popupType ? `Preferred pop-up type: ${form.popupType}` : null,
+      form.message || null,
+    ].filter(Boolean);
     submitMutation.mutate({
       name: form.name,
       email: form.email,
-      territory: mappedTerritory,
-      city: TERRITORY_CITY[form.territory] ?? form.territory,
+      territory: form.territory as "TX" | "OK" | "AR" | "CH",
+      city: form.city,
       venue: form.shop || undefined,
       preferredDate: form.date || undefined,
-      message: form.message || undefined,
+      message: messageParts.length > 0 ? messageParts.join("\n\n") : undefined,
       eventType: "pop-up-espresso",
     });
   };
@@ -1730,7 +1732,7 @@ function BookingForm() {
   const inputClass = "w-full font-mono-custom text-sm px-4 py-3 border-0 border-b-2 bg-transparent outline-none transition-colors duration-200";
   const inputStyle = { borderBottomColor: "oklch(0.78 0.03 70)", color: "oklch(0.22 0.01 60)" };
 
-  const showWeather = !!mappedTerritory; // skip weather for "other" and "ch"
+  const showWeather = !!selectedWeatherTerritory;
 
   return (
     <section id="book-a-pop-up" className="py-24 relative" style={{ background: "oklch(0.945 0.018 78)" }}>
@@ -1818,19 +1820,13 @@ function BookingForm() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>Territory *</label>
-                        <select className={inputClass} style={{ ...inputStyle, appearance: "none" as const }} value={form.territory} onChange={(e) => setForm({ ...form, territory: e.target.value })}>
+                        <select className={inputClass} style={{ ...inputStyle, appearance: "none" as const }} value={form.territory} onChange={(e) => setForm({ ...form, territory: e.target.value, city: "" })}>
                           <option value="">Select territory...</option>
-                          <option value="bentonville">{TERRITORY_LABEL.bentonville}</option>
-                          <option value="austin">{TERRITORY_LABEL.austin}</option>
-                          <option value="okc">{TERRITORY_LABEL.okc}</option>
-                          <option value="ch" disabled>{TERRITORY_LABEL.ch}</option>
-                          <option value="other">Other (specify in notes)</option>
+                          <option value="TX">{TERRITORY_LABEL.TX}</option>
+                          <option value="AR">{TERRITORY_LABEL.AR}</option>
+                          <option value="OK">{TERRITORY_LABEL.OK}</option>
+                          <option value="CH">{TERRITORY_LABEL.CH}</option>
                         </select>
-                        {form.territory === "ch" && (
-                          <p className="font-mono-custom text-xs mt-2" style={{ color: "oklch(0.52 0.12 45)" }}>
-                            Switzerland pop-ups aren't bookable through this form yet. Email <a className="hover:underline" href="mailto:ianzak@mac.com">ianzak@mac.com</a> or call <a className="hover:underline" href="tel:917-578-7687">917-578-7687</a> to be first on the list.
-                          </p>
-                        )}
                       </div>
                       <div>
                         <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>Preferred Date</label>
@@ -1841,8 +1837,8 @@ function BookingForm() {
                     {/* Weather Widget */}
                     <AnimatePresence>
                       {showWeather && (
-                        <motion.div key={form.territory} initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.4 }}>
-                          <WeatherWidget territoryId={form.territory} selectedDate={form.date} />
+                        <motion.div key={selectedWeatherTerritory} initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.4 }}>
+                          <WeatherWidget territoryId={selectedWeatherTerritory} selectedDate={form.date} />
                         </motion.div>
                       )}
                     </AnimatePresence>
@@ -1858,6 +1854,27 @@ function BookingForm() {
                         </p>
                       </div>
                     )}
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>City *</label>
+                        <select className={inputClass} style={{ ...inputStyle, appearance: "none" as const }} value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} disabled={!form.territory}>
+                          <option value="">Select city...</option>
+                          {(TERRITORY_CITY_OPTIONS[form.territory] ?? []).map((city) => (
+                            <option key={city} value={city}>{city}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>Preferred Pop-Up Type</label>
+                        <select className={inputClass} style={{ ...inputStyle, appearance: "none" as const }} value={form.popupType} onChange={(e) => setForm({ ...form, popupType: e.target.value })}>
+                          <option value="">Select type...</option>
+                          {POPUP_TYPE_OPTIONS.map((type) => (
+                            <option key={type} value={type}>{type}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
 
                     <div>
                       <label className="font-label text-xs tracking-widest uppercase block mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>Notes</label>

@@ -11,6 +11,7 @@ const TERRITORY_LABELS: Record<string, string> = {
   TX: "Texas",
   OK: "Oklahoma",
   AR: "Arkansas",
+  CH: "Whistler / BC",
 };
 
 export const bookingRouter = router({
@@ -23,7 +24,7 @@ export const bookingRouter = router({
       z.object({
         name: z.string().min(1).max(128),
         email: z.string().email(),
-        territory: z.enum(["TX", "OK", "AR"]),
+        territory: z.enum(["TX", "OK", "AR", "CH"]),
         city: z.string().min(1).max(128),
         venue: z.string().max(256).optional(),
         preferredDate: z.string().optional(), // ISO date string YYYY-MM-DD
@@ -146,7 +147,7 @@ export const bookingRouter = router({
   capacityHint: publicProcedure
     .input(
       z.object({
-        territory: z.enum(["TX", "OK", "AR"]),
+        territory: z.enum(["TX", "OK", "AR", "CH"]),
         date: z.string().min(1).max(32),
       })
     )
