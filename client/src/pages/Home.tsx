@@ -1100,6 +1100,9 @@ const CALENDAR_EVENTS = [
   { id: 15, territory: "okc", territoryName: "Tulsa, OK", type: "event", title: "Tulsa Tough", date: "2026-06-19", time: "All Day", location: "Tulsa, OK", description: "Three days of criterium racing through Tulsa neighborhoods. Urban grit, titanium frame.", contact: null },
   { id: 16, territory: "austin", territoryName: "Houston, TX", type: "event", title: "Tour de Houston", date: "2027-03-07", time: "All Day", location: "Houston, TX", description: "The city century. Flat and fast through Houston. Vamoots RCS built for days like this.", contact: null },
   { id: 17, territory: "bentonville", territoryName: "Whistler, BC", type: "event", title: "Whistler Park Community Ride", date: "2026-08-15", time: "All Day", location: "Whistler, BC", description: "Moots rides the mountain. Whistler Bike Park — where titanium meets elevation.", contact: null },
+  { id: 18, territory: "houston", territoryName: "Houston, TX", type: "popup", title: "Moots Pop-Up: Houston", date: "2026-07-18", time: "8:00 AM – 11:00 AM", location: "Houston, TX", description: "Demo fleet in Houston. Vamoots RCS and Routt RSL on display. Location TBD — request a stop.", contact: "917-578-7687" },
+  { id: 19, territory: "dallas", territoryName: "Dallas / Fort Worth, TX", type: "popup", title: "Moots Pop-Up: Dallas / Fort Worth", date: "2026-07-25", time: "8:00 AM – 11:00 AM", location: "Dallas / Fort Worth, TX", description: "Demo fleet in DFW. Location TBD — request a stop.", contact: "917-578-7687" },
+  { id: 20, territory: "tulsa", territoryName: "Tulsa, OK", type: "popup", title: "Moots Pop-Up: Tulsa", date: "2026-08-01", time: "8:00 AM – 11:00 AM", location: "Tulsa, OK", description: "Demo fleet in Tulsa. Location TBD — request a stop.", contact: "917-578-7687" },
 ];
 
 // ─── RSVP Modal ───────────────────────────────────────────────────────────────
@@ -1235,7 +1238,10 @@ function RideCalendar() {
     { id: "all", label: "All Territories" },
     { id: "bentonville", label: "Bentonville, AR" },
     { id: "austin", label: "Austin, TX" },
+    { id: "houston", label: "Houston, TX" },
+    { id: "dallas", label: "Dallas / Fort Worth, TX" },
     { id: "okc", label: "Oklahoma City, OK" },
+    { id: "tulsa", label: "Tulsa, OK" },
   ];
 
   const typeFilters = [
