@@ -110,11 +110,13 @@ export default function BlogPost() {
                   </p>
                 ))}
               </div>
-              <Link href="/#book-a-pop-up">
-                <a className="inline-block font-label text-xs tracking-[0.2em] uppercase px-6 py-3 transition-opacity hover:opacity-80" style={{ background: "oklch(0.72 0.14 65)", color: "oklch(0.22 0.01 60)" }}>
-                  Request a pop-up in your city →
-                </a>
-              </Link>
+              <a
+                href="/#book-a-pop-up"
+                className="inline-block font-label text-xs tracking-[0.2em] uppercase px-6 py-3 transition-opacity hover:opacity-80"
+                style={{ background: "oklch(0.72 0.14 65)", color: "oklch(0.22 0.01 60)" }}
+              >
+                Request a pop-up in your city →
+              </a>
             </>
           ) : (
             <>
