@@ -104,8 +104,8 @@ export default function BlogPost() {
                 {post.date}
               </p>
               <div className="mb-10">
-                {post.body.map((paragraph) => (
-                  <p key={paragraph} className="font-mono-custom text-base leading-loose mb-4" style={{ color: "oklch(0.78 0.03 70)" }}>
+                {post.body.map((paragraph, index) => (
+                  <p key={`${post.slug}-${index}`} className="font-mono-custom text-base leading-loose mb-4" style={{ color: "oklch(0.78 0.03 70)" }}>
                     {paragraph}
                   </p>
                 ))}
