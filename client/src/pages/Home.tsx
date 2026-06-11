@@ -1458,6 +1458,84 @@ function RideCalendar() {
   </>);
 }
 
+// ─── Recent Field Notes ───────────────────────────────────────────────────────
+function RecentFieldNotes() {
+  const notes = [
+    {
+      title: "The First Signal",
+      category: "Dispatch",
+      date: "June 6, 2026",
+      href: "/blog/the-first-signal",
+    },
+    {
+      title: "Grassroots Gravel: Pueblo, October 10",
+      category: "Events",
+      date: "June 6, 2026",
+      href: "/blog/grassroots-gravel-pueblo",
+    },
+    {
+      title: "Where Moots Meets Coffee: Bentonville",
+      category: "Routes",
+      date: "June 6, 2026",
+      href: "/blog/where-moots-meets-coffee-bentonville",
+    },
+  ];
+
+  return (
+    <section className="py-24 relative overflow-hidden" style={{ background: "oklch(0.88 0.025 75)" }}>
+      <GrainOverlay opacity={0.08} />
+      <div className="container relative z-20">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <div>
+            <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: "oklch(0.52 0.12 45)" }}>
+              From the Territory
+            </p>
+            <h2 className="font-display text-4xl md:text-5xl font-bold" style={{ color: "oklch(0.22 0.01 60)" }}>
+              Recent Field Notes
+            </h2>
+            <p className="font-mono-custom text-sm mt-4 max-w-xl leading-loose" style={{ color: "oklch(0.52 0.04 65)" }}>
+              Short notes from the territory. Races, routes, riders, and the signals that matter.
+            </p>
+          </div>
+          <a
+            href="/blog"
+            className="font-label text-xs tracking-[0.2em] uppercase px-6 py-2.5 transition-all hover:opacity-80 self-start md:self-auto"
+            style={{ background: "oklch(0.22 0.01 60)", color: "oklch(0.945 0.018 78)" }}
+          >
+            View all Field Notes →
+          </a>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-px" style={{ background: "oklch(0.78 0.03 70)" }}>
+          {notes.map((note) => (
+            <a
+              key={note.href}
+              href={note.href}
+              className="group block p-7 transition-all duration-300 hover:opacity-90"
+              style={{ background: "oklch(0.945 0.018 78)" }}
+            >
+              <div className="flex items-center gap-3 mb-5 flex-wrap">
+                <span className="font-label text-xs tracking-widest uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>
+                  {note.category}
+                </span>
+                <span className="font-mono-custom text-xs" style={{ color: "oklch(0.52 0.04 65)" }}>
+                  {note.date}
+                </span>
+              </div>
+              <h3 className="font-display text-2xl font-bold leading-tight mb-6" style={{ color: "oklch(0.22 0.01 60)" }}>
+                {note.title}
+              </h3>
+              <span className="font-label text-xs tracking-[0.2em] uppercase transition-opacity group-hover:opacity-70" style={{ color: "oklch(0.52 0.12 45)" }}>
+                Read note →
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ─── Order Section ─────────────────────────────────────────────────────────────
 function OrderSection() {
   return (
@@ -2147,6 +2225,7 @@ export default function Home() {
       <OrderSection />
       <WarrantyTradeUpSection />
       <RideCalendar />
+      <RecentFieldNotes />
       <BookingForm />
       <NewsletterSignup />
       <FollowTheVibe />
