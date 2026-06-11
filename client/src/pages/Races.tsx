@@ -58,6 +58,14 @@ const CATEGORIES: Category[] = [
     accent: "oklch(0.35 0.06 145)",
     events: [
       {
+        title: "SBT GRVL",
+        date: "August 17, 2026",
+        location: "Steamboat Springs, CO",
+        blurb:
+          "Premier gravel race from the birthplace of Moots. Beyond the territory — but very much on signal.",
+        url: "https://sbtgrvl.com",
+      },
+      {
         title: "Tulsa Tough",
         date: "Fri–Sun Jun 5–7, 2026",
         location: "Tulsa, OK",
@@ -96,6 +104,13 @@ const CATEGORIES: Category[] = [
         blurb:
           "Classic Flint Hills gravel riding. The landscape that inspired the campaign.",
         url: "https://flinthillsgravelride.com/",
+      },
+      {
+        title: "The Mid South",
+        date: "March 2027 — date TBD",
+        location: "Stillwater, OK",
+        blurb: "Gravel's proving ground. Stillwater, OK. Ian's backyard.",
+        url: "https://themidsouth.cc",
       },
     ],
     ctas: [
