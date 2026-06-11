@@ -9,6 +9,18 @@ Allow: /community
 Allow: /dealers
 Allow: /build
 
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
 # Block admin and private paths
 Disallow: /admin
 Disallow: /api
