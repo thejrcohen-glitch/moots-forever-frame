@@ -2137,6 +2137,16 @@ export default function Home() {
     setMetaContent('meta[name="twitter:description"]', description);
   }, []);
 
+  useEffect(() => {
+    if (window.location.hash !== "#book-a-pop-up") return;
+
+    const frame = window.requestAnimationFrame(() => {
+      document.getElementById("book-a-pop-up")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
+
   return (
     <div className="min-h-screen" style={{ background: "oklch(0.945 0.018 78)" }}>
       <Nav />
