@@ -64,7 +64,7 @@ const POSTS = [
 export default function BlogPost() {
   const [, params] = useRoute("/blog/:slug");
   const post = POSTS.find((item) => item.slug === params?.slug);
-  const title = post ? `${post.title} — Field Notes` : "Field Notes — Moots Forever Frame";
+  const title = post ? `${post.title} — Field Notes (Blog)` : "Field Notes (Blog) — Moots Forever Frame";
   const description = post ? `${post.category} from the Moots Forever Frame field notes.` : "Field notes from the Moots TX, AR, and OK territory.";
 
   useEffect(() => {
@@ -88,7 +88,7 @@ export default function BlogPost() {
         <div className="container max-w-3xl">
           <Link href="/blog">
             <a className="font-mono-custom text-xs hover:underline" style={{ color: "oklch(0.72 0.14 65)" }}>
-              ← Field Notes
+              ← Field Notes (Blog)
             </a>
           </Link>
 

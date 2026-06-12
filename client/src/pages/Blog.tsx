@@ -24,7 +24,7 @@ const POSTS = [
 
 export default function Blog() {
   useEffect(() => {
-    const title = "Field Notes — Moots Forever Frame";
+    const title = "Field Notes (Blog) — Moots Forever Frame";
     const description = "Field notes from the Moots TX, AR, and OK territory. Dispatches, events, and routes from the road.";
     const setMetaContent = (selector: string, content: string) => {
       document.querySelector(selector)?.setAttribute("content", content);
@@ -47,7 +47,7 @@ export default function Blog() {
             Moots Forever Frame
           </p>
           <h1 className="font-display text-5xl md:text-6xl font-bold mb-5" style={{ color: "oklch(0.945 0.018 78)" }}>
-            Field Notes
+            Field Notes (Blog)
           </h1>
           <p className="font-mono-custom text-sm leading-loose max-w-2xl" style={{ color: "oklch(0.78 0.03 70)" }}>
             Dispatches from the territory. Short notes. Real routes. No gloss.

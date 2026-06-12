@@ -288,7 +288,7 @@ function Nav() {
     { label: "Engineering", href: "/engineering" },
     { label: "Community", href: "/community" },
     { label: "Dealers", href: "/dealers" },
-    { label: "Field Notes", href: "/blog" },
+    { label: "Field Notes (Blog)", href: "/blog" },
     { label: "@MootsFrames", href: "#follow-the-vibe" },
     { label: "Facebook", href: "https://www.facebook.com/MootsFrame" },
   ];
