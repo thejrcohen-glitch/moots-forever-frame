@@ -2141,7 +2141,8 @@ export default function Home() {
     if (window.location.hash !== "#book-a-pop-up") return;
 
     const frame = window.requestAnimationFrame(() => {
-      document.getElementById("book-a-pop-up")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+      document.getElementById("book-a-pop-up")?.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
     });
 
     return () => window.cancelAnimationFrame(frame);
