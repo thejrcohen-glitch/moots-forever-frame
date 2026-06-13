@@ -113,6 +113,28 @@ export default function BlogPost() {
     setMetaContent('meta[property="og:url"]', url);
     setMetaContent('meta[name="twitter:title"]', ogTitle);
     setMetaContent('meta[name="twitter:description"]', ogDescription);
+
+    if (!post || !postSeo) return;
+
+    const articleSchema = {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: post.title,
+      description,
+      datePublished: "2026-06-07",
+      dateModified: "2026-06-07",
+      author: { "@type": "Person", name: "Ian Zakrocki" },
+      publisher: { "@type": "Organization", name: "MootsFrame", url: "https://mootsframe.com" },
+      mainEntityOfPage: url,
+    };
+    const articleSchemaScript = document.createElement("script");
+    articleSchemaScript.type = "application/ld+json";
+    articleSchemaScript.textContent = JSON.stringify(articleSchema);
+    document.head.appendChild(articleSchemaScript);
+
+    return () => {
+      articleSchemaScript.remove();
+    };
   }, [description, ogDescription, ogTitle, post, title]);
 
   return (
