@@ -110,6 +110,7 @@ export default function BlogPost() {
     setMetaContent('meta[property="og:url"]', url);
     setMetaContent('meta[name="twitter:title"]', ogTitle);
     setMetaContent('meta[name="twitter:description"]', ogDescription);
+    document.querySelector('link[rel="canonical"]')?.setAttribute("href", url);
   }, [description, ogDescription, ogTitle, post, title]);
 
   return (
