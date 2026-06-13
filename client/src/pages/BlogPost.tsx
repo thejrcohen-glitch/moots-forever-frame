@@ -1,6 +1,33 @@
 import { useEffect } from "react";
 import { Link, useRoute } from "wouter";
 
+const POST_SEO: Partial<Record<string, { title: string; description: string; ogTitle: string; ogDescription: string }>> = {
+  "the-first-signal": {
+    title: "The First Signal — MootsFrame Field Notes",
+    description:
+      "MootsFrame is live. The Moots territory rep for Texas, Arkansas, and Oklahoma starts here. What this project is, what it means, and where it is going.",
+    ogTitle: "The First Signal — MootsFrame Field Notes",
+    ogDescription:
+      "MootsFrame is live. The Moots territory rep for Texas, Arkansas, and Oklahoma starts here. What this project is, what it means, and where it is going.",
+  },
+  "grassroots-gravel-pueblo": {
+    title: "Grassroots Gravel 2026 — Pueblo, CO — MootsFrame Field Notes",
+    description:
+      "Grassroots Gravel returns October 10, 2026 in Pueblo, CO. 15 to 110 miles of Colorado gravel. Why this race matters to riders in Texas, Arkansas, and Oklahoma.",
+    ogTitle: "Grassroots Gravel 2026 — Pueblo, CO — MootsFrame Field Notes",
+    ogDescription:
+      "Grassroots Gravel returns October 10, 2026 in Pueblo, CO. 15 to 110 miles of Colorado gravel. Why this race matters to riders in Texas, Arkansas, and Oklahoma.",
+  },
+  "where-moots-meets-coffee-bentonville": {
+    title: "Bentonville Gravel and Coffee — Where Moots Meets the Ride — MootsFrame",
+    description:
+      "The gravel scene in Bentonville, Arkansas runs deep. Where cyclists stop for coffee, what routes connect them, and why Moots fits here.",
+    ogTitle: "Bentonville Gravel and Coffee — Where Moots Meets the Ride — MootsFrame",
+    ogDescription:
+      "The gravel scene in Bentonville, Arkansas runs deep. Where cyclists stop for coffee, what routes connect them, and why Moots fits here.",
+  },
+};
+
 const POSTS = [
   {
     slug: "the-first-signal",
@@ -64,8 +91,11 @@ const POSTS = [
 export default function BlogPost() {
   const [, params] = useRoute("/blog/:slug");
   const post = POSTS.find((item) => item.slug === params?.slug);
-  const title = post ? `${post.title} — Field Notes (Blog)` : "Field Notes (Blog) — Moots Forever Frame";
-  const description = post ? `${post.category} from the Moots Forever Frame field notes.` : "Field notes from the Moots TX, AR, and OK territory.";
+  const postSeo = post ? POST_SEO[post.slug] : undefined;
+  const title = postSeo?.title ?? (post ? `${post.title} — Field Notes` : "Field Notes — Moots Forever Frame");
+  const description = postSeo?.description ?? (post ? `${post.category} from the Moots Forever Frame field notes.` : "Field notes from the Moots TX, AR, and OK territory.");
+  const ogTitle = postSeo?.ogTitle ?? title;
+  const ogDescription = postSeo?.ogDescription ?? description;
 
   useEffect(() => {
     const url = post ? `https://mootsframe.com/blog/${post.slug}` : "https://mootsframe.com/blog";
@@ -73,14 +103,17 @@ export default function BlogPost() {
       document.querySelector(selector)?.setAttribute("content", content);
     };
 
+    const canonicalEl = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (canonicalEl) canonicalEl.href = url;
+
     document.title = title;
     setMetaContent('meta[name="description"]', description);
-    setMetaContent('meta[property="og:title"]', title);
-    setMetaContent('meta[property="og:description"]', description);
+    setMetaContent('meta[property="og:title"]', ogTitle);
+    setMetaContent('meta[property="og:description"]', ogDescription);
     setMetaContent('meta[property="og:url"]', url);
-    setMetaContent('meta[name="twitter:title"]', title);
-    setMetaContent('meta[name="twitter:description"]', description);
-  }, [description, post, title]);
+    setMetaContent('meta[name="twitter:title"]', ogTitle);
+    setMetaContent('meta[name="twitter:description"]', ogDescription);
+  }, [description, ogDescription, ogTitle, post, title]);
 
   return (
     <main className="min-h-screen" style={{ background: "oklch(0.22 0.01 60)" }}>
