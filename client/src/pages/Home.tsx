@@ -2016,6 +2016,85 @@ function NewsletterSignup() {
   );
 }
 
+// ─── Social Hub ───────────────────────────────────────────────────────────────
+function SocialHub() {
+  const links = [
+    {
+      label: "Instagram",
+      href: "https://www.instagram.com/mootsframes",
+      copy: "Rides, shop notes, coffee stops, and the quiet work between them.",
+    },
+    {
+      label: "Facebook",
+      href: "https://www.facebook.com/MootsFrame",
+      copy: "Updates, events, Field Notes, and local ride signals.",
+    },
+    {
+      label: "YouTube",
+      href: "#",
+      status: "Coming soon",
+      copy: "Coming soon. Ride notes, routes, and rider stories when the channel is ready.",
+    },
+    {
+      label: "Show Us Your Moots",
+      href: "/community",
+      copy: "Share your Moots, your city, your ride, and the roads that shaped it.",
+    },
+  ];
+
+  return (
+    <section className="py-24 relative overflow-hidden" style={{ background: "oklch(0.88 0.025 75)" }}>
+      <GrainOverlay opacity={0.08} />
+      <div className="container relative z-20">
+        <div className="text-center mb-14">
+          <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: "oklch(0.52 0.12 45)" }}>
+            Social Hub
+          </p>
+          <h2 className="font-display text-4xl md:text-5xl font-bold" style={{ color: "oklch(0.22 0.01 60)" }}>
+            Follow the Frame
+          </h2>
+          <p className="font-mono-custom text-sm mt-4 max-w-xl mx-auto leading-loose" style={{ color: "oklch(0.52 0.04 65)" }}>
+            The latest rides, posts, photos, and rider notes. One place to follow along.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-px max-w-4xl mx-auto" style={{ background: "oklch(0.78 0.03 70)" }}>
+          {links.map((link) => {
+            const isExternal = link.href.startsWith("http");
+            return (
+              <a
+                key={link.label}
+                href={link.href}
+                target={isExternal ? "_blank" : undefined}
+                rel={isExternal ? "noopener noreferrer" : undefined}
+                className="p-10 flex flex-col gap-5 transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                style={{ background: "oklch(0.945 0.018 78)" }}
+              >
+                <div className="flex items-center justify-between gap-4">
+                  <h3 className="font-display text-3xl font-bold" style={{ color: "oklch(0.22 0.01 60)" }}>
+                    {link.label}
+                  </h3>
+                  {link.status && (
+                    <span className="font-label text-xs tracking-[0.2em] uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>
+                      {link.status}
+                    </span>
+                  )}
+                </div>
+                <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.52 0.04 65)" }}>
+                  {link.copy}
+                </p>
+                <span className="font-label text-xs tracking-[0.2em] uppercase mt-auto" style={{ color: "oklch(0.52 0.12 45)" }}>
+                  Visit →
+                </span>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ─── Follow the Vibe (Instagram) ──────────────────────────────────────────────
 function FollowTheVibe() {
   return (
@@ -2149,6 +2228,7 @@ export default function Home() {
       <RideCalendar />
       <BookingForm />
       <NewsletterSignup />
+      <SocialHub />
       <FollowTheVibe />
       <Footer />
     </div>
