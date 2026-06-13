@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link, useRoute } from "wouter";
 
-const POST_SEO: Record<string, { title: string; description: string; ogTitle: string; ogDescription: string }> = {
+const POST_SEO: Partial<Record<string, { title: string; description: string; ogTitle: string; ogDescription: string }>> = {
   "the-first-signal": {
     title: "The First Signal — MootsFrame Field Notes",
     description:
@@ -103,6 +103,9 @@ export default function BlogPost() {
       document.querySelector(selector)?.setAttribute("content", content);
     };
 
+    const canonicalEl = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (canonicalEl) canonicalEl.href = url;
+
     document.title = title;
     setMetaContent('meta[name="description"]', description);
     setMetaContent('meta[property="og:title"]', ogTitle);
@@ -110,7 +113,6 @@ export default function BlogPost() {
     setMetaContent('meta[property="og:url"]', url);
     setMetaContent('meta[name="twitter:title"]', ogTitle);
     setMetaContent('meta[name="twitter:description"]', ogDescription);
-    document.querySelector('link[rel="canonical"]')?.setAttribute("href", url);
   }, [description, ogDescription, ogTitle, post, title]);
 
   return (
