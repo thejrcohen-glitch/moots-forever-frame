@@ -72,7 +72,7 @@ const CATEGORIES: Category[] = [
         blurb:
           "Three days of criterium racing through Tulsa neighborhoods. A strong Oklahoma signal to track for the next cycle.",
         url: "https://www.tulsatough.com",
-        note: "Jun 5–7, 2026",
+        note: "Past 2026 event",
       },
       {
         title: "Life Time Big Sugar Gravel",
@@ -112,6 +112,7 @@ const CATEGORIES: Category[] = [
         blurb:
           "Stillwater dirt, red roads, and a long weekend built around endurance. A strong Oklahoma signal.",
         url: "https://www.midsouthgravel.com/",
+        note: "Past 2026 event",
       },
     ],
     ctas: [
