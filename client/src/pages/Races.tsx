@@ -59,11 +59,11 @@ const CATEGORIES: Category[] = [
     events: [
       {
         title: "SBT GRVL",
-        date: "August 17, 2026",
+        date: "Sunday, June 28, 2026",
         location: "Steamboat Springs, CO",
         blurb:
           "Premier gravel race from the birthplace of Moots. Beyond the territory — but very much on signal.",
-        url: "https://sbtgrvl.com",
+        url: "https://www.sbtgrvl.com/",
       },
       {
         title: "Tulsa Tough",
@@ -148,7 +148,7 @@ const CATEGORIES: Category[] = [
         date: "Sat Aug 29, 2026",
         location: "Wichita Falls, TX",
         blurb:
-          "100-mile road century. The Vamoots RSL was built for days like this.",
+          "Road and gravel weekend in Wichita Falls, August 27–30, 2026. A long, hot Texas signal for riders who know what they are getting into.",
         url: "https://hh100.org/",
       },
       {
