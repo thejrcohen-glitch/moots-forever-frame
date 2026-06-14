@@ -229,6 +229,40 @@ const CATEGORIES: Category[] = [
   },
 ];
 
+const APPROVED_EVENT_SCHEMA = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name: "Hotter 'N Hell Hundred",
+    startDate: "2026-08-27",
+    endDate: "2026-08-30",
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    location: "Wichita Falls, TX",
+    url: "https://hh100.org/",
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name: "Life Time Big Sugar Gravel",
+    startDate: "2026-10-17",
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    location: "Bentonville, AR",
+    url: "https://www.bigsugarclassic.com/gravel/",
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name: "SBT GRVL",
+    startDate: "2026-06-28",
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    location: "Steamboat Springs, CO",
+    url: "https://www.sbtgrvl.com/",
+  },
+];
+
 function RacesNav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const close = () => setMenuOpen(false);
@@ -538,6 +572,15 @@ export default function Races() {
     setMetaContent('meta[property="og:url"]', "https://mootsframe.com/races");
     setMetaContent('meta[name="twitter:title"]', title);
     setMetaContent('meta[name="twitter:description"]', description);
+
+    const eventSchemaScript = document.createElement("script");
+    eventSchemaScript.type = "application/ld+json";
+    eventSchemaScript.textContent = JSON.stringify(APPROVED_EVENT_SCHEMA);
+    document.head.appendChild(eventSchemaScript);
+
+    return () => {
+      eventSchemaScript.remove();
+    };
   }, []);
 
   return (
