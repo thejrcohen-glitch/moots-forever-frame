@@ -70,12 +70,12 @@ const CATEGORIES: Category[] = [
         date: "Fri–Sun Jun 5–7, 2026",
         location: "Tulsa, OK",
         blurb:
-          "Three days of criterium racing through Tulsa neighborhoods. Urban grit, titanium frame.",
+          "Three days of criterium racing through Tulsa neighborhoods. A strong Oklahoma signal to track for the next cycle.",
         url: "https://www.tulsatough.com",
         note: "Jun 5–7, 2026",
       },
       {
-        title: "Big Sugar Gravel",
+        title: "Life Time Big Sugar Gravel",
         date: "Sat Oct 17, 2026",
         location: "Bentonville, AR",
         blurb:
@@ -88,7 +88,7 @@ const CATEGORIES: Category[] = [
         location: "Pueblo, CO",
         blurb:
           "Pueblo gravel. 15 to 110 miles through the river corridor. Two-day expo, live music, all levels.",
-        url: "https://raceroster.com/events/2026/113078/grassroots-gravel",
+        url: "https://www.grassrootsgravel.com/grg-2026",
       },
       {
         title: "Slaughter Pen Jam",
@@ -107,10 +107,11 @@ const CATEGORIES: Category[] = [
       },
       {
         title: "The Mid South",
-        date: "March 2027 — date TBD",
+        date: "March 12–15, 2026",
         location: "Stillwater, OK",
-        blurb: "Gravel's proving ground. Stillwater, OK. Ian's backyard.",
-        url: "https://themidsouth.cc",
+        blurb:
+          "Stillwater dirt, red roads, and a long weekend built around endurance. A strong Oklahoma signal.",
+        url: "https://www.midsouthgravel.com/",
       },
     ],
     ctas: [
