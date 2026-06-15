@@ -267,6 +267,8 @@ const APPROVED_EVENT_SCHEMA = [
   },
 ];
 
+const READABLE_ACCENT_TEXT = "oklch(0.72 0.14 65)";
+
 function RacesNav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const close = () => setMenuOpen(false);
@@ -413,7 +415,7 @@ function EventCard({ event, accent }: { event: RaceEvent; accent: string }) {
     >
       <p
         className="font-label text-xs tracking-[0.25em] uppercase mb-2"
-        style={{ color: accent }}
+        style={{ color: READABLE_ACCENT_TEXT }}
       >
         <time>{event.date}</time>
       </p>
@@ -449,7 +451,7 @@ function EventCard({ event, accent }: { event: RaceEvent; accent: string }) {
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block font-label text-xs tracking-[0.2em] uppercase mt-4 hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
-          style={{ color: accent }}
+          style={{ color: READABLE_ACCENT_TEXT }}
         >
           Event site →
         </a>
@@ -462,7 +464,7 @@ function EventCard({ event, accent }: { event: RaceEvent; accent: string }) {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block font-label text-xs tracking-[0.2em] uppercase hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
-              style={{ color: accent }}
+              style={{ color: READABLE_ACCENT_TEXT }}
             >
               Instagram →
             </a>
@@ -473,7 +475,7 @@ function EventCard({ event, accent }: { event: RaceEvent; accent: string }) {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block font-label text-xs tracking-[0.2em] uppercase hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
-              style={{ color: accent }}
+              style={{ color: READABLE_ACCENT_TEXT }}
             >
               Facebook →
             </a>
@@ -553,7 +555,7 @@ function CategorySection({ category }: { category: Category }) {
       <Link
         href={category.recommendedBikeHref}
         className="inline-block font-label text-xs tracking-[0.2em] uppercase mb-10 hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
-        style={{ color: category.accent }}
+        style={{ color: READABLE_ACCENT_TEXT }}
       >
         {category.recommendedBikeLabel} →
       </Link>
