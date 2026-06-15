@@ -290,7 +290,7 @@ function Nav() {
     { label: "Community", href: "/community" },
     { label: "Dealers", href: "/dealers" },
     { label: "Field Notes (Blog)", href: "/blog" },
-    { label: "Follow the Vibe", href: "#follow-the-vibe" },
+    { label: "MootsFrames / Follow the Vibe", href: "#follow-the-vibe" },
     { label: "Facebook", href: "https://www.facebook.com/MootsFrame" },
     { label: "Instagram", href: "https://www.instagram.com/MootsFrames" },
   ];
