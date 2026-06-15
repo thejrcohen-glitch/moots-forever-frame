@@ -1752,6 +1752,140 @@ function WarrantyTradeUpSection() {
   );
 }
 
+const FEATURED_SIGNAL = {
+  eyebrow: "Featured Signal",
+  title: "SBT GRVL",
+  dateLine: "Steamboat Springs, CO · June 28, 2026",
+  chips: ["Beyond Territory", "Verified Event", "Editorial Signal"],
+  raceFacts:
+    "A public gravel race signal in Steamboat Springs, Colorado — the town that shaped Moots.",
+  fieldNote:
+    "For J.R. and Ian, Steamboat is more than a dot on the calendar. The story belongs in Field Notes. The race facts stay clean.",
+};
+
+function WheelSignalBadge() {
+  const spokes = Array.from({ length: 16 }, (_, i) => i * 22.5);
+
+  return (
+    <svg viewBox="0 0 180 180" className="w-36 h-36 md:w-44 md:h-44" aria-hidden="true" focusable="false">
+      <circle cx="90" cy="90" r="78" fill="none" stroke="oklch(0.72 0.14 65 / 0.9)" strokeWidth="5" />
+      <circle cx="90" cy="90" r="65" fill="none" stroke="oklch(0.88 0.025 75 / 0.22)" strokeWidth="1.5" />
+      {spokes.map((angle) => (
+        <line
+          key={angle}
+          x1="90"
+          y1="90"
+          x2="90"
+          y2="22"
+          stroke="oklch(0.88 0.025 75 / 0.42)"
+          strokeWidth="1"
+          transform={`rotate(${angle} 90 90)`}
+        />
+      ))}
+      <circle cx="90" cy="90" r="14" fill="oklch(0.22 0.01 60)" stroke="oklch(0.72 0.14 65)" strokeWidth="3" />
+      <circle cx="90" cy="90" r="5" fill="oklch(0.72 0.14 65)" />
+    </svg>
+  );
+}
+
+function FeaturedSignal() {
+  return (
+    <section className="py-24 relative overflow-hidden" style={{ background: "oklch(0.18 0.01 60)" }}>
+      <GrainOverlay opacity={0.12} />
+      <div className="container relative z-20">
+        <a
+          href="/races#gravel"
+          className="group grid grid-cols-1 lg:grid-cols-[0.72fr_1.28fr] gap-px transition-opacity hover:opacity-95"
+          style={{ background: "oklch(0.38 0.015 60 / 0.65)" }}
+          aria-label="View SBT GRVL race signal"
+        >
+          <div className="p-10 md:p-12 flex items-center justify-center" style={{ background: "oklch(0.22 0.01 60)" }}>
+            <div className="relative flex items-center justify-center">
+              <div className="absolute inset-0 rounded-full blur-2xl opacity-30" style={{ background: "oklch(0.52 0.12 45)" }} />
+              <WheelSignalBadge />
+            </div>
+          </div>
+
+          <div className="p-8 md:p-12" style={{ background: "oklch(0.24 0.01 60)" }}>
+            <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: "oklch(0.72 0.14 65)" }}>
+              {FEATURED_SIGNAL.eyebrow}
+            </p>
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+              <div>
+                <h2 className="font-display text-4xl md:text-5xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>
+                  {FEATURED_SIGNAL.title}
+                </h2>
+                <p className="font-mono-custom text-sm mt-2" style={{ color: "oklch(0.78 0.03 70)" }}>
+                  {FEATURED_SIGNAL.dateLine}
+                </p>
+              </div>
+              <span className="font-label text-xs tracking-[0.2em] uppercase transition-opacity group-hover:opacity-70" style={{ color: "oklch(0.72 0.14 65)" }}>
+                View race signal →
+              </span>
+            </div>
+
+            <div className="flex flex-wrap gap-2 mb-8">
+              {FEATURED_SIGNAL.chips.map((chip) => (
+                <span
+                  key={chip}
+                  className="font-label text-xs tracking-[0.18em] uppercase px-2.5 py-1"
+                  style={{ background: "oklch(0.30 0.01 60)", color: "oklch(0.88 0.025 75)" }}
+                >
+                  {chip}
+                </span>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <p className="font-label text-xs tracking-[0.25em] uppercase mb-3" style={{ color: "oklch(0.52 0.12 45)" }}>
+                  Race facts
+                </p>
+                <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+                  {FEATURED_SIGNAL.raceFacts}
+                </p>
+              </div>
+              <div>
+                <p className="font-label text-xs tracking-[0.25em] uppercase mb-3" style={{ color: "oklch(0.52 0.12 45)" }}>
+                  Field note
+                </p>
+                <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+                  {FEATURED_SIGNAL.fieldNote}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 mt-8">
+              <span className="font-mono-custom text-xs" style={{ color: "oklch(0.52 0.04 65)" }}>
+                No sponsorship, partnership, attendance, or activation is implied.
+              </span>
+              <span className="font-label text-xs tracking-[0.2em] uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>
+                Field Note coming later
+              </span>
+            </div>
+          </div>
+        </a>
+        <div className="mt-6 flex flex-wrap gap-4">
+          <a
+            href="/races#gravel"
+            className="font-label text-xs tracking-[0.2em] uppercase px-6 py-3 transition-all hover:opacity-80"
+            style={{ background: "oklch(0.72 0.14 65)", color: "oklch(0.22 0.01 60)" }}
+          >
+            View race signal →
+          </a>
+          <a
+            href="/strava"
+            className="font-label text-xs tracking-[0.2em] uppercase px-6 py-3 transition-all hover:opacity-80"
+            style={{ border: "1px solid oklch(0.72 0.14 65 / 0.65)", color: "oklch(0.88 0.025 75)" }}
+          >
+            View Strava signal →
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 const TERRITORY_LABEL: Record<string, string> = {
   TX: "Texas",
   AR: "Arkansas",
@@ -2319,6 +2453,7 @@ export default function Home() {
       <TheVibe />
       <OrderSection />
       <WarrantyTradeUpSection />
+      <FeaturedSignal />
       <RideCalendar />
       <RecentFieldNotes />
       <BookingForm />
