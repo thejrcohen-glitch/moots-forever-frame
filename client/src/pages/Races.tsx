@@ -70,23 +70,6 @@ const CATEGORIES: Category[] = [
         facebookUrl: "https://www.facebook.com/SBTGRVL/",
       },
       {
-        title: "Tulsa Tough",
-        date: "Fri–Sun Jun 5–7, 2026",
-        location: "Tulsa, OK",
-        blurb:
-          "Three days of criterium racing through Tulsa neighborhoods. A strong Oklahoma signal to track for the next cycle.",
-        url: "https://www.tulsatough.com",
-        note: "Past 2026 event",
-      },
-      {
-        title: "Life Time Big Sugar Gravel",
-        date: "Sat Oct 17, 2026",
-        location: "Bentonville, AR",
-        blurb:
-          "The premier Ozarks gravel race. 100+ miles of dirt. Routt RSL and Routt YBB territory.",
-        url: "https://www.bigsugarclassic.com/gravel/",
-      },
-      {
         title: "Grassroots Gravel",
         date: "Sat Oct 10, 2026",
         location: "Pueblo, CO",
@@ -100,6 +83,14 @@ const CATEGORIES: Category[] = [
         location: "Slaughter Pen Trail, Bentonville, AR",
         blurb:
           "Annual gravel and MTB gathering in the Ozarks. Prime demo opportunity.",
+      },
+      {
+        title: "Life Time Big Sugar Gravel",
+        date: "Sat Oct 17, 2026",
+        location: "Bentonville, AR",
+        blurb:
+          "The premier Ozarks gravel race. 100+ miles of dirt. Routt RSL and Routt YBB territory.",
+        url: "https://www.bigsugarclassic.com/gravel/",
       },
       {
         title: "Flint Hills Gravel",
@@ -116,6 +107,15 @@ const CATEGORIES: Category[] = [
         blurb:
           "Stillwater dirt, red roads, and a long weekend built around endurance. A strong Oklahoma signal.",
         url: "https://www.midsouthgravel.com/",
+        note: "Past 2026 event",
+      },
+      {
+        title: "Tulsa Tough",
+        date: "Fri–Sun Jun 5–7, 2026",
+        location: "Tulsa, OK",
+        blurb:
+          "Three days of criterium racing through Tulsa neighborhoods. A strong Oklahoma signal to track for the next cycle.",
+        url: "https://www.tulsatough.com",
         note: "Past 2026 event",
       },
     ],
@@ -150,6 +150,14 @@ const CATEGORIES: Category[] = [
     accent: "oklch(0.52 0.12 45)",
     events: [
       {
+        title: "Driveway Series",
+        date: "Mar–Oct 2026 (weekly Thursdays)",
+        location: "Austin, TX",
+        blurb:
+          "The longest-running weekly criterium in the country. Closed circuit, 4 miles from downtown.",
+        url: "https://www.bikereg.com/74301",
+      },
+      {
         title: "Hotter 'N Hell Hundred",
         date: "Sat Aug 29, 2026",
         location: "Wichita Falls, TX",
@@ -165,14 +173,6 @@ const CATEGORIES: Category[] = [
           "The city century. Flat and fast through Houston. Vamoots RCS built for days like this.",
         url: "https://www.tourdehouston.org",
         note: "Past event",
-      },
-      {
-        title: "Driveway Series",
-        date: "Mar–Oct 2026 (weekly Thursdays)",
-        location: "Austin, TX",
-        blurb:
-          "The longest-running weekly criterium in the country. Closed circuit, 4 miles from downtown.",
-        url: "https://www.bikereg.com/74301",
       },
     ],
     ctas: [
@@ -520,6 +520,9 @@ function CtaRow({ ctas, accent }: { ctas: CategoryCta[]; accent: string }) {
 
 function CategorySection({ category }: { category: Category }) {
   const headingId = `${category.id}-heading`;
+  const activeEvents = category.events.filter((event) => !event.note?.includes("Past"));
+  const pastEvents = category.events.filter((event) => event.note?.includes("Past"));
+
   return (
     <section
       id={category.id}
@@ -562,17 +565,36 @@ function CategorySection({ category }: { category: Category }) {
 
       {category.events.length > 0 ? (
         <>
-          <p
-            className="font-label text-xs tracking-[0.25em] uppercase mb-4"
-            style={{ color: "oklch(0.52 0.04 65)" }}
-          >
-            On the calendar
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {category.events.map((event) => (
-              <EventCard key={event.title} event={event} accent={category.accent} />
-            ))}
-          </div>
+          {activeEvents.length > 0 && (
+            <>
+              <p
+                className="font-label text-xs tracking-[0.25em] uppercase mb-4"
+                style={{ color: "oklch(0.52 0.04 65)" }}
+              >
+                On the calendar
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {activeEvents.map((event) => (
+                  <EventCard key={event.title} event={event} accent={category.accent} />
+                ))}
+              </div>
+            </>
+          )}
+          {pastEvents.length > 0 && (
+            <>
+              <p
+                className="font-label text-xs tracking-[0.25em] uppercase mt-8 mb-4"
+                style={{ color: "oklch(0.52 0.04 65)" }}
+              >
+                Past 2026 events
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {pastEvents.map((event) => (
+                  <EventCard key={event.title} event={event} accent={category.accent} />
+                ))}
+              </div>
+            </>
+          )}
         </>
       ) : (
         <p
