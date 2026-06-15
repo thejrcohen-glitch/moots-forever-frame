@@ -1116,7 +1116,8 @@ const CALENDAR_EVENTS = [
 { id: 18, territory: "houston", territoryName: "Houston, TX", type: "popup", title: "Request a Pop-Up: Houston", date: "2026-07-18", time: "By request", location: "Houston, TX", description: "Demo fleet available by request. Vamoots RCS and Routt RSL on display. Location TBD.", contact: "917-578-7687" },
 { id: 19, territory: "dallas", territoryName: "Dallas / Fort Worth, TX", type: "popup", title: "Request a Pop-Up: Dallas / Fort Worth", date: "2026-07-25", time: "By request", location: "Dallas / Fort Worth, TX", description: "Demo fleet available by request. Location TBD.", contact: "917-578-7687" },
 { id: 20, territory: "tulsa", territoryName: "Tulsa, OK", type: "popup", title: "Request a Pop-Up: Tulsa", date: "2026-08-01", time: "By request", location: "Tulsa, OK", description: "Demo fleet available by request. Location TBD.", contact: "917-578-7687" },
-{ id: 21, territory: "beyond", territoryName: "Beyond Territory", type: "event", title: "SBT GRVL", date: "2026-06-28", time: "All Day", location: "Steamboat Springs, CO", description: "Public gravel event in Steamboat Springs, CO. Beyond Territory / Moots hometown signal.", contact: null }
+{ id: 21, territory: "beyond", territoryName: "Beyond Territory", type: "event", title: "SBT GRVL", date: "2026-06-28", time: "All Day", location: "Steamboat Springs, CO", description: "Public gravel event in Steamboat Springs, CO. Beyond Territory / Moots hometown signal.", contact: null },
+{ id: 22, territory: "beyond", territoryName: "Beyond Territory", type: "event", title: "Triple Bypass", date: "2026-07-11", time: "All Day", location: "Evergreen, CO", description: "Three Colorado passes. Evergreen to Avon. A Beyond Territory road signal worth watching.", contact: null }
 ];
 
 // ─── RSVP Modal ───────────────────────────────────────────────────────────────
