@@ -18,6 +18,8 @@ interface RaceEvent {
   location: string;
   blurb: string;
   url?: string;
+  instagramUrl?: string;
+  facebookUrl?: string;
   note?: string;
 }
 
@@ -64,6 +66,8 @@ const CATEGORIES: Category[] = [
         blurb:
           "Premier gravel race from the birthplace of Moots. Beyond the territory — but very much on signal.",
         url: "https://www.sbtgrvl.com/",
+        instagramUrl: "https://www.instagram.com/sbtgrvl",
+        facebookUrl: "https://www.facebook.com/SBTGRVL/",
       },
       {
         title: "Tulsa Tough",
@@ -449,6 +453,32 @@ function EventCard({ event, accent }: { event: RaceEvent; accent: string }) {
         >
           Event site →
         </a>
+      )}
+      {(event.instagramUrl || event.facebookUrl) && (
+        <div className="flex flex-wrap gap-4 mt-3">
+          {event.instagramUrl && (
+            <a
+              href={event.instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block font-label text-xs tracking-[0.2em] uppercase hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
+              style={{ color: accent }}
+            >
+              Instagram →
+            </a>
+          )}
+          {event.facebookUrl && (
+            <a
+              href={event.facebookUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block font-label text-xs tracking-[0.2em] uppercase hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
+              style={{ color: accent }}
+            >
+              Facebook →
+            </a>
+          )}
+        </div>
       )}
     </article>
   );
