@@ -16,6 +16,7 @@ import Admin from "@/pages/Admin";
 import Comparison from "@/pages/Comparison";
 import Bikes from "@/pages/Bikes";
 import Races from "@/pages/Races";
+import Routes from "@/pages/Routes";
 import Blog from "@/pages/Blog";
 import BlogPost from "@/pages/BlogPost";
 
@@ -78,6 +79,7 @@ function Router() {
       <Route path={"/comparison"} component={Comparison} />
       <Route path={"/bikes"} component={Bikes} />
       <Route path={"/races"} component={Races} />
+      <Route path={"/routes"} component={Routes} />
       <Route path={"/blog"} component={Blog} />
       <Route path={"/blog/:slug"} component={BlogPost} />
       <Route path={"/404"} component={NotFound} />
