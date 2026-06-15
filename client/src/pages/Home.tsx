@@ -286,6 +286,7 @@ function Nav() {
     { label: "Book a Pop-Up", href: "#book-a-pop-up" },
     { label: "Bikes", href: "/bikes" },
     { label: "Routes", href: "/routes" },
+    { label: "Strava", href: "/strava" },
     { label: "Engineering", href: "/engineering" },
     { label: "Community", href: "/community" },
     { label: "Dealers", href: "/dealers" },
