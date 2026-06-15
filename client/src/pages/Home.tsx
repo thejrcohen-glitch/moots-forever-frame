@@ -1104,18 +1104,18 @@ const CALENDAR_EVENTS = [
   { id: 4, territory: "bentonville", territoryName: "Bentonville, AR", type: "event", title: "Slaughter Pen Jam", date: "2026-10-10", time: "All Day", location: "Slaughter Pen Trail, Bentonville", description: "Annual gravel and MTB gathering in the Ozarks. Prime demo opportunity.", contact: null },
   // Austin
   { id: 7, territory: "austin", territoryName: "Austin, TX", type: "popup", title: "Request a Pop-Up: Austin", date: "2026-06-06", time: "Date TBD", location: "Cosmic Coffee + Beer Garden, Austin", description: "Demo fleet available by request. Location TBD.", contact: "917-578-7687" },
-  { id: 8, territory: "austin", territoryName: "Austin, TX", type: "event", title: "Hotter 'N Hell Hundred", date: "2026-08-29", time: "All Day", location: "Wichita Falls, TX", description: "100-mile road century. The Vamoots RSL was built for days like this.", contact: null },
+  { id: 8, territory: "austin", territoryName: "Austin, TX", type: "event", title: "Hotter 'N Hell Hundred", date: "2026-08-29", time: "All Day", location: "Wichita Falls, TX", description: "Road and gravel weekend in Wichita Falls, August 27–30, 2026. A long, hot Texas signal for riders who know what they are getting into.", contact: null },
   // OKC
   { id: 11, territory: "okc", territoryName: "Oklahoma City, OK", type: "popup", title: "Request a Pop-Up: Oklahoma City", date: "2026-06-13", time: "Date TBD", location: "Stonecloud Brewing, OKC", description: "Demo fleet available by request. Location TBD.", contact: "917-578-7687" },
   { id: 12, territory: "okc", territoryName: "Oklahoma City, OK", type: "event", title: "Flint Hills Gravel", date: "2026-10-17", time: "All Day", location: "Emporia, KS (near OKC)", description: "Classic Flint Hills gravel riding. The landscape that inspired the campaign.", contact: null },
-  { id: 13, territory: "bentonville", territoryName: "Bentonville, AR", type: "event", title: "Big Sugar Gravel", date: "2026-10-03", time: "All Day", location: "Bentonville, AR", description: "The premier gravel race of the Ozarks. 100+ miles of dirt. Routt RSL and Routt YBB territory.", contact: null },
+  { id: 13, territory: "bentonville", territoryName: "Bentonville, AR", type: "event", title: "Life Time Big Sugar Gravel", date: "2026-10-17", time: "All Day", location: "Bentonville, AR", description: "The premier gravel race of the Ozarks. 100+ miles of dirt. Routt RSL and Routt YBB territory.", contact: null },
   { id: 14, territory: "austin", territoryName: "Austin, TX", type: "popup", title: "Request a Pop-Up: Austin", date: "2026-07-11", time: "Date TBD", location: "Flat Track Coffee, East Austin", description: "Demo fleet available by request. Location TBD.", contact: "917-578-7687" },
-  { id: 15, territory: "tulsa", territoryName: "Tulsa, OK", type: "event", title: "Tulsa Tough", date: "2026-06-19", time: "All Day", location: "Tulsa, OK", description: "Three days of criterium racing through Tulsa neighborhoods. Urban grit, titanium frame.", contact: null },
   { id: 16, territory: "houston", territoryName: "Houston, TX", type: "event", title: "Tour de Houston", date: "2027-03-07", time: "All Day", location: "Houston, TX", description: "The city century. Flat and fast through Houston. Vamoots RCS built for days like this.", contact: null },
   { id: 17, territory: "bentonville", territoryName: "Whistler, BC", type: "event", title: "Whistler Park Community Ride", date: "2026-08-15", time: "All Day", location: "Whistler, BC", description: "Moots rides the mountain. Whistler Bike Park — where titanium meets elevation.", contact: null },
 { id: 18, territory: "houston", territoryName: "Houston, TX", type: "popup", title: "Request a Pop-Up: Houston", date: "2026-07-18", time: "By request", location: "Houston, TX", description: "Demo fleet available by request. Vamoots RCS and Routt RSL on display. Location TBD.", contact: "917-578-7687" },
 { id: 19, territory: "dallas", territoryName: "Dallas / Fort Worth, TX", type: "popup", title: "Request a Pop-Up: Dallas / Fort Worth", date: "2026-07-25", time: "By request", location: "Dallas / Fort Worth, TX", description: "Demo fleet available by request. Location TBD.", contact: "917-578-7687" },
-{ id: 20, territory: "tulsa", territoryName: "Tulsa, OK", type: "popup", title: "Request a Pop-Up: Tulsa", date: "2026-08-01", time: "By request", location: "Tulsa, OK", description: "Demo fleet available by request. Location TBD.", contact: "917-578-7687" }
+{ id: 20, territory: "tulsa", territoryName: "Tulsa, OK", type: "popup", title: "Request a Pop-Up: Tulsa", date: "2026-08-01", time: "By request", location: "Tulsa, OK", description: "Demo fleet available by request. Location TBD.", contact: "917-578-7687" },
+{ id: 21, territory: "beyond", territoryName: "Beyond Territory", type: "event", title: "SBT GRVL", date: "2026-06-28", time: "All Day", location: "Steamboat Springs, CO", description: "Public gravel event in Steamboat Springs, CO. Beyond Territory / Moots hometown signal.", contact: null }
 ];
 
 // ─── RSVP Modal ───────────────────────────────────────────────────────────────
@@ -1255,6 +1255,7 @@ function RideCalendar() {
     { id: "dallas", label: "Dallas / Fort Worth, TX" },
     { id: "okc", label: "Oklahoma City, OK" },
     { id: "tulsa", label: "Tulsa, OK" },
+    { id: "beyond", label: "Beyond Territory" },
   ];
 
   const typeFilters = [
