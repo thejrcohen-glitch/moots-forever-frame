@@ -158,6 +158,14 @@ const CATEGORIES: Category[] = [
         url: "https://www.bikereg.com/74301",
       },
       {
+        title: "Triple Bypass",
+        date: "Saturday, July 11, 2026",
+        location: "Evergreen, CO",
+        blurb:
+          "Three Colorado passes. Closed roads. Evergreen to Avon. A Beyond Territory road signal worth watching.",
+        url: "https://runsignup.com/Race/CO/Evergreen/TripleBypass",
+      },
+      {
         title: "Hotter 'N Hell Hundred",
         date: "Sat Aug 29, 2026",
         location: "Wichita Falls, TX",
