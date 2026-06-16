@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
+import OnTheWheelBadge from "@/components/OnTheWheelBadge";
 
 type SourceType = "Route Source" | "Coffee Stop" | "Ride Group" | "Repair / Service" | "Beyond Territory";
 type Territory = "TX" | "AR" | "OK" | "Beyond Territory";
@@ -197,6 +198,7 @@ function RoutesNav() {
           >
             Routes
           </span>
+          <OnTheWheelBadge />
         </div>
         <button
           className="md:hidden flex flex-col justify-center items-center w-9 h-9 gap-1.5"
@@ -236,6 +238,7 @@ function RoutesNav() {
                 {link.label}
               </Link>
             ))}
+            <OnTheWheelBadge className="self-start" />
           </div>
         </div>
       )}

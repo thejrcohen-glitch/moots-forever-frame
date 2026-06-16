@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
+import OnTheWheelBadge from "@/components/OnTheWheelBadge";
 
 type StravaStatus = "Research" | "Verified Public Source";
 
@@ -357,6 +358,7 @@ function StravaNav() {
           >
             Strava
           </span>
+          <OnTheWheelBadge />
         </div>
         <button
           className="md:hidden flex flex-col justify-center items-center w-9 h-9 gap-1.5"
@@ -396,6 +398,7 @@ function StravaNav() {
                 {link.label}
               </Link>
             ))}
+            <OnTheWheelBadge className="self-start" />
           </div>
         </div>
       )}
