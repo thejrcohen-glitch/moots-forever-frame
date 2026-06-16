@@ -1790,7 +1790,7 @@ function WheelSignalBadge() {
 
 function FeaturedSignal() {
   return (
-    <section id="featured-signal" className="py-24 relative overflow-hidden" style={{ background: "oklch(0.18 0.01 60)" }}>
+    <section id="featured-signal" className="scroll-mt-24 py-24 relative overflow-hidden" style={{ background: "oklch(0.18 0.01 60)" }}>
       <GrainOverlay opacity={0.12} />
       <div className="container relative z-20">
         <a
