@@ -9,6 +9,7 @@
 
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
+import OnTheWheelBadge from "@/components/OnTheWheelBadge";
 
 type Discipline = "gravel" | "road" | "mountain";
 
@@ -332,6 +333,7 @@ function RacesNav() {
           >
             Races
           </span>
+          <OnTheWheelBadge />
         </div>
         <button
           className="md:hidden flex flex-col justify-center items-center w-9 h-9 gap-1.5"
@@ -377,6 +379,7 @@ function RacesNav() {
                 {l.label}
               </Link>
             ))}
+            <OnTheWheelBadge className="self-start" />
           </div>
         </div>
       )}
