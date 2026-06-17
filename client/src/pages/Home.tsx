@@ -2434,11 +2434,16 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (window.location.hash !== "#book-a-pop-up") return;
+    const hashTargets: Record<string, string> = {
+      "#book-a-pop-up": "book-a-pop-up",
+      "#featured-signal": "featured-signal",
+    };
+    const targetId = hashTargets[window.location.hash];
+    if (!targetId) return;
 
     const frame = window.requestAnimationFrame(() => {
       const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-      document.getElementById("book-a-pop-up")?.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
+      document.getElementById(targetId)?.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth", block: "start" });
     });
 
     return () => window.cancelAnimationFrame(frame);
