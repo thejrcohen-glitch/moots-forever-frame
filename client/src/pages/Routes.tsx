@@ -63,15 +63,6 @@ const SOURCES: RouteCoffeeSource[] = [
     note: "Austin ride-culture source lead.",
   },
   {
-    title: "Race Ready Repair Strava",
-    region: "Conroe, TX",
-    type: "Ride Group",
-    territory: "TX",
-    status: "Research",
-    sourceUrl: "https://www.strava.com/clubs/489455",
-    note: "Conroe source lead for future route and community verification.",
-  },
-  {
     title: "Anthills MTB",
     region: "Houston, TX",
     type: "Route Source",
@@ -115,15 +106,6 @@ const SOURCES: RouteCoffeeSource[] = [
     status: "Public Source",
     sourceUrl: "https://themeteor.cafe/",
     note: "Coffee, bikes, and rider culture under one roof. Listing does not imply partnership.",
-  },
-  {
-    title: "Race Ready Repair",
-    region: "Conroe, TX",
-    type: "Repair / Service",
-    territory: "TX",
-    status: "Public Source",
-    sourceUrl: "http://racereadyrepair.com",
-    note: "Conroe cycling source. Listing does not imply partnership.",
   },
   {
     title: "Chasing Watts",
