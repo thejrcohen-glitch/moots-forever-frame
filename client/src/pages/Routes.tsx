@@ -54,6 +54,15 @@ const SOURCES: RouteCoffeeSource[] = [
     note: "Global rider signal for future source verification.",
   },
   {
+    title: "Switzerland / Furka Pass",
+    region: "Switzerland",
+    type: "Beyond Territory",
+    territory: "Beyond Territory",
+    status: "Research",
+    sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/national-routes",
+    note: "Furka Pass. Switzerland. A public alpine route signal for riders who look beyond the map.",
+  },
+  {
     title: "The Meteor Strava",
     region: "Austin, TX",
     type: "Ride Group",
