@@ -2171,6 +2171,7 @@ function NewsletterSignup() {
       email,
       territory: territory || undefined,
       source: "home-footer",
+      website: "",
     });
   };
 
@@ -2193,15 +2194,20 @@ function NewsletterSignup() {
             </p>
           ) : (
             <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto items-stretch">
-              <input
-                type="email"
-                required
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 font-mono-custom text-sm px-4 py-3 border-0 border-b-2 bg-transparent outline-none transition-colors duration-200"
-                style={{ borderBottomColor: "oklch(0.78 0.03 70)", color: "oklch(0.22 0.01 60)" }}
-              />
+              <div className="flex-1">
+                <input
+                  type="email"
+                  required
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full font-mono-custom text-sm px-4 py-3 border-0 border-b-2 bg-transparent outline-none transition-colors duration-200"
+                  style={{ borderBottomColor: "oklch(0.78 0.03 70)", color: "oklch(0.22 0.01 60)" }}
+                />
+                <p className="font-mono-custom text-xs mt-2 text-left" style={{ color: "oklch(0.52 0.04 65)" }}>
+                  By subscribing, you agree to receive updates from MootsFrame. Unsubscribe anytime.
+                </p>
+              </div>
               <select
                 value={territory}
                 onChange={(e) => setTerritory(e.target.value as "" | "TX" | "OK" | "AR")}
