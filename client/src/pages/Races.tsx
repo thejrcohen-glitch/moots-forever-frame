@@ -710,6 +710,32 @@ export default function Races() {
         ))}
 
         <section
+          className="py-10 border-t"
+          style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }}
+          aria-label="Demo fleet booking"
+        >
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
+            <p
+              className="font-mono-custom text-sm"
+              style={{ color: "oklch(0.72 0.04 65)" }}
+            >
+              Demo fleet available by request. Routt RSL, Routt 45, Vamoots RCS.
+            </p>
+            <a
+              href="/#book-a-pop-up"
+              className="font-label text-xs tracking-[0.2em] uppercase px-5 py-3 transition-opacity hover:opacity-80 focus:outline focus:outline-2 focus:outline-offset-4 self-start md:self-auto"
+              style={{
+                background: "transparent",
+                color: "oklch(0.88 0.025 75)",
+                border: "1px solid oklch(0.72 0.14 65)",
+              }}
+            >
+              Book a pop-up →
+            </a>
+          </div>
+        </section>
+
+        <section
           className="py-16 border-t"
           style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }}
           aria-labelledby="races-contact-heading"
