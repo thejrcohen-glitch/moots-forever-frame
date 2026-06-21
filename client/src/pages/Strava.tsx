@@ -68,7 +68,7 @@ const STRAVA_SOURCES: StravaSource[] = [
     territory: "TX",
     status: "Verified Public Source",
     stravaUrl: "https://www.strava.com/clubs/1843",
-    note: "Austin riding source signal for future verification.",
+    note: "Austin riding source signal. Verified public Strava listing. No affiliation implied.",
   },
   {
     title: "The Breakfast Club ATX",
