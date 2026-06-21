@@ -15,9 +15,14 @@ export const newsletterRouter = router({
         email: z.string().email().max(320),
         territory: z.enum(["TX", "OK", "AR"]).optional(),
         source: z.string().max(64).optional(),
+        website: z.string().max(256).optional(),
       })
     )
     .mutation(async ({ input }) => {
+      if (input.website?.trim()) {
+        return { success: true, alreadySubscribed: false, resubscribed: false };
+      }
+
       const db = await getDb();
       if (!db) {
         throw new TRPCError({
@@ -71,7 +76,10 @@ export const newsletterRouter = router({
       sendEmail({
         to: normalizedEmail,
         subject: "You're on the list — Moots Forever Frame",
-        html: newsletterWelcomeEmail({ territory: input.territory }),
+        html: newsletterWelcomeEmail({ territory: input.territory }).replace(
+          "</div>",
+          `<p style="font-size:12px;line-height:1.6;color:#6f6a60;">To unsubscribe, reply UNSUBSCRIBE to this email or contact ianzak@mac.com.</p></div>`
+        ),
       }).catch(() => {/* non-blocking */});
 
       return { success: true, alreadySubscribed: false, resubscribed: false };
