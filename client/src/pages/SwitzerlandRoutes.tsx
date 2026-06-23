@@ -20,51 +20,46 @@ const HELD_ITEMS = [
   "Rhône Route",
   "Rhine Route",
   "Alpine Panorama Route",
-  "Specific watch brands",
-  "Watch museums",
-  "Coffee and village stops",
-  "Geneva start options",
-  "Col du Marchairuz details",
-  "La Chaux-de-Fonds stops",
-  "Le Locle stops",
-  "Route maps",
-  "GPX files",
+  "Watch brands",
+  "Museums",
+  "Exact connectors",
+  "Ride files",
+  "Maps",
+  "Village stops",
   "Photos",
   "Strava, Komoot, and RideWithGPS links",
 ];
 
 const WATCH_ROAD_SIGNALS = [
   {
-    title: "Jura Route / National Route 7",
+    title: "Jura Route — Swiss National Route 7",
     status: "Research",
-    sourceName: "Cycling Thread — Jura Route",
-    sourceUrl: "https://www.cyclingthread.com/jura-route-cycling-adventure-in-western-switzerland",
-    note: "A public route signal through western Switzerland, linking Lake Geneva country, Jura landscapes, and watchmaking towns.",
+    region: "Lake Geneva to Basel",
+    territory: "Beyond Territory",
+    sourceName: "SwitzerlandMobility National Cycling Routes",
+    sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/national-routes",
+    note: "A public national route signal through the Swiss Jura. Nyon to Basel. 266 km by official route length. Research only.",
     governanceNote: "Research signal only. No route ownership, attendance, partnership, or endorsement implied.",
-  },
-  {
-    title: "Geneva to Watch Country",
-    status: "Research",
-    sourceName: "Cycling Holiday — Jura Route",
-    sourceUrl: "https://www.cycling-holiday.com/cycle-tour-switzerland-jura-route",
-    note: "A source-backed idea lane from Lake Geneva toward the Jura, Vallée de Joux, and La Chaux-de-Fonds.",
-    governanceNote: "Research signal only. Not a MootsFrame itinerary, tour, or guided route.",
-  },
-  {
-    title: "La Chaux-de-Fonds / Le Locle",
-    status: "Research",
-    sourceName: "UNESCO World Heritage Centre",
-    sourceUrl: "https://whc.unesco.org/en/list/1302/",
-    note: "Watchmaking town planning in the Swiss Jura. A cultural signal, not a brand claim.",
-    governanceNote: "Public source signal only. No watch brand, partnership, or endorsement implied.",
   },
   {
     title: "Vallée de Joux",
     status: "Research",
-    sourceName: "Cycling Thread — Jura watchmaking traditions",
-    sourceUrl: "https://www.cyclingthread.com/jura-route-cycling-adventure-in-western-switzerland#jura-the-cradle-of-swiss-watchmaking-traditions",
-    note: "A quiet Jura valley where roads, lakes, and watchmaking history meet.",
-    governanceNote: "Research signal only. No brand, museum, or route endorsement implied.",
+    region: "Canton Vaud",
+    territory: "Beyond Territory",
+    sourceName: "Cycling Thread — Jura Route",
+    sourceUrl: "https://www.cyclingthread.com/jura-route-cycling-adventure-in-western-switzerland",
+    note: "A quiet valley signal tied to Lac de Joux, the Marchairuz descent, and Swiss watchmaking country. Research only.",
+    governanceNote: "Research signal only. No route ownership, attendance, partnership, or endorsement implied.",
+  },
+  {
+    title: "La Chaux-de-Fonds / Le Locle",
+    status: "Research",
+    region: "Canton Neuchâtel",
+    territory: "Beyond Territory",
+    sourceName: "UNESCO World Heritage Centre",
+    sourceUrl: "https://whc.unesco.org/en/list/1302/",
+    note: "UNESCO watchmaking urbanism in the Swiss Jura. City signal only. No brand claim.",
+    governanceNote: "Public source signal only. No watch brand, partnership, or endorsement implied.",
   },
 ];
 
@@ -290,6 +285,9 @@ function WatchRoadCard({ signal }: { signal: (typeof WATCH_ROAD_SIGNALS)[number]
           {signal.status}
         </span>
       </div>
+      <p className="font-label text-xs tracking-[0.24em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
+        {signal.region} / {signal.territory}
+      </p>
       <h3 className="font-display text-2xl md:text-3xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>
         {signal.title}
       </h3>
@@ -361,7 +359,7 @@ export default function SwitzerlandRoutes() {
               Alpine roads. Old passes. Source first.
             </p>
             <p className="font-mono-custom text-sm leading-loose max-w-2xl" style={{ color: "oklch(0.78 0.03 70)" }}>
-              Furka is the first alpine signal. The Jura watch road is the next Research layer. The deeper details stay held until the sources are clean.
+              Furka is the first alpine signal. The Jura watch road is the next Research layer. From Geneva, the signal points north toward the Jura. The sourced route begins at Nyon on Lake Geneva and runs toward Basel through watchmaking country.
             </p>
           </div>
           <div className="relative min-h-[260px] flex items-center justify-center overflow-hidden" style={{ background: "oklch(0.18 0.008 60)", border: "1px solid oklch(0.38 0.015 60 / 0.5)" }}>
@@ -392,11 +390,19 @@ export default function SwitzerlandRoutes() {
           </p>
           <div className="max-w-3xl">
             <h2 id="why-switzerland-heading" className="font-display text-3xl md:text-4xl font-bold mb-5" style={{ color: "oklch(0.945 0.018 78)" }}>
-              Why Switzerland
+              Watches and Roads
             </h2>
-            <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
-              Switzerland sits outside the territory. That is the point. Some roads become signals because riders remember them before they can explain them.
-            </p>
+            <div className="space-y-5 font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+              <p>
+                Two crafts built on restraint: metal, patience, time, and the parts nobody sees.
+              </p>
+              <p>
+                A frame does not need to explain itself. Neither does a good watch. The work is in the tolerance, the silence, and the miles after the first climb.
+              </p>
+              <p>
+                The Jura gives the page a second rhythm: less alpine spectacle, more mechanical time.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -410,10 +416,10 @@ export default function SwitzerlandRoutes() {
             The Watch Road
           </h2>
           <p className="font-display text-xl md:text-2xl font-bold mb-5" style={{ color: "oklch(0.88 0.025 75)" }}>
-            Geneva to the Jura. Roads, watches, and the long way north.
+            Roads. Watches. Jura.
           </p>
           <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
-            Ian knows Geneva. The signal runs north from the lake toward the Jura, where cycling starts to feel quieter and time starts to feel mechanical. Some anchors can stand as Research signals now. The deeper details — exact connectors, stops, brands, maps, and ride files — stay held until the sources are clean.
+            Mechanical time. Mechanical distance. A quiet source board for Ian, Geneva, the Jura, and watchmaking country. These are Research signals only; the deeper details stay held.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
@@ -432,7 +438,7 @@ export default function SwitzerlandRoutes() {
             Not public until sourced.
           </h2>
           <p className="font-mono-custom text-sm leading-loose mb-8" style={{ color: "oklch(0.78 0.03 70)" }}>
-            These signals stay held until direct public sources, rights, and governance rules are confirmed.
+            Watch brands, museums, exact connectors, ride files, maps, village stops, and photos remain held until each source is clean.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
             {HELD_ITEMS.map((item) => (
