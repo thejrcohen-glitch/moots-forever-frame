@@ -2254,8 +2254,8 @@ function SocialHub() {
     },
     {
       label: "YouTube",
-      handle: "Coming soon",
-      href: "#",
+      handle: "@Mootsframe",
+      href: "https://www.youtube.com/@Mootsframe",
     },
   ];
 
