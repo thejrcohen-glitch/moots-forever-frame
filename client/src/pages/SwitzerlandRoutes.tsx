@@ -225,6 +225,7 @@ function SignalCard() {
           href={FURKA_SIGNAL.sourceUrl}
           target="_blank"
           rel="noopener noreferrer"
+          aria-label={`Source: ${FURKA_SIGNAL.sourceName}`}
           className="font-label text-xs tracking-[0.2em] uppercase mt-auto hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
           style={{ color: READABLE_ACCENT }}
         >
