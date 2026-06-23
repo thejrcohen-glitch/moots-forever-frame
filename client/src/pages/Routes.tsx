@@ -13,6 +13,7 @@ interface RouteCoffeeSource {
   territory: Territory;
   status: SourceStatus;
   sourceUrl: string;
+  detailUrl?: string;
   note: string;
 }
 
@@ -60,6 +61,7 @@ const SOURCES: RouteCoffeeSource[] = [
     territory: "Beyond Territory",
     status: "Research",
     sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/national-routes",
+    detailUrl: "/routes/switzerland",
     note: "Furka Pass. Switzerland. A public alpine route signal for riders who look beyond the map.",
   },
   {
@@ -279,6 +281,15 @@ function SourceCard({ source }: { source: RouteCoffeeSource }) {
       >
         Source →
       </a>
+      {source.detailUrl && (
+        <Link
+          href={source.detailUrl}
+          className="inline-block font-label text-xs tracking-[0.2em] uppercase mt-4 hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
+          style={{ color: "oklch(0.88 0.025 75)" }}
+        >
+          Details →
+        </Link>
+      )}
     </article>
   );
 }
