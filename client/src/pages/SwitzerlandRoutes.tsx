@@ -362,10 +362,18 @@ export default function SwitzerlandRoutes() {
               Furka is the first alpine signal. The Jura watch road is the next Research layer. From Geneva, the signal points north toward the Jura. The sourced route begins at Nyon on Lake Geneva and runs toward Basel through watchmaking country.
             </p>
           </div>
-          <div className="relative min-h-[260px] flex items-center justify-center overflow-hidden" style={{ background: "oklch(0.18 0.008 60)", border: "1px solid oklch(0.38 0.015 60 / 0.5)" }}>
-            <div className="absolute inset-0 opacity-40" style={{ background: "radial-gradient(circle at 65% 35%, oklch(0.52 0.12 45 / 0.28), transparent 42%)" }} />
-            <AlpineMotif className="relative z-10 w-full max-w-[520px] p-6" />
-          </div>
+          <figure className="relative min-h-[320px] overflow-hidden" style={{ background: "oklch(0.18 0.008 60)", border: "1px solid oklch(0.38 0.015 60 / 0.5)" }}>
+            <img
+              src="/images/ian-andermatt-switzerland.jpg"
+              alt="Rider on a gravel road in the Swiss Alps near Andermatt"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, oklch(0.18 0.008 60 / 0.08), oklch(0.18 0.008 60 / 0.62))" }} />
+            <AlpineMotif className="absolute inset-x-0 bottom-8 mx-auto w-full max-w-[420px] px-6 opacity-20" />
+            <figcaption className="absolute bottom-4 left-5 font-label text-xs tracking-[0.24em] uppercase" style={{ color: "oklch(0.945 0.018 78)" }}>
+              Swiss Alps. Andermatt area.
+            </figcaption>
+          </figure>
         </div>
       </header>
 
