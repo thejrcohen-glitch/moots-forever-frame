@@ -17,6 +17,7 @@ import Comparison from "@/pages/Comparison";
 import Bikes from "@/pages/Bikes";
 import Races from "@/pages/Races";
 import Routes from "@/pages/Routes";
+import SwitzerlandRoutes from "@/pages/SwitzerlandRoutes";
 import Strava from "@/pages/Strava";
 import Blog from "@/pages/Blog";
 import BlogPost from "@/pages/BlogPost";
@@ -80,6 +81,7 @@ function Router() {
       <Route path={"/comparison"} component={Comparison} />
       <Route path={"/bikes"} component={Bikes} />
       <Route path={"/races"} component={Races} />
+      <Route path={"/routes/switzerland"} component={SwitzerlandRoutes} />
       <Route path={"/routes"} component={Routes} />
       <Route path={"/strava"} component={Strava} />
       <Route path={"/blog"} component={Blog} />
