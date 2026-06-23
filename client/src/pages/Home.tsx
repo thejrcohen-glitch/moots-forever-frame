@@ -2302,9 +2302,6 @@ function SocialHub() {
             );
           })}
         </div>
-        <p className="font-mono-custom text-xs text-center mt-6" style={{ color: "oklch(0.52 0.04 65)" }}>
-          Manual feed. No scraping. Live Instagram integration held until Meta permissions are ready.
-        </p>
       </div>
     </section>
   );
