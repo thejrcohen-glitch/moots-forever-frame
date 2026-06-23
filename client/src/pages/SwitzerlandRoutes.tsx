@@ -361,7 +361,7 @@ export default function SwitzerlandRoutes() {
               Alpine roads. Old passes. Source first.
             </p>
             <p className="font-mono-custom text-sm leading-loose max-w-2xl" style={{ color: "oklch(0.78 0.03 70)" }}>
-              Furka is the first signal. The rest stays held until the sources are clean.
+              Furka is the first alpine signal. The Jura watch road is the next Research layer. The deeper details stay held until the sources are clean.
             </p>
           </div>
           <div className="relative min-h-[260px] flex items-center justify-center overflow-hidden" style={{ background: "oklch(0.18 0.008 60)", border: "1px solid oklch(0.38 0.015 60 / 0.5)" }}>
@@ -377,7 +377,7 @@ export default function SwitzerlandRoutes() {
             Route Signal
           </p>
           <h2 id="switzerland-signal-heading" className="font-display text-3xl md:text-4xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>
-            One sourced signal.
+            First alpine signal.
           </h2>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
