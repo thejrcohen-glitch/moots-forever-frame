@@ -317,6 +317,7 @@ function WatchRoadCard({ signal }: { signal: (typeof WATCH_ROAD_SIGNALS)[number]
           href={signal.sourceUrl}
           target="_blank"
           rel="noopener noreferrer"
+          aria-label={`Open source for ${signal.title}: ${signal.sourceName}`}
           className="font-label text-xs tracking-[0.2em] uppercase hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
           style={{ color: READABLE_ACCENT }}
         >
@@ -412,7 +413,7 @@ export default function SwitzerlandRoutes() {
             Geneva to the Jura. Roads, watches, and the long way north.
           </p>
           <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
-            Ian knows Geneva. The signal runs north from the lake toward the Jura, where cycling starts to feel quieter and time starts to feel mechanical. Vallée de Joux, La Chaux-de-Fonds, and Le Locle stay held until the sources are clean, but the line is there: road craft and watch craft, both built around patience.
+            Ian knows Geneva. The signal runs north from the lake toward the Jura, where cycling starts to feel quieter and time starts to feel mechanical. Some anchors can stand as Research signals now. The deeper details — exact connectors, stops, brands, maps, and ride files — stay held until the sources are clean.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
