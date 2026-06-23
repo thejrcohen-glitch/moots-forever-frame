@@ -20,12 +20,52 @@ const HELD_ITEMS = [
   "Rhône Route",
   "Rhine Route",
   "Alpine Panorama Route",
-  "Additional Swiss climbs",
+  "Specific watch brands",
+  "Watch museums",
   "Coffee and village stops",
+  "Geneva start options",
+  "Col du Marchairuz details",
+  "La Chaux-de-Fonds stops",
+  "Le Locle stops",
+  "Route maps",
   "GPX files",
-  "Maps and embeds",
   "Photos",
   "Strava, Komoot, and RideWithGPS links",
+];
+
+const WATCH_ROAD_SIGNALS = [
+  {
+    title: "Jura Route / National Route 7",
+    status: "Research",
+    sourceName: "Cycling Thread — Jura Route",
+    sourceUrl: "https://www.cyclingthread.com/jura-route-cycling-adventure-in-western-switzerland",
+    note: "A public route signal through western Switzerland, linking Lake Geneva country, Jura landscapes, and watchmaking towns.",
+    governanceNote: "Research signal only. No route ownership, attendance, partnership, or endorsement implied.",
+  },
+  {
+    title: "Geneva to Watch Country",
+    status: "Research",
+    sourceName: "Cycling Holiday — Jura Route",
+    sourceUrl: "https://www.cycling-holiday.com/cycle-tour-switzerland-jura-route",
+    note: "A source-backed idea lane from Lake Geneva toward the Jura, Vallée de Joux, and La Chaux-de-Fonds.",
+    governanceNote: "Research signal only. Not a MootsFrame itinerary, tour, or guided route.",
+  },
+  {
+    title: "La Chaux-de-Fonds / Le Locle",
+    status: "Research",
+    sourceName: "UNESCO World Heritage Centre",
+    sourceUrl: "https://whc.unesco.org/en/list/1302/",
+    note: "Watchmaking town planning in the Swiss Jura. A cultural signal, not a brand claim.",
+    governanceNote: "Public source signal only. No watch brand, partnership, or endorsement implied.",
+  },
+  {
+    title: "Vallée de Joux",
+    status: "Research",
+    sourceName: "Cycling Thread — Jura watchmaking traditions",
+    sourceUrl: "https://www.cyclingthread.com/jura-route-cycling-adventure-in-western-switzerland#jura-the-cradle-of-swiss-watchmaking-traditions",
+    note: "A quiet Jura valley where roads, lakes, and watchmaking history meet.",
+    governanceNote: "Research signal only. No brand, museum, or route endorsement implied.",
+  },
 ];
 
 function AlpineMotif({ className = "" }: { className?: string }) {
@@ -236,6 +276,57 @@ function SignalCard() {
   );
 }
 
+function WatchRoadCard({ signal }: { signal: (typeof WATCH_ROAD_SIGNALS)[number] }) {
+  return (
+    <article
+      className="p-6 md:p-7 min-h-[320px] flex flex-col"
+      style={{ background: "oklch(0.24 0.01 60)" }}
+    >
+      <div className="flex items-center justify-between gap-4 mb-7">
+        <span
+          className="font-label text-xs tracking-[0.18em] uppercase px-2.5 py-1"
+          style={{ color: "oklch(0.88 0.025 75)", background: "oklch(0.30 0.01 60)" }}
+        >
+          {signal.status}
+        </span>
+      </div>
+      <h3 className="font-display text-2xl md:text-3xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>
+        {signal.title}
+      </h3>
+      <p className="font-mono-custom text-sm leading-loose mb-7" style={{ color: "oklch(0.78 0.03 70)" }}>
+        {signal.note}
+      </p>
+      <div className="mt-auto flex flex-col gap-5">
+        <div>
+          <p className="font-label text-xs tracking-[0.26em] uppercase mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>
+            Source
+          </p>
+          <p className="font-mono-custom text-xs leading-relaxed" style={{ color: "oklch(0.88 0.025 75)" }}>
+            {signal.sourceName}
+          </p>
+        </div>
+        <div>
+          <p className="font-label text-xs tracking-[0.26em] uppercase mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>
+            Governance
+          </p>
+          <p className="font-mono-custom text-xs leading-loose" style={{ color: "oklch(0.72 0.04 65)" }}>
+            {signal.governanceNote}
+          </p>
+        </div>
+        <a
+          href={signal.sourceUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-label text-xs tracking-[0.2em] uppercase hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
+          style={{ color: READABLE_ACCENT }}
+        >
+          Source →
+        </a>
+      </div>
+    </article>
+  );
+}
+
 export default function SwitzerlandRoutes() {
   useEffect(() => {
     const title = "Switzerland Signals — MootsFrame";
@@ -306,6 +397,28 @@ export default function SwitzerlandRoutes() {
               Switzerland sits outside the territory. That is the point. Some roads become signals because riders remember them before they can explain them.
             </p>
           </div>
+        </div>
+      </section>
+
+      <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="watch-road-heading">
+        <div className="max-w-4xl mb-9">
+          <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
+            Research
+          </p>
+          <h2 id="watch-road-heading" className="font-display text-3xl md:text-5xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>
+            The Watch Road
+          </h2>
+          <p className="font-display text-xl md:text-2xl font-bold mb-5" style={{ color: "oklch(0.88 0.025 75)" }}>
+            Geneva to the Jura. Roads, watches, and the long way north.
+          </p>
+          <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+            Ian knows Geneva. The signal runs north from the lake toward the Jura, where cycling starts to feel quieter and time starts to feel mechanical. Vallée de Joux, La Chaux-de-Fonds, and Le Locle stay held until the sources are clean, but the line is there: road craft and watch craft, both built around patience.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
+          {WATCH_ROAD_SIGNALS.map((signal) => (
+            <WatchRoadCard key={signal.title} signal={signal} />
+          ))}
         </div>
       </section>
 
