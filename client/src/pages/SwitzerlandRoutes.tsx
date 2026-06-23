@@ -28,6 +28,51 @@ const HELD_ITEMS = [
   "Strava, Komoot, and RideWithGPS links",
 ];
 
+function AlpineMotif({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 520 320"
+      className={className}
+      fill="none"
+    >
+      <path
+        d="M40 235 C105 200 126 158 170 164 C213 170 221 116 263 108 C310 99 332 164 371 153 C414 141 439 190 480 174"
+        stroke="oklch(0.72 0.14 65)"
+        strokeWidth="2"
+      />
+      <path
+        d="M52 262 C119 226 142 187 182 191 C220 195 238 145 275 140 C315 135 340 190 382 181 C426 171 449 213 486 202"
+        stroke="oklch(0.88 0.025 75 / 0.45)"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M65 291 C132 255 155 222 196 225 C236 228 254 183 292 178 C332 173 357 221 396 215 C438 209 460 242 496 235"
+        stroke="oklch(0.88 0.025 75 / 0.28)"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M112 86 C148 57 184 47 220 58 C256 69 283 51 318 42 C371 29 424 53 455 94"
+        stroke="oklch(0.52 0.12 45 / 0.75)"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M120 118 C162 92 196 87 235 96 C270 104 296 86 331 82 C378 76 420 97 451 128"
+        stroke="oklch(0.88 0.025 75 / 0.25)"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M208 246 C236 224 251 198 246 171 C241 141 257 119 287 105"
+        stroke="oklch(0.945 0.018 78 / 0.42)"
+        strokeWidth="1.25"
+        strokeDasharray="7 8"
+      />
+      <circle cx="287" cy="105" r="5" fill="oklch(0.72 0.14 65)" />
+      <circle cx="208" cy="246" r="4" fill="oklch(0.52 0.12 45)" />
+    </svg>
+  );
+}
+
 function SwitzerlandNav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const close = () => setMenuOpen(false);
@@ -130,45 +175,63 @@ function SwitzerlandNav() {
 function SignalCard() {
   return (
     <article
-      className="p-6 flex flex-col"
+      className="grid grid-cols-1 lg:grid-cols-[1.25fr_0.75fr] gap-px"
       style={{
-        background: "oklch(0.24 0.01 60)",
         border: "1px solid oklch(0.38 0.015 60 / 0.5)",
-        borderLeft: "3px solid oklch(0.52 0.12 45)",
+        background: "oklch(0.38 0.015 60 / 0.5)",
       }}
     >
-      <div className="flex flex-wrap gap-2 mb-5">
-        {[FURKA_SIGNAL.status, FURKA_SIGNAL.territory, FURKA_SIGNAL.country].map((label) => (
-          <span
-            key={label}
-            className="font-label text-xs tracking-[0.18em] uppercase px-2 py-1"
-            style={{ color: "oklch(0.88 0.025 75)", background: "oklch(0.30 0.01 60)" }}
-          >
-            {label}
-          </span>
-        ))}
+      <div className="p-7 md:p-10 flex flex-col" style={{ background: "oklch(0.24 0.01 60)" }}>
+        <div className="flex flex-wrap gap-2 mb-8">
+          {[FURKA_SIGNAL.status, FURKA_SIGNAL.territory, FURKA_SIGNAL.country].map((label) => (
+            <span
+              key={label}
+              className="font-label text-xs tracking-[0.18em] uppercase px-2.5 py-1"
+              style={{ color: "oklch(0.88 0.025 75)", background: "oklch(0.30 0.01 60)" }}
+            >
+              {label}
+            </span>
+          ))}
+        </div>
+        <p className="font-label text-xs tracking-[0.25em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
+          {FURKA_SIGNAL.region}
+        </p>
+        <h2 className="font-display text-4xl md:text-5xl font-bold mb-6" style={{ color: "oklch(0.945 0.018 78)" }}>
+          {FURKA_SIGNAL.title}
+        </h2>
+        <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+          {FURKA_SIGNAL.note}
+        </p>
       </div>
-      <p className="font-label text-xs tracking-[0.25em] uppercase mb-2" style={{ color: READABLE_ACCENT }}>
-        {FURKA_SIGNAL.region}
-      </p>
-      <h2 className="font-display text-3xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>
-        {FURKA_SIGNAL.title}
-      </h2>
-      <p className="font-mono-custom text-sm leading-relaxed mb-5" style={{ color: "oklch(0.72 0.04 65)" }}>
-        {FURKA_SIGNAL.note}
-      </p>
-      <p className="font-mono-custom text-xs leading-relaxed mb-6" style={{ color: "oklch(0.52 0.04 65)" }}>
-        {FURKA_SIGNAL.governanceNote}
-      </p>
-      <a
-        href={FURKA_SIGNAL.sourceUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="font-label text-xs tracking-[0.2em] uppercase mt-auto hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
-        style={{ color: READABLE_ACCENT }}
-      >
-        {FURKA_SIGNAL.sourceName} →
-      </a>
+
+      <div className="p-7 md:p-10 flex flex-col gap-6" style={{ background: "oklch(0.20 0.01 60)" }}>
+        <div>
+          <p className="font-label text-xs tracking-[0.28em] uppercase mb-3" style={{ color: "oklch(0.52 0.12 45)" }}>
+            Source
+          </p>
+          <p className="font-mono-custom text-sm leading-relaxed" style={{ color: "oklch(0.88 0.025 75)" }}>
+            {FURKA_SIGNAL.sourceName}
+          </p>
+        </div>
+        <div>
+          <p className="font-label text-xs tracking-[0.28em] uppercase mb-3" style={{ color: "oklch(0.52 0.12 45)" }}>
+            Governance
+          </p>
+          <p className="font-mono-custom text-xs leading-loose" style={{ color: "oklch(0.72 0.04 65)" }}>
+            {FURKA_SIGNAL.governanceNote}
+          </p>
+        </div>
+        <a
+          href={FURKA_SIGNAL.sourceUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Source: ${FURKA_SIGNAL.sourceName}`}
+          className="font-label text-xs tracking-[0.2em] uppercase mt-auto hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
+          style={{ color: READABLE_ACCENT }}
+        >
+          Source →
+        </a>
+      </div>
     </article>
   );
 }
@@ -193,19 +256,30 @@ export default function SwitzerlandRoutes() {
   return (
     <main className="min-h-screen" style={{ background: "oklch(0.22 0.01 60)" }}>
       <SwitzerlandNav />
-      <header className="pt-28 pb-12 container">
-        <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
-          Beyond Territory
-        </p>
-        <h1 className="font-display text-5xl md:text-6xl font-bold mb-5" style={{ color: "oklch(0.945 0.018 78)" }}>
-          Switzerland Signals
-        </h1>
-        <p className="font-mono-custom text-sm leading-loose max-w-2xl" style={{ color: "oklch(0.78 0.03 70)" }}>
-          Alpine roads, public route signals, and climbs held until the sources are clean.
-        </p>
+      <header className="pt-28 pb-16 border-b" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }}>
+        <div className="container grid grid-cols-1 lg:grid-cols-[1fr_0.82fr] gap-10 items-center">
+          <div>
+            <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
+              Beyond Territory
+            </p>
+            <h1 className="font-display text-5xl md:text-7xl font-bold mb-5" style={{ color: "oklch(0.945 0.018 78)" }}>
+              Switzerland Signals
+            </h1>
+            <p className="font-display text-2xl md:text-3xl font-bold mb-5" style={{ color: "oklch(0.88 0.025 75)" }}>
+              Alpine roads. Old passes. Source first.
+            </p>
+            <p className="font-mono-custom text-sm leading-loose max-w-2xl" style={{ color: "oklch(0.78 0.03 70)" }}>
+              Furka is the first signal. The rest stays held until the sources are clean.
+            </p>
+          </div>
+          <div className="relative min-h-[260px] flex items-center justify-center overflow-hidden" style={{ background: "oklch(0.18 0.008 60)", border: "1px solid oklch(0.38 0.015 60 / 0.5)" }}>
+            <div className="absolute inset-0 opacity-40" style={{ background: "radial-gradient(circle at 65% 35%, oklch(0.52 0.12 45 / 0.28), transparent 42%)" }} />
+            <AlpineMotif className="relative z-10 w-full max-w-[520px] p-6" />
+          </div>
+        </div>
       </header>
 
-      <section className="container pb-16" aria-labelledby="switzerland-signal-heading">
+      <section className="container py-16" aria-labelledby="switzerland-signal-heading">
         <div className="mb-6">
           <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: "oklch(0.52 0.12 45)" }}>
             Route Signal
@@ -216,6 +290,22 @@ export default function SwitzerlandRoutes() {
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           <SignalCard />
+        </div>
+      </section>
+
+      <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="why-switzerland-heading">
+        <div className="grid grid-cols-1 lg:grid-cols-[0.45fr_1fr] gap-8">
+          <p className="font-label text-xs tracking-[0.35em] uppercase" style={{ color: READABLE_ACCENT }}>
+            Editorial
+          </p>
+          <div className="max-w-3xl">
+            <h2 id="why-switzerland-heading" className="font-display text-3xl md:text-4xl font-bold mb-5" style={{ color: "oklch(0.945 0.018 78)" }}>
+              Why Switzerland
+            </h2>
+            <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+              Switzerland sits outside the territory. That is the point. Some roads become signals because riders remember them before they can explain them.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -230,15 +320,18 @@ export default function SwitzerlandRoutes() {
           <p className="font-mono-custom text-sm leading-loose mb-8" style={{ color: "oklch(0.78 0.03 70)" }}>
             These signals stay held until direct public sources, rights, and governance rules are confirmed.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
             {HELD_ITEMS.map((item) => (
-              <div key={item} className="p-4" style={{ background: "oklch(0.24 0.01 60)" }}>
-                <p className="font-label text-xs tracking-[0.2em] uppercase" style={{ color: "oklch(0.88 0.025 75)" }}>
+              <div key={item} className="p-5 min-h-[96px] flex items-center" style={{ background: "oklch(0.24 0.01 60)" }}>
+                <p className="font-label text-xs tracking-[0.18em] uppercase leading-relaxed" style={{ color: "oklch(0.88 0.025 75)" }}>
                   {item}
                 </p>
               </div>
             ))}
           </div>
+          <p className="font-mono-custom text-sm leading-loose mt-8" style={{ color: "oklch(0.78 0.03 70)" }}>
+            More routes come later. The source comes first.
+          </p>
         </div>
       </section>
     </main>
