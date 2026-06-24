@@ -383,6 +383,51 @@ export default function SwitzerlandRoutes() {
   useEffect(() => {
     const title = "Switzerland Signals — MootsFrame";
     const description = "A governed Switzerland route signal page for MootsFrame. Public source signals only. No route ownership, attendance, partnership, or endorsement implied.";
+    const jsonLd = {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: "Switzerland Signals — MootsFrame",
+      description: "Alpine cycling signals from Switzerland. Furka Pass, the Jura Route, Andermatt, and watchmaking country. Research-first. Source-backed.",
+      url: "https://mootsframe.com/routes/switzerland",
+      isPartOf: {
+        "@type": "WebSite",
+        name: "MootsFrame",
+        url: "https://mootsframe.com",
+      },
+      about: [
+        {
+          "@type": "Place",
+          name: "Furka Pass",
+          description: "Alpine mountain pass in Switzerland. Public cycling route signal.",
+          geo: {
+            "@type": "GeoCoordinates",
+            latitude: 46.5716,
+            longitude: 8.4159,
+          },
+        },
+        {
+          "@type": "Place",
+          name: "Andermatt",
+          description: "Alpine cycling hub in Uri, Switzerland. Base for Furka, Nufenen, and Gotthard Pass riding.",
+          geo: {
+            "@type": "GeoCoordinates",
+            latitude: 46.6355,
+            longitude: 8.5942,
+          },
+        },
+        {
+          "@type": "Place",
+          name: "La Chaux-de-Fonds",
+          description: "UNESCO World Heritage watchmaking city in the Swiss Jura, Canton Neuchâtel.",
+          sameAs: "https://whc.unesco.org/en/list/1302/",
+        },
+        {
+          "@type": "Place",
+          name: "Vallée de Joux",
+          description: "A quiet valley in Canton Vaud connected to Swiss watchmaking history and the Jura cycling route.",
+        },
+      ],
+    };
     const setMetaContent = (selector: string, content: string) => {
       document.querySelector(selector)?.setAttribute("content", content);
     };
@@ -394,6 +439,18 @@ export default function SwitzerlandRoutes() {
     setMetaContent('meta[property="og:url"]', "https://mootsframe.com/routes/switzerland");
     setMetaContent('meta[name="twitter:title"]', title);
     setMetaContent('meta[name="twitter:description"]', description);
+
+    const schemaId = "switzerland-signals-json-ld";
+    document.getElementById(schemaId)?.remove();
+    const script = document.createElement("script");
+    script.id = schemaId;
+    script.type = "application/ld+json";
+    script.textContent = JSON.stringify(jsonLd);
+    document.head.appendChild(script);
+
+    return () => {
+      script.remove();
+    };
   }, []);
 
   return (
