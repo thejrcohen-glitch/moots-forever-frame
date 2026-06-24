@@ -116,6 +116,39 @@ const ALPINE_RESEARCH_SIGNALS = [
   },
 ];
 
+const DISPATCHES = [
+  {
+    title: "Andermatt Base",
+    status: "Planned",
+    note: "Trip base signal for July riding updates.",
+  },
+  {
+    title: "Furka Signal",
+    status: "Planned",
+    note: "Alpine pass dispatch placeholder. Photo, caption, and source link held for approval.",
+  },
+  {
+    title: "Nufenen / Gotthard",
+    status: "Planned",
+    note: "High-alpine road dispatch placeholder. No route file or live tracking.",
+  },
+  {
+    title: "Watch Road",
+    status: "Research",
+    note: "Jura and watchmaking-country dispatch placeholder. Source-backed updates only.",
+  },
+  {
+    title: "Strava Activity Link — Held",
+    status: "Held",
+    note: "Public activity links stay held until approved. No private activity data.",
+  },
+  {
+    title: "Instagram Post — Held",
+    status: "Held",
+    note: "Public post links stay held until photo, caption, and source are approved.",
+  },
+];
+
 function AlpineMotif({ className = "" }: { className?: string }) {
   return (
     <svg
@@ -507,6 +540,44 @@ export default function SwitzerlandRoutes() {
             <WatchRoadCard key={signal.title} signal={signal} />
           ))}
         </div>
+      </section>
+
+      <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="switzerland-dispatches-heading">
+        <div className="max-w-4xl mb-9">
+          <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
+            Manual Dispatches
+          </p>
+          <h2 id="switzerland-dispatches-heading" className="font-display text-3xl md:text-5xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>
+            Switzerland Dispatches
+          </h2>
+          <p className="font-display text-xl md:text-2xl font-bold mb-5" style={{ color: "oklch(0.88 0.025 75)" }}>
+            July 7–14. Andermatt, Furka, Nufenen, Gotthard, Jura, and the watch road.
+          </p>
+          <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+            Ian will be riding Switzerland in July. Updates stay source-backed: approved photos, public social links, and public activity links only.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
+          {DISPATCHES.map((dispatch) => (
+            <article key={dispatch.title} className="p-6 md:p-7 min-h-[220px] flex flex-col" style={{ background: "oklch(0.24 0.01 60)" }}>
+              <span
+                className="font-label text-xs tracking-[0.18em] uppercase px-2.5 py-1 self-start mb-7"
+                style={{ color: "oklch(0.88 0.025 75)", background: "oklch(0.30 0.01 60)" }}
+              >
+                {dispatch.status}
+              </span>
+              <h3 className="font-display text-2xl md:text-3xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>
+                {dispatch.title}
+              </h3>
+              <p className="font-mono-custom text-sm leading-loose mt-auto" style={{ color: "oklch(0.78 0.03 70)" }}>
+                {dispatch.note}
+              </p>
+            </article>
+          ))}
+        </div>
+        <p className="font-mono-custom text-xs leading-loose mt-7 max-w-4xl" style={{ color: "oklch(0.72 0.04 65)" }}>
+          Dispatches publish only after Ian or J.R. approves the photo, caption, and source link. No live tracking, no scraping, no private activity data.
+        </p>
       </section>
 
       <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="held-switzerland-heading">
