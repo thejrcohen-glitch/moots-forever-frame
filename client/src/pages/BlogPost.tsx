@@ -30,6 +30,43 @@ const POST_SEO: Partial<Record<string, { title: string; description: string; ogT
 
 const POSTS = [
   {
+    slug: "sbt-grvl-steamboat",
+    title: "Steamboat",
+    subtitle: "Four years to the finish line. Why SBT GRVL matters, and why it happens to be in the town where Moots was born.",
+    author: "J.R. Cohen",
+    date: "2026-06-24",
+    category: "Field Note",
+    tags: ["SBT GRVL", "Steamboat Springs", "Moots", "gravel", "field note"],
+    body: [
+      "\"Ready to ride some bikes with some friends.\"",
+      "That's the first line of the documentary. It's also the truest thing anyone has said about what SBT GRVL actually is, once you get past the distance and the elevation and the clock.",
+      "I had less than a minute left when I crossed the finish line. One hundred forty-two miles, close to ten thousand feet of climbing, and the cutoff running. I kept pedaling. That's the only way through.",
+      "The town",
+      "Steamboat Springs, Colorado, is where Moots Cycles has built titanium frames since 1981. That's the short version. The longer one starts with my brother.",
+      "Steamboat was his favorite town in Colorado. He had a beat-up old Steamboat hat he wore until it fell apart. I didn't know then that the place he loved would end up being the place that changed my life.",
+      "In July of 2016, I got a phone call from my father. I knew what it was before he said it. My brother had been struggling for a long time, and he took his own life. My mother said something to me that day I've carried ever since: I can't lose another son.",
+      "Three years later, I was the one she might lose. My weight had climbed past 430 pounds. A doctor told me I was a type 2 diabetic, with an A1C near 12. Sitting in that office, my mother's words came back to me. I made a decision to change everything.",
+      "It started small",
+      "I took a mountain bike out to the seawall in Galveston, where my family was staying, and told myself I'd ride to the end and stop. I got to the end and kept going. One more water tower, then another, until I'd ridden the length of the island. The wind on the way back nearly broke me. I could have called someone to pick me up. I didn't want to. I wanted to finish what I started.",
+      "That ride became the next ride, and the next, and eventually it became a different life. Riding wasn't about losing weight, not really. It was about proving to myself, over and over, that I could keep going when it would have been easier to stop.",
+      "Four years to the finish line",
+      "It took four years to get to that champagne finish.",
+      "The first year, COVID had upended the event. The closest I could get to SBT GRVL was a ride of my own making just outside Houston — same distance, same spirit, none of the mountains.",
+      "The next year, a friend and I drove from Houston to Steamboat, not to race, but to volunteer. We worked every hour they'd let us. Volunteering turned out to be the surest way in — it earned us a guaranteed spot the following year.",
+      "That third year was my first time actually racing in Steamboat. I finished the Blue course, just over a hundred miles. One of the first real tests is a long, steep climb early in the race. That year, I had to get off my bike a couple of times to walk it. I'd intended to push for the Black, but I knew the math at the last checkpoint. I let it go and finished what I'd come to finish.",
+      "The fourth year, I went back for the Black: 142 miles, around ten thousand feet of climbing. That same climb — I never got off my bike. Not once, except for a pit stop for water and fuel. I crossed the finish line with less than a minute to spare. A champagne finish. The kind they pour for everyone who makes it under the wire.",
+      "Steamboat, again",
+      "A few years into that new life, I started traveling to Steamboat regularly — not for cycling at first, but to help a friend in real estate cook for his clients during the season. Two years of that, back and forth to a town I didn't yet know was tied to my family's history.",
+      "On one of those trips, I ended up at a bike shop called Orange Peel — the same shop where Moots got its start. I pointed at a bike. Just pointed, the way you do when something catches your eye and you don't expect anything to come of it.",
+      "Four months later, that exact bike showed up at my door. A gift.",
+      "I didn't choose Moots because of a spec sheet. I ended up on a Moots because of a friend, a shop in a town my brother loved, and a bike I pointed at without thinking too hard about it. Riding it, posting the miles — that's how I met Ian. We raced together. He and Moots gave me a Vamoots RCS, built for road but capable on cobbles and gravel. They saw what I was doing. What I was becoming. That's a story for another post, but it's part of this one.",
+      "Why I keep telling this story",
+      "I couldn't save my brother. If telling this honestly helps even one person decide to keep going on a hard day, that matters more to me than any finish time.",
+      "SBT GRVL takes place each year in Steamboat Springs, Colorado. Race facts and dates are on our races page. Riders, clubs, and signals connected to the event are on our Strava Signals page.",
+      "Titanium remembers where it's from. So do we.",
+    ],
+  },
+  {
     slug: "the-first-signal",
     title: "The First Signal",
     date: "June 6, 2026",
@@ -96,6 +133,34 @@ export default function BlogPost() {
   const description = postSeo?.description ?? (post ? `${post.category} from the Moots Forever Frame field notes.` : "Field notes from the Moots TX, AR, and OK territory.");
   const ogTitle = postSeo?.ogTitle ?? title;
   const ogDescription = postSeo?.ogDescription ?? description;
+  const linkStyle = { color: "oklch(0.72 0.14 65)" };
+
+  const renderBodyParagraph = (paragraph: string, index: number) => {
+    const className = "font-mono-custom text-base leading-loose mb-4";
+    const style = { color: "oklch(0.78 0.03 70)" };
+
+    if (post?.slug === "sbt-grvl-steamboat" && paragraph.startsWith("SBT GRVL takes place")) {
+      return (
+        <p key={`${post.slug}-${index}`} className={className} style={style}>
+          SBT GRVL takes place each year in Steamboat Springs, Colorado. Race facts and dates are on our{" "}
+          <Link href="/races">
+            <a className="hover:underline" style={linkStyle}>races page</a>
+          </Link>
+          . Riders, clubs, and signals connected to the event are on our{" "}
+          <Link href="/strava">
+            <a className="hover:underline" style={linkStyle}>Strava Signals page</a>
+          </Link>
+          .
+        </p>
+      );
+    }
+
+    return (
+      <p key={`${post?.slug ?? "missing"}-${index}`} className={className} style={style}>
+        {paragraph}
+      </p>
+    );
+  };
 
   useEffect(() => {
     const url = post ? `https://mootsframe.com/blog/${post.slug}` : "https://mootsframe.com/blog";
@@ -155,15 +220,30 @@ export default function BlogPost() {
               <h1 className="font-display text-5xl md:text-6xl font-bold mb-5" style={{ color: "oklch(0.945 0.018 78)" }}>
                 {post.title}
               </h1>
-              <p className="font-mono-custom text-xs mb-10" style={{ color: "oklch(0.52 0.04 65)" }}>
+              {"subtitle" in post && post.subtitle && (
+                <p className="font-mono-custom text-base leading-loose mb-5" style={{ color: "oklch(0.78 0.03 70)" }}>
+                  {post.subtitle}
+                </p>
+              )}
+              <p className="font-mono-custom text-xs mb-4" style={{ color: "oklch(0.52 0.04 65)" }}>
+                {"author" in post && post.author ? `${post.author} · ` : ""}
                 {post.date}
               </p>
+              {"tags" in post && post.tags && (
+                <div className="flex flex-wrap gap-2 mb-10">
+                  {post.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="font-label text-[10px] tracking-[0.18em] uppercase px-2 py-1"
+                      style={{ color: "oklch(0.88 0.025 75)", background: "oklch(0.30 0.01 60)" }}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
               <div className="mb-10">
-                {post.body.map((paragraph, index) => (
-                  <p key={`${post.slug}-${index}`} className="font-mono-custom text-base leading-loose mb-4" style={{ color: "oklch(0.78 0.03 70)" }}>
-                    {paragraph}
-                  </p>
-                ))}
+                {post.body.map((paragraph, index) => renderBodyParagraph(paragraph, index))}
               </div>
               <a
                 href="/#book-a-pop-up"
