@@ -3,6 +3,12 @@ import { Link } from "wouter";
 
 const POSTS = [
   {
+    slug: "sbt-grvl-steamboat",
+    title: "Steamboat",
+    date: "2026-06-24",
+    category: "Field Note",
+  },
+  {
     slug: "the-first-signal",
     title: "The First Signal",
     date: "June 6, 2026",
