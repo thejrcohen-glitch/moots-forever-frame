@@ -63,6 +63,59 @@ const WATCH_ROAD_SIGNALS = [
   },
 ];
 
+const ALPINE_RESEARCH_SIGNALS = [
+  {
+    title: "On the Trail of Watches",
+    status: "Research",
+    region: "La Chaux-de-Fonds",
+    territory: "Beyond Territory",
+    sourceName: "Switzerland Tourism — On the trail of watches",
+    sourceUrl: "https://www.myswitzerland.com/en-us/experiences/on-the-trail-of-watches/",
+    note: "La Chaux-de-Fonds is a public watchmaking city signal in the Swiss Jura. Switzerland Tourism ties the city’s street grid, altitude, UNESCO status, and museum culture to watchmaking. Research only.",
+    governanceNote: "City and culture signal only. No watch brand, sponsor, partner, route ownership, dealer, or endorsement claim.",
+  },
+  {
+    title: "Furka / Nufenen / Gotthard Loop",
+    status: "Research",
+    region: "Andermatt / Swiss Alps",
+    territory: "Beyond Territory",
+    sourceName: "SwitzerlandMobility National Cycling Routes",
+    sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/national-routes",
+    note: "A high-alpine riding signal around Andermatt, Furka, Nufenen, Gotthard, and Tremola. Research only.",
+    governanceNote: "Research signal only. No route ownership, attendance, partnership, sponsorship, or endorsement implied.",
+  },
+  {
+    title: "Octopus Gravel",
+    status: "Research",
+    region: "Andermatt",
+    territory: "Beyond Territory",
+    sourceName: "Switzerland Tourism — Octopus Gravel",
+    sourceUrl: "https://www.myswitzerland.com/en-us/experiences/events/octopus-gravel/",
+    note: "A public Andermatt gravel event signal built around dead-end alpine climbs. Research only. No attendance or sponsorship claim.",
+    governanceNote: "Research signal only. No route ownership, attendance, partnership, sponsorship, or endorsement implied.",
+  },
+  {
+    title: "Hospental Gravel Routes",
+    status: "Research",
+    region: "Hospental / Andermatt",
+    territory: "Beyond Territory",
+    sourceName: "Andermatt Swiss Alps — Hospental gravel routes",
+    sourceUrl: "https://maps.andermatt.swiss/en/gravel-bike-routes/hospental/gravel-bike-routes-in-hospental/314685244/",
+    note: "A public gravel route signal near Hospental and Andermatt. Source link only. No map embed, GPX, or route ownership claim.",
+    governanceNote: "Research signal only. No route ownership, attendance, partnership, sponsorship, or endorsement implied.",
+  },
+  {
+    title: "Seven Arms Gravel",
+    status: "Research",
+    region: "Andermatt",
+    territory: "Beyond Territory",
+    sourceName: "Gravel Union — Seven Arms in the Alps",
+    sourceUrl: "https://gravelunion.cc/article/ride-report-gravel-on-seven-arms-in-the-alps",
+    note: "A source-backed alpine gravel story signal from the Andermatt area. Research only.",
+    governanceNote: "Research signal only. No route ownership, attendance, partnership, sponsorship, or endorsement implied.",
+  },
+];
+
 function AlpineMotif({ className = "" }: { className?: string }) {
   return (
     <svg
@@ -432,6 +485,25 @@ export default function SwitzerlandRoutes() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
           {WATCH_ROAD_SIGNALS.map((signal) => (
+            <WatchRoadCard key={signal.title} signal={signal} />
+          ))}
+        </div>
+      </section>
+
+      <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="alpine-research-heading">
+        <div className="max-w-4xl mb-9">
+          <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
+            Research
+          </p>
+          <h2 id="alpine-research-heading" className="font-display text-3xl md:text-5xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>
+            Watch Trail / Andermatt Signals
+          </h2>
+          <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+            Source-backed watchmaking and alpine riding signals only. No routes, events, brands, or partnerships are claimed here.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
+          {ALPINE_RESEARCH_SIGNALS.map((signal) => (
             <WatchRoadCard key={signal.title} signal={signal} />
           ))}
         </div>
