@@ -116,6 +116,104 @@ const ALPINE_RESEARCH_SIGNALS = [
   },
 ];
 
+const WATCHES_AND_ROADS_EXPANSION = [
+  {
+    name: "Geneva start signal",
+    location: "Geneva",
+    status: "Verified Public Source",
+    sourceUrl: "https://www.myswitzerland.com/en-us/destinations/geneva/",
+    copy: "A quiet city start point for the Switzerland board. Public destination source only.",
+  },
+  {
+    name: "Jura Route / National Route 7",
+    location: "Lake Geneva to Basel",
+    status: "Verified Public Source",
+    sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/national-routes/route-07.html",
+    copy: "A public national cycling route through the Jura. Source signal only.",
+  },
+  {
+    name: "Vallée de Joux",
+    location: "Canton Vaud",
+    status: "Verified Public Source",
+    sourceUrl: "https://www.myswitzerland.com/en-us/destinations/vallee-de-joux/",
+    copy: "A public valley signal for watchmaking country and quiet road context.",
+  },
+  {
+    name: "La Chaux-de-Fonds / Le Locle",
+    location: "Canton Neuchâtel",
+    status: "Verified Public Source",
+    sourceUrl: "https://whc.unesco.org/en/list/1302/",
+    copy: "UNESCO-listed watchmaking urbanism. Culture signal only, not a brand claim.",
+  },
+  {
+    name: "Furka / Nufenen / Gotthard",
+    location: "Andermatt / Swiss Alps",
+    status: "Research",
+    sourceUrl: "https://www.andermatt.ch/en/summer/cycling/",
+    copy: "High-alpine road context around Andermatt. No route ownership implied.",
+  },
+  {
+    name: "Hospental gravel routes",
+    location: "Hospental / Andermatt",
+    status: "Research",
+    sourceUrl: "https://maps.andermatt.swiss/",
+    copy: "Public gravel source board for the Andermatt area. No maps embedded here.",
+  },
+  {
+    name: "Octopus Gravel",
+    location: "Andermatt",
+    status: "Research",
+    sourceUrl: "https://www.myswitzerland.com/en-us/experiences/octopus-gravel/",
+    copy: "A public gravel event signal. No attendance, sponsorship, or activation claim.",
+  },
+  {
+    name: "Seven Arms Gravel",
+    location: "Andermatt area",
+    status: "Research",
+    sourceUrl: "https://gravelunion.cc/",
+    copy: "A public gravel editorial source for alpine context. Research only.",
+  },
+  {
+    name: "On the Trail of Watches",
+    location: "La Chaux-de-Fonds",
+    status: "Verified Public Source",
+    sourceUrl: "https://www.myswitzerland.com/en-us/experiences/on-the-trail-of-watches/",
+    copy: "A public watchmaking culture signal in the Swiss Jura. No brand affiliation implied.",
+  },
+  {
+    name: "Rhône Route",
+    location: "Swiss national route",
+    status: "Held",
+    sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/national-routes/route-01.html",
+    copy: "Held as a public national-route source until the Switzerland board needs expansion.",
+  },
+  {
+    name: "Alpine Panorama Route",
+    location: "Swiss national route",
+    status: "Held",
+    sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/national-routes/route-04.html",
+    copy: "Held as a public alpine-route source. No itinerary or GPS data is claimed.",
+  },
+  {
+    name: "Rhine Route",
+    location: "Swiss national route",
+    status: "Held",
+    sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/national-routes/route-02.html",
+    copy: "Held as a public national-route source for later review.",
+  },
+] as const;
+
+const WATCH_BRANDS = [
+  { name: "Audemars Piguet", url: "https://www.audemarspiguet.com" },
+  { name: "Jaeger-LeCoultre", url: "https://www.jaeger-lecoultre.com" },
+  { name: "IWC Schaffhausen", url: "https://www.iwc.com" },
+  { name: "Patek Philippe", url: "https://www.patek.com" },
+  { name: "Longines", url: "https://www.longines.com" },
+  { name: "TAG Heuer", url: "https://www.tagheuer.com" },
+  { name: "Rolex", url: "https://www.rolex.com" },
+  { name: "Omega", url: "https://www.omegawatches.com" },
+] as const;
+
 const DISPATCHES = [
   {
     title: "Andermatt Base",
@@ -396,6 +494,41 @@ function WatchRoadCard({ signal }: { signal: (typeof WATCH_ROAD_SIGNALS)[number]
   );
 }
 
+function ExpansionSignalCard({ signal }: { signal: (typeof WATCHES_AND_ROADS_EXPANSION)[number] }) {
+  return (
+    <article className="p-6 md:p-7 min-h-[300px] flex flex-col" style={{ background: "oklch(0.24 0.01 60)" }}>
+      <span
+        className="font-label text-xs tracking-[0.18em] uppercase px-2.5 py-1 self-start mb-7"
+        style={{
+          color: signal.status === "Verified Public Source" ? "oklch(0.22 0.01 60)" : "oklch(0.88 0.025 75)",
+          background: signal.status === "Verified Public Source" ? READABLE_ACCENT : "oklch(0.30 0.01 60)",
+        }}
+      >
+        {signal.status}
+      </span>
+      <p className="font-label text-xs tracking-[0.24em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
+        {signal.location}
+      </p>
+      <h3 className="font-display text-2xl md:text-3xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>
+        {signal.name}
+      </h3>
+      <p className="font-mono-custom text-sm leading-loose mb-7" style={{ color: "oklch(0.78 0.03 70)" }}>
+        {signal.copy}
+      </p>
+      <a
+        href={signal.sourceUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`Open public source for ${signal.name}`}
+        className="font-label text-xs tracking-[0.2em] uppercase mt-auto hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4 self-start"
+        style={{ color: READABLE_ACCENT }}
+      >
+        Source →
+      </a>
+    </article>
+  );
+}
+
 export default function SwitzerlandRoutes() {
   useEffect(() => {
     const title = "Switzerland Signals — MootsFrame";
@@ -538,6 +671,60 @@ export default function SwitzerlandRoutes() {
                 The Jura gives the page a second rhythm: less alpine spectacle, more mechanical time.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="watches-roads-expansion-heading">
+        <div className="max-w-4xl mb-9">
+          <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
+            Source Rail
+          </p>
+          <h2 id="watches-roads-expansion-heading" className="font-display text-3xl md:text-5xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>
+            Watches + Roads
+          </h2>
+          <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+            Public sources for the Switzerland board. No route ownership, sponsorship, attendance, or endorsement is claimed.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
+          {WATCHES_AND_ROADS_EXPANSION.map((signal) => (
+            <ExpansionSignalCard key={signal.name} signal={signal} />
+          ))}
+        </div>
+      </section>
+
+      <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="watch-brands-heading">
+        <div className="grid grid-cols-1 lg:grid-cols-[0.35fr_1fr] gap-8">
+          <div>
+            <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
+              Reference
+            </p>
+            <h2 id="watch-brands-heading" className="font-display text-3xl md:text-4xl font-bold mb-5" style={{ color: "oklch(0.945 0.018 78)" }}>
+              Watchmaking region.
+            </h2>
+            <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+              Watchmaking region. Public source only. Brand references do not imply sponsorship, partnership, endorsement, or MootsFrame affiliation.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
+            {WATCH_BRANDS.map((brand) => (
+              <a
+                key={brand.name}
+                href={brand.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-5 min-h-[120px] flex flex-col justify-between transition-opacity hover:opacity-80 focus:outline focus:outline-2 focus:outline-offset-4"
+                style={{ background: "oklch(0.24 0.01 60)" }}
+              >
+                <span className="font-label text-xs tracking-[0.18em] uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>
+                  Official Site
+                </span>
+                <span className="font-display text-xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>
+                  {brand.name} →
+                </span>
+              </a>
+            ))}
           </div>
         </div>
       </section>
