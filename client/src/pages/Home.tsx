@@ -2003,8 +2003,17 @@ function BookingForm() {
                 ))}
                 <div className="flex gap-4">
                   <span className="font-label text-xs tracking-widest uppercase w-28 flex-shrink-0 pt-0.5" style={{ color: "oklch(0.52 0.12 45)" }}>WhatsApp</span>
-                  <a href="https://wa.me/19175787687" className="font-mono-custom text-xs hover:underline" style={{ color: "oklch(0.88 0.025 75)" }}>
-                    <span aria-hidden="true">✆</span> WhatsApp Ian →
+                  <a
+                    href="https://wa.me/19175787687"
+                    className="inline-flex font-mono-custom text-xs px-3 py-1.5 transition-opacity hover:opacity-80"
+                    style={{
+                      color: "oklch(0.32 0.08 145)",
+                      background: "oklch(0.82 0.08 145 / 0.22)",
+                      border: "1px solid oklch(0.32 0.08 145 / 0.35)",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    WhatsApp Ian →
                   </a>
                 </div>
               </div>
