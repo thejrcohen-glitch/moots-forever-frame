@@ -334,14 +334,6 @@ function SignalCard() {
             {FURKA_SIGNAL.sourceName}
           </p>
         </div>
-        <div>
-          <p className="font-label text-xs tracking-[0.28em] uppercase mb-3" style={{ color: "oklch(0.52 0.12 45)" }}>
-            Governance
-          </p>
-          <p className="font-mono-custom text-xs leading-loose" style={{ color: "oklch(0.72 0.04 65)" }}>
-            {FURKA_SIGNAL.governanceNote}
-          </p>
-        </div>
         <a
           href={FURKA_SIGNAL.sourceUrl}
           target="_blank"
@@ -387,14 +379,6 @@ function WatchRoadCard({ signal }: { signal: (typeof WATCH_ROAD_SIGNALS)[number]
           </p>
           <p className="font-mono-custom text-xs leading-relaxed" style={{ color: "oklch(0.88 0.025 75)" }}>
             {signal.sourceName}
-          </p>
-        </div>
-        <div>
-          <p className="font-label text-xs tracking-[0.26em] uppercase mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>
-            Governance
-          </p>
-          <p className="font-mono-custom text-xs leading-loose" style={{ color: "oklch(0.72 0.04 65)" }}>
-            {signal.governanceNote}
           </p>
         </div>
         <a
