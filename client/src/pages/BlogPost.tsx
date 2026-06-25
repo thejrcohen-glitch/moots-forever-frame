@@ -134,6 +134,16 @@ export default function BlogPost() {
   const ogTitle = postSeo?.ogTitle ?? title;
   const ogDescription = postSeo?.ogDescription ?? description;
   const linkStyle = { color: "oklch(0.72 0.14 65)" };
+  const relatedInternalLinks = [
+    { href: "/races", label: "Races" },
+    { href: "/strava", label: "Strava Signals" },
+    { href: "/blog", label: "Field Notes" },
+  ];
+  const relatedExternalLinks = [
+    { href: "https://www.strava.com/clubs/2216534", label: "MootsFrame Strava Club" },
+    { href: "https://www.strava.com/clubs/476249", label: "SBT GRVL Strava Club" },
+    { href: "https://sbtgrvl.com/", label: "SBT GRVL" },
+  ];
 
   const renderBodyParagraph = (paragraph: string, index: number) => {
     const className = "font-mono-custom text-base leading-loose mb-4";
@@ -245,6 +255,37 @@ export default function BlogPost() {
               <div className="mb-10">
                 {post.body.map((paragraph, index) => renderBodyParagraph(paragraph, index))}
               </div>
+              {post.slug === "sbt-grvl-steamboat" && (
+                <section className="mb-10 p-6" style={{ background: "oklch(0.24 0.01 60)", border: "1px solid oklch(0.38 0.015 60 / 0.5)" }}>
+                  <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: "oklch(0.72 0.14 65)" }}>
+                    Related Signals
+                  </p>
+                  <h2 className="font-display text-3xl md:text-4xl font-bold mb-5" style={{ color: "oklch(0.945 0.018 78)" }}>
+                    Read More
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {relatedInternalLinks.map((item) => (
+                      <Link key={item.href} href={item.href}>
+                        <a className="font-label text-xs tracking-[0.18em] uppercase p-4 transition-opacity hover:opacity-70" style={{ color: "oklch(0.88 0.025 75)", background: "oklch(0.30 0.01 60)" }}>
+                          {item.label} →
+                        </a>
+                      </Link>
+                    ))}
+                    {relatedExternalLinks.map((item) => (
+                      <a
+                        key={item.href}
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-label text-xs tracking-[0.18em] uppercase p-4 transition-opacity hover:opacity-70"
+                        style={{ color: "oklch(0.88 0.025 75)", background: "oklch(0.30 0.01 60)" }}
+                      >
+                        {item.label} →
+                      </a>
+                    ))}
+                  </div>
+                </section>
+              )}
               <a
                 href="/#book-a-pop-up"
                 className="inline-block font-label text-xs tracking-[0.2em] uppercase px-6 py-3 transition-opacity hover:opacity-80"
