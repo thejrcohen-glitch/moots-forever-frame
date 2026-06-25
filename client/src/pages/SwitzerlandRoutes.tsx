@@ -557,7 +557,7 @@ export default function SwitzerlandRoutes() {
             Mechanical time. Mechanical distance. A quiet source board for Ian, Geneva, the Jura, and watchmaking country. These are Research signals only; the deeper details stay held.
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
           {WATCH_ROAD_SIGNALS.map((signal) => (
             <WatchRoadCard key={signal.title} signal={signal} />
           ))}
