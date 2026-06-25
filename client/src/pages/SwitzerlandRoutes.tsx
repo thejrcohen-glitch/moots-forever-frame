@@ -214,6 +214,49 @@ const WATCH_BRANDS = [
   { name: "Omega", url: "https://www.omegawatches.com" },
 ] as const;
 
+const COFFEE_SIGNALS = [
+  {
+    name: "Café du Glacier",
+    city: "Andermatt",
+    near: "Furka / Nufenen / Gotthard",
+    status: "Research",
+    sourceUrl: "https://www.andermatt.ch/en/gastronomy/",
+    copy: "Coffee signal near the Andermatt route corridor. Publicly listed café. Research only.",
+  },
+  {
+    name: "Gasthof zum Sternen",
+    city: "Hospental",
+    near: "Gotthard pass",
+    status: "Research",
+    sourceUrl: "https://www.andermatt.ch/en/gastronomy/",
+    copy: "Coffee signal near Hospental. Publicly listed café. Research only.",
+  },
+  {
+    name: "Geneva café quarter",
+    city: "Geneva",
+    near: "Geneva start signal",
+    status: "Research",
+    sourceUrl: "https://www.myswitzerland.com/en-us/destinations/geneva/",
+    copy: "Geneva café culture. Public destination source only. Research only.",
+  },
+  {
+    name: "Café du Soleil",
+    city: "Le Locle",
+    near: "Watchmaking region / La Chaux-de-Fonds",
+    status: "Research",
+    sourceUrl: "https://www.myswitzerland.com/en-us/destinations/la-chaux-de-fonds/",
+    copy: "Coffee signal in the watchmaking district. Publicly listed source. Research only.",
+  },
+  {
+    name: "Andermatt village cafés",
+    city: "Andermatt",
+    near: "Alpine passes corridor",
+    status: "Research",
+    sourceUrl: "https://www.andermatt.ch/en/gastronomy/",
+    copy: "Publicly listed café corridor in Andermatt. Research signal only.",
+  },
+] as const;
+
 const DISPATCHES = [
   {
     title: "Andermatt Base",
@@ -529,6 +572,38 @@ function ExpansionSignalCard({ signal }: { signal: (typeof WATCHES_AND_ROADS_EXP
   );
 }
 
+function CoffeeSignalCard({ signal }: { signal: (typeof COFFEE_SIGNALS)[number] }) {
+  return (
+    <article className="p-6 md:p-7 min-h-[280px] flex flex-col" style={{ background: "oklch(0.24 0.01 60)" }}>
+      <span
+        className="font-label text-xs tracking-[0.18em] uppercase px-2.5 py-1 self-start mb-7"
+        style={{ color: "oklch(0.88 0.025 75)", background: "oklch(0.30 0.01 60)" }}
+      >
+        {signal.status}
+      </span>
+      <p className="font-label text-xs tracking-[0.24em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
+        {signal.city} / {signal.near}
+      </p>
+      <h3 className="font-display text-2xl md:text-3xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>
+        {signal.name}
+      </h3>
+      <p className="font-mono-custom text-sm leading-loose mb-7" style={{ color: "oklch(0.78 0.03 70)" }}>
+        {signal.copy}
+      </p>
+      <a
+        href={signal.sourceUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`Open public source for ${signal.name}`}
+        className="font-label text-xs tracking-[0.2em] uppercase mt-auto hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4 self-start"
+        style={{ color: READABLE_ACCENT }}
+      >
+        Source →
+      </a>
+    </article>
+  );
+}
+
 export default function SwitzerlandRoutes() {
   useEffect(() => {
     const title = "Switzerland Signals — MootsFrame";
@@ -729,6 +804,25 @@ export default function SwitzerlandRoutes() {
         </div>
       </section>
 
+      <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="coffee-signals-heading">
+        <div className="max-w-4xl mb-9">
+          <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
+            Coffee Signals
+          </p>
+          <h2 id="coffee-signals-heading" className="font-display text-3xl md:text-5xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>
+            Cafés near the corridor.
+          </h2>
+          <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+            Publicly listed cafés and destination signals for later field notes. Research only.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
+          {COFFEE_SIGNALS.map((signal) => (
+            <CoffeeSignalCard key={signal.name} signal={signal} />
+          ))}
+        </div>
+      </section>
+
       <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="watch-road-heading">
         <div className="max-w-4xl mb-9">
           <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
@@ -839,7 +933,7 @@ export default function SwitzerlandRoutes() {
               Follow Ian through Switzerland.
             </h2>
             <p className="font-mono-custom text-sm leading-loose mb-7" style={{ color: "oklch(0.78 0.03 70)" }}>
-              Ian rides public. Activity links go live as he posts. July 7–14.
+              Ian rides public. Activity links added here as dispatches are approved. July 7–14.
             </p>
             <a
               href="https://www.strava.com/athletes/275498"
