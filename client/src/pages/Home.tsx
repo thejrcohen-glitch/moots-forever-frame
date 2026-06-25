@@ -1238,18 +1238,18 @@ function RideCalendar() {
     { enabled: !IS_STATIC_SITE }
   );
 
+  const isUpcoming = (dateStr: string) => new Date(dateStr + "T12:00:00") >= new Date();
+
   const filtered = CALENDAR_EVENTS.filter((e) => {
     const tMatch = activeTerritory === "all" || e.territory === activeTerritory;
     const typeMatch = activeType === "all" || e.type === activeType;
-    return tMatch && typeMatch;
+    return tMatch && typeMatch && isUpcoming(e.date);
   }).sort((a, b) => a.date.localeCompare(b.date));
 
   const formatDate = (dateStr: string) => {
     const d = new Date(dateStr + "T12:00:00");
     return d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" });
   };
-
-  const isUpcoming = (dateStr: string) => new Date(dateStr + "T12:00:00") >= new Date();
 
   const filters = [
     { id: "all", label: "All Territories" },
@@ -2395,7 +2395,7 @@ function Footer() {
           </div>
         </div>
         <div className="mt-8 pt-8 border-t flex flex-col md:flex-row items-center justify-between gap-4" style={{ borderColor: "oklch(0.38 0.015 60 / 0.4)" }}>
-          <p className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>© 2026 Moots Bicycle. The Forever Frame Campaign.</p>
+          <p className="font-mono-custom text-xs" style={{ color: "oklch(0.78 0.03 70)" }}>© 2026 Moots Bicycle. The Forever Frame Campaign.</p>
           <div className="flex flex-col md:flex-row items-center gap-3">
             <a
               href="https://www.instagram.com/MootsFrames"
@@ -2418,7 +2418,7 @@ function Footer() {
               Facebook →
             </a>
           </div>
-          <p className="font-mono-custom text-xs" style={{ color: "oklch(0.38 0.015 60)" }}>Built in Colorado. Proven in the Ozarks.</p>
+          <p className="font-mono-custom text-xs" style={{ color: "oklch(0.78 0.03 70)" }}>Built in Colorado. Proven in the Ozarks.</p>
         </div>
       </div>
     </footer>
