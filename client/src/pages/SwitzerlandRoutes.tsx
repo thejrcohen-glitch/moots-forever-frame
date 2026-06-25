@@ -622,40 +622,100 @@ export default function SwitzerlandRoutes() {
       </section>
 
       <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="follow-switzerland-dispatch-heading">
-        <div className="max-w-4xl mb-9">
-          <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
-            Public Links
-          </p>
-          <h2 id="follow-switzerland-dispatch-heading" className="font-display text-3xl md:text-5xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>
-            Follow the Switzerland Dispatch
-          </h2>
-          <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
-            Public links only. Switzerland dispatches will be added as Ian posts public ride activity and field notes.
-          </p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
-          {[
-            { label: "Ian Strava", href: "https://www.strava.com/athletes/275498" },
-            { label: "MootsFrame Strava Club", href: "https://www.strava.com/clubs/2216534" },
-            { label: "MootsFrame Instagram", href: "https://www.instagram.com/mootsframes/" },
-            { label: "YouTube", href: "https://www.youtube.com/@Mootsframe" },
-          ].map((link) => (
+        <div
+          className="grid grid-cols-1 lg:grid-cols-[0.4fr_0.6fr]"
+          style={{ background: "oklch(0.38 0.015 60 / 0.5)", border: "1px solid oklch(0.38 0.015 60 / 0.5)" }}
+        >
+          <a
+            href="https://www.strava.com/athletes/275498"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="relative min-h-[460px] overflow-hidden transition-opacity hover:opacity-90 focus:outline focus:outline-2 focus:outline-offset-4"
+            aria-label="Follow Ian Zakrocki on Strava"
+          >
+            <img
+              src="/images/ian-steamboat-ride.jpg"
+              alt="Ian Zakrocki riding a Moots titanium bike in Steamboat Springs, Colorado."
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            <div className="absolute inset-x-0 bottom-0 h-1/2" style={{ background: "linear-gradient(to top, oklch(0.08 0.005 60 / 0.88), oklch(0.08 0.005 60 / 0))" }} />
+            <p className="absolute bottom-5 left-5 right-5 font-label text-xs tracking-[0.22em] uppercase leading-relaxed" style={{ color: "oklch(0.945 0.018 78)" }}>
+              Ian Zakrocki. Territory Rep. Steamboat to Switzerland.
+            </p>
+          </a>
+
+          <div className="p-7 md:p-10 lg:p-12 flex flex-col" style={{ background: "oklch(0.24 0.01 60)" }}>
+            <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
+              Follow the Dispatch
+            </p>
+            <h2 id="follow-switzerland-dispatch-heading" className="font-display text-4xl md:text-5xl font-bold mb-5" style={{ color: "oklch(0.945 0.018 78)" }}>
+              Follow Ian through Switzerland.
+            </h2>
+            <p className="font-mono-custom text-sm leading-loose mb-7" style={{ color: "oklch(0.78 0.03 70)" }}>
+              Ian rides public. Activity links go live as he posts. July 7–14.
+            </p>
             <a
-              key={link.label}
-              href={link.href}
+              href="https://www.strava.com/athletes/275498"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-6 md:p-7 min-h-[140px] flex flex-col justify-between transition-opacity hover:opacity-80 focus:outline focus:outline-2 focus:outline-offset-4"
-              style={{ background: "oklch(0.24 0.01 60)" }}
+              className="font-label text-xs tracking-[0.2em] uppercase hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4 self-start"
+              style={{ color: READABLE_ACCENT }}
             >
-              <span className="font-label text-xs tracking-[0.18em] uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>
-                Source
-              </span>
-              <span className="font-display text-2xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>
-                {link.label} →
-              </span>
+              Follow Ian on Strava →
             </a>
-          ))}
+
+            <div className="h-px my-8" style={{ background: "oklch(0.38 0.015 60 / 0.65)" }} />
+
+            <div className="flex flex-col sm:flex-row gap-5">
+              <img
+                src="/images/mootsframe-logo.png"
+                alt="MootsFrame"
+                className="h-10 w-auto object-contain self-start"
+              />
+              <div>
+                <h3 className="font-display text-2xl font-bold mb-2" style={{ color: "oklch(0.945 0.018 78)" }}>
+                  MootsFrame Strava Club
+                </h3>
+                <p className="font-mono-custom text-sm leading-loose mb-4" style={{ color: "oklch(0.78 0.03 70)" }}>
+                  Riders from TX, AR, OK, and wherever the frame goes.
+                </p>
+                <a
+                  href="https://www.strava.com/clubs/2216534"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-label text-xs tracking-[0.2em] uppercase hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
+                  style={{ color: READABLE_ACCENT }}
+                >
+                  Join on Strava →
+                </a>
+              </div>
+            </div>
+
+            <div className="mt-10 pt-6 flex flex-col sm:flex-row gap-4 sm:gap-6" style={{ borderTop: "1px solid oklch(0.38 0.015 60 / 0.4)" }}>
+              <a
+                href="https://www.instagram.com/mootsframes/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono-custom text-xs hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
+                style={{ color: "oklch(0.72 0.04 65)" }}
+              >
+                @mootsframes on Instagram
+              </a>
+              <a
+                href="https://www.youtube.com/@Mootsframe"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono-custom text-xs hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
+                style={{ color: "oklch(0.72 0.04 65)" }}
+              >
+                @Mootsframe on YouTube
+              </a>
+            </div>
+
+            <p className="font-mono-custom text-xs leading-loose mt-6" style={{ color: "oklch(0.72 0.04 65)" }}>
+              Public links only. No live tracking. Dispatches added as Ian posts.
+            </p>
+          </div>
         </div>
       </section>
 
