@@ -128,7 +128,7 @@ const WATCHES_AND_ROADS_EXPANSION = [
     name: "Jura Route / National Route 7",
     location: "Lake Geneva to Basel",
     status: "Verified Public Source",
-    sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/national-routes/route-07.html",
+    sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/route-7",
     copy: "A public national cycling route through the Jura. Source signal only.",
   },
   {
@@ -184,21 +184,21 @@ const WATCHES_AND_ROADS_EXPANSION = [
     name: "Rhône Route",
     location: "Swiss national route",
     status: "Held",
-    sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/national-routes/route-01.html",
+    sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/route-1",
     copy: "Held as a public national-route source until the Switzerland board needs expansion.",
   },
   {
     name: "Alpine Panorama Route",
     location: "Swiss national route",
     status: "Held",
-    sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/national-routes/route-04.html",
+    sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/route-4",
     copy: "Held as a public alpine-route source. No itinerary or GPS data is claimed.",
   },
   {
     name: "Rhine Route",
     location: "Swiss national route",
     status: "Held",
-    sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/national-routes/route-02.html",
+    sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/route-2",
     copy: "Held as a public national-route source for later review.",
   },
 ] as const;
@@ -224,12 +224,12 @@ const COFFEE_SIGNALS = [
     copy: "Coffee signal near the Andermatt route corridor. Publicly listed café. Research only.",
   },
   {
-    name: "Gasthof zum Sternen",
-    city: "Hospental",
-    near: "Gotthard pass",
+    name: "Andermatt village hospitality signal",
+    city: "Andermatt",
+    near: "Gotthard pass corridor",
     status: "Research",
     sourceUrl: "https://www.andermatt.ch/en/gastronomy/",
-    copy: "Coffee signal near Hospental. Publicly listed café. Research only.",
+    copy: "Publicly listed hospitality corridor near Andermatt. Research only.",
   },
   {
     name: "Geneva café quarter",
@@ -240,12 +240,12 @@ const COFFEE_SIGNALS = [
     copy: "Geneva café culture. Public destination source only. Research only.",
   },
   {
-    name: "Café du Soleil",
-    city: "Le Locle",
-    near: "Watchmaking region / La Chaux-de-Fonds",
+    name: "La Chaux-de-Fonds café signal",
+    city: "La Chaux-de-Fonds",
+    near: "Watchmaking region",
     status: "Research",
     sourceUrl: "https://www.myswitzerland.com/en-us/destinations/la-chaux-de-fonds/",
-    copy: "Coffee signal in the watchmaking district. Publicly listed source. Research only.",
+    copy: "Coffee signal in the watchmaking district. Public destination source only. Research only.",
   },
   {
     name: "Andermatt village cafés",
@@ -994,7 +994,7 @@ export default function SwitzerlandRoutes() {
             </div>
 
             <p className="font-mono-custom text-xs leading-loose mt-6" style={{ color: "oklch(0.72 0.04 65)" }}>
-              Public links only. No live tracking. Dispatches added as Ian posts.
+              Public links only. No live tracking. Dispatches added here as they are approved.
             </p>
           </div>
         </div>
