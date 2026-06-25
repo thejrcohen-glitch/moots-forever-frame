@@ -487,6 +487,56 @@ function SourceSection({ section }: { section: StravaSource["section"] }) {
   );
 }
 
+function MootsFrameClubSection() {
+  return (
+    <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="mootsframe-club-heading">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6 items-start">
+        <article
+          className="p-7 md:p-9 min-h-[320px] flex flex-col"
+          style={{
+            background: "oklch(0.24 0.01 60)",
+            border: "1px solid oklch(0.38 0.015 60 / 0.5)",
+            borderLeft: `3px solid ${READABLE_ACCENT}`,
+          }}
+        >
+          <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
+            MootsFrame Club
+          </p>
+          <h2 id="mootsframe-club-heading" className="font-display text-3xl md:text-4xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>
+            MootsFrame
+          </h2>
+          <p className="font-label text-xs tracking-[0.22em] uppercase mb-6" style={{ color: "oklch(0.52 0.12 45)" }}>
+            Houston, Texas
+          </p>
+          <p className="font-mono-custom text-sm leading-loose flex-1" style={{ color: "oklch(0.78 0.03 70)" }}>
+            Public club activity for MootsFrame riders and source-backed field notes. No partnership, sponsorship, attendance, or endorsement is implied.
+          </p>
+          <a
+            href="https://www.strava.com/clubs/2216534"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-label text-xs tracking-[0.2em] uppercase mt-8 hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4 self-start"
+            style={{ color: READABLE_ACCENT }}
+          >
+            View on Strava →
+          </a>
+        </article>
+        <div className="p-5 flex justify-center" style={{ background: "oklch(0.24 0.01 60)", border: "1px solid oklch(0.38 0.015 60 / 0.5)" }}>
+          <iframe
+            allowTransparency={true}
+            frameBorder="0"
+            height="454"
+            scrolling="no"
+            src="https://www.strava.com/clubs/2216534/latest-rides/6694c7f04725dfdf49d6ce9506ea97575cb8fdae?show_rides=true"
+            title="MootsFrame Strava Club latest public rides"
+            width="300"
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Strava() {
   useEffect(() => {
     const title = "Strava Signals — MootsFrame";
@@ -527,6 +577,8 @@ export default function Strava() {
       {SECTION_ORDER.map((section) => (
         <SourceSection key={section} section={section} />
       ))}
+
+      <MootsFrameClubSection />
 
       <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="held-heading">
         <div className="max-w-2xl">

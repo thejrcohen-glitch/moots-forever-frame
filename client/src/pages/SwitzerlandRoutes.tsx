@@ -621,6 +621,44 @@ export default function SwitzerlandRoutes() {
         </p>
       </section>
 
+      <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="follow-switzerland-dispatch-heading">
+        <div className="max-w-4xl mb-9">
+          <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
+            Public Links
+          </p>
+          <h2 id="follow-switzerland-dispatch-heading" className="font-display text-3xl md:text-5xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>
+            Follow the Switzerland Dispatch
+          </h2>
+          <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+            Public links only. Switzerland dispatches will be added as Ian posts public ride activity and field notes.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
+          {[
+            { label: "Ian Strava", href: "https://www.strava.com/athletes/275498" },
+            { label: "MootsFrame Strava Club", href: "https://www.strava.com/clubs/2216534" },
+            { label: "MootsFrame Instagram", href: "https://www.instagram.com/mootsframes/" },
+            { label: "YouTube", href: "https://www.youtube.com/@Mootsframe" },
+          ].map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-6 md:p-7 min-h-[140px] flex flex-col justify-between transition-opacity hover:opacity-80 focus:outline focus:outline-2 focus:outline-offset-4"
+              style={{ background: "oklch(0.24 0.01 60)" }}
+            >
+              <span className="font-label text-xs tracking-[0.18em] uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>
+                Source
+              </span>
+              <span className="font-display text-2xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>
+                {link.label} →
+              </span>
+            </a>
+          ))}
+        </div>
+      </section>
+
       <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="held-switzerland-heading">
         <div className="max-w-3xl">
           <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
