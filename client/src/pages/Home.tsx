@@ -286,6 +286,7 @@ function Nav() {
     { label: "Book a Pop-Up", href: "#book-a-pop-up" },
     { label: "Bikes", href: "/bikes" },
     { label: "Routes", href: "/routes" },
+    { label: "Switzerland", href: "/routes/switzerland" },
     { label: "Strava", href: "/strava" },
     { label: "Engineering", href: "/engineering" },
     { label: "Community", href: "/community" },
@@ -301,8 +302,8 @@ function Nav() {
       <nav
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
         style={{
-          background: scrolled || menuOpen ? "oklch(0.945 0.018 78 / 0.97)" : "transparent",
-          backdropFilter: scrolled || menuOpen ? "blur(8px)" : "none",
+          background: scrolled || menuOpen ? "oklch(0.945 0.018 78 / 0.97)" : "oklch(0.22 0.01 60 / 0.68)",
+          backdropFilter: "blur(10px)",
           borderBottom: scrolled || menuOpen ? "1px solid oklch(0.78 0.03 70)" : "none",
         }}
       >
@@ -312,7 +313,7 @@ function Nav() {
             <span className="font-display text-xl font-bold tracking-tight" style={{ color: scrolled || menuOpen ? "oklch(0.22 0.01 60)" : "oklch(0.945 0.018 78)" }}>
               Moots
             </span>
-            <span className="font-label text-xs tracking-[0.2em] uppercase" style={{ color: scrolled || menuOpen ? "oklch(0.52 0.12 45)" : "oklch(0.88 0.025 75 / 0.8)" }}>
+            <span className="font-label text-xs tracking-[0.2em] uppercase" style={{ color: scrolled || menuOpen ? "oklch(0.52 0.12 45)" : "oklch(0.945 0.018 78)" }}>
               The Forever Frame
             </span>
           </a>
@@ -326,7 +327,7 @@ function Nav() {
                 target={link.href.startsWith("http") ? "_blank" : undefined}
                 rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
                 className="font-label text-xs tracking-widest uppercase transition-opacity hover:opacity-70"
-                style={{ color: scrolled ? "oklch(0.38 0.015 60)" : "oklch(0.945 0.018 78)" }}
+                style={{ color: scrolled || menuOpen ? "oklch(0.38 0.015 60)" : "oklch(0.945 0.018 78)" }}
               >
                 {link.label}
               </a>
@@ -334,7 +335,7 @@ function Nav() {
             <a
               href="/build"
               className="font-label text-xs tracking-widest uppercase px-4 py-1.5 transition-all hover:opacity-80"
-              style={{ background: scrolled ? "oklch(0.52 0.12 45)" : "oklch(0.72 0.14 65)", color: scrolled ? "oklch(0.945 0.018 78)" : "oklch(0.22 0.01 60)" }}
+              style={{ background: scrolled || menuOpen ? "oklch(0.52 0.12 45)" : "oklch(0.72 0.14 65)", color: scrolled || menuOpen ? "oklch(0.945 0.018 78)" : "oklch(0.22 0.01 60)" }}
             >
               Build a Moots
             </a>
@@ -1288,10 +1289,44 @@ function RideCalendar() {
               href="#book-a-pop-up"
               className="font-label text-xs tracking-[0.2em] uppercase px-6 py-2.5 transition-all hover:opacity-80 self-start md:self-auto"
               style={{ background: "oklch(0.72 0.14 65)", color: "oklch(0.22 0.01 60)" }}
-            >
+              >
               Request a Date →
             </a>
           </div>
+
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-5 mt-8">
+            <article className="p-6 md:p-7 flex flex-col gap-4" style={{ background: "oklch(0.24 0.01 60)", border: "1px solid oklch(0.38 0.015 60 / 0.5)" }}>
+              <p className="font-label text-xs tracking-[0.35em] uppercase" style={{ color: "oklch(0.72 0.14 65)" }}>
+                International
+              </p>
+              <h3 className="font-display text-2xl md:text-3xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>
+                Switzerland Signals
+              </h3>
+              <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+                Furka, Gotthard, Andermatt, and the Jura watch roads.
+              </p>
+              <a href="/routes/switzerland" className="font-label text-xs tracking-[0.2em] uppercase hover:opacity-70 transition-opacity self-start" style={{ color: "oklch(0.72 0.14 65)" }}>
+                Open Switzerland →
+              </a>
+            </article>
+            <article className="p-6 md:p-7 flex flex-col gap-4" style={{ background: "oklch(0.24 0.01 60)", border: "1px solid oklch(0.38 0.015 60 / 0.5)" }}>
+              <p className="font-label text-xs tracking-[0.35em] uppercase" style={{ color: "oklch(0.72 0.14 65)" }}>
+                Switzerland Dispatch
+              </p>
+              <h3 className="font-display text-2xl md:text-3xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>
+                Time to Furka.
+              </h3>
+              <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+                Coffee near La Chaux-de-Fonds. Andermatt and Gotthard ahead. Follow the Switzerland signals.
+              </p>
+              <a href="/routes/switzerland" className="font-label text-xs tracking-[0.2em] uppercase hover:opacity-70 transition-opacity self-start" style={{ color: "oklch(0.72 0.14 65)" }}>
+                Ride the Switzerland Signal →
+              </a>
+            </article>
+          </div>
+          <p className="font-mono-custom text-xs mt-5" style={{ color: "oklch(0.72 0.04 65)" }}>
+            Road. Gravel. Mountain. All-road. Built for the long way around.
+          </p>
 
           {/* Filter pills */}
           <div className="flex flex-wrap gap-2 mt-8">
@@ -2394,29 +2429,50 @@ function Footer() {
             <p className="font-mono-custom text-xs" style={{ color: "oklch(0.52 0.04 65)" }}>Ian Zakrocki — Dealer & Individual Orders</p>
           </div>
         </div>
-        <div className="mt-8 pt-8 border-t flex flex-col md:flex-row items-center justify-between gap-4" style={{ borderColor: "oklch(0.38 0.015 60 / 0.4)" }}>
-          <p className="font-mono-custom text-xs" style={{ color: "oklch(0.78 0.03 70)" }}>© 2026 Moots Bicycle. The Forever Frame Campaign.</p>
-          <div className="flex flex-col md:flex-row items-center gap-3">
-            <a
-              href="https://www.instagram.com/MootsFrames"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Follow @MootsFrames on Instagram (opens in a new tab)"
-              className="font-mono-custom text-xs hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-              style={{ color: "oklch(0.72 0.14 65)" }}
-            >
-              Follow the field notes on Instagram.
-            </a>
-            <a
-              href="https://www.facebook.com/MootsFrame"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Follow MootsFrame on Facebook (opens in a new tab)"
-              className="font-mono-custom text-xs hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-              style={{ color: "oklch(0.72 0.14 65)" }}
-            >
-              Facebook →
-            </a>
+        <div className="mt-8 pt-8 border-t flex flex-col md:flex-row items-start md:items-center justify-between gap-5" style={{ borderColor: "oklch(0.38 0.015 60 / 0.4)" }}>
+          <p className="font-mono-custom text-xs" style={{ color: "oklch(0.88 0.025 75)" }}>© 2026 Moots Bicycle. The Forever Frame Campaign.</p>
+          <div className="flex flex-col gap-2">
+            <p className="font-label text-xs tracking-[0.22em] uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>
+              Follow the field notes.
+            </p>
+            <div className="flex flex-wrap gap-x-4 gap-y-2">
+              <a
+                href="https://www.instagram.com/MootsFrames/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono-custom text-xs hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                style={{ color: "oklch(0.72 0.14 65)" }}
+              >
+                Instagram
+              </a>
+              <a
+                href="https://www.facebook.com/MootsFrame"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono-custom text-xs hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                style={{ color: "oklch(0.72 0.14 65)" }}
+              >
+                Facebook
+              </a>
+              <a
+                href="https://www.youtube.com/@Mootsframe"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono-custom text-xs hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                style={{ color: "oklch(0.72 0.14 65)" }}
+              >
+                YouTube
+              </a>
+              <a
+                href="https://www.strava.com/clubs/2216534"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono-custom text-xs hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                style={{ color: "oklch(0.72 0.14 65)" }}
+              >
+                Strava Club
+              </a>
+            </div>
           </div>
           <p className="font-mono-custom text-xs" style={{ color: "oklch(0.78 0.03 70)" }}>Built in Colorado. Proven in the Ozarks.</p>
         </div>
