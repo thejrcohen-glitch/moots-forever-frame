@@ -10,7 +10,7 @@ const FURKA_SIGNAL = {
   country: "Switzerland",
   territory: "Beyond Territory",
   status: "Route signal",
-  sourceName: "SwitzerlandMobility National Cycling Routes",
+  sourceName: "Switzerland Mobility National Cycling Routes",
   sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/national-routes",
   note: "Furka Pass. Switzerland. A public alpine route signal for riders who look beyond the map.",
 };
@@ -21,7 +21,7 @@ const WATCH_ROAD_SIGNALS = [
     status: "Route signal",
     region: "Lake Geneva to Basel",
     territory: "Beyond Territory",
-    sourceName: "SwitzerlandMobility National Cycling Routes",
+    sourceName: "Switzerland Mobility National Cycling Routes",
     sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/national-routes",
     note: "A public national route signal through the Swiss Jura. Nyon to Basel. 266 km by official route length.",
   },
@@ -60,7 +60,7 @@ const ALPINE_RESEARCH_SIGNALS = [
     status: "Route signal",
     region: "Andermatt / Swiss Alps",
     territory: "Beyond Territory",
-    sourceName: "SwitzerlandMobility National Cycling Routes",
+    sourceName: "Switzerland Mobility National Cycling Routes",
     sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/national-routes",
     note: "A high-alpine riding signal around Andermatt, Furka, Nufenen, Gotthard, and Tremola.",
   },
@@ -1052,7 +1052,7 @@ export default function SwitzerlandRoutes() {
             </div>
 
             <p className="font-mono-custom text-xs leading-loose mt-6" style={{ color: "oklch(0.72 0.04 65)" }}>
-              Public links. Dispatches appear here as they publish.
+              Public source signals.
             </p>
           </div>
         </div>

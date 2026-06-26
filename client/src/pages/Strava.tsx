@@ -313,6 +313,7 @@ function StravaNav() {
   const navLinks = [
     { label: "← Home", href: "/" },
     { label: "Routes", href: "/routes" },
+    { label: "Switzerland", href: "/routes/switzerland" },
     { label: "Races", href: "/races" },
     { label: "Bikes", href: "/bikes" },
     { label: "Community", href: "/community" },
@@ -490,7 +491,7 @@ function SourceSection({ section }: { section: StravaSource["section"] }) {
 function MootsFrameClubSection() {
   return (
     <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="mootsframe-club-heading">
-      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_420px] gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_440px] gap-6 items-start">
         <article
           className="p-7 md:p-9 min-h-[320px] flex flex-col"
           style={{
@@ -509,7 +510,7 @@ function MootsFrameClubSection() {
             Houston, Texas
           </p>
           <p className="font-mono-custom text-sm leading-loose flex-1" style={{ color: "oklch(0.78 0.03 70)" }}>
-            Public club activity for MootsFrame riders and source-backed field notes. No partnership, sponsorship, attendance, or endorsement is implied.
+            Latest public rides from the MootsFrame club.
           </p>
           <a
             href="https://www.strava.com/clubs/2216534"
@@ -525,12 +526,12 @@ function MootsFrameClubSection() {
           <iframe
             allowTransparency={true}
             frameBorder="0"
-            className="w-full h-[560px] max-w-[420px]"
-            height="560"
+            className="w-full h-[620px] max-w-[440px]"
+            height="620"
             scrolling="no"
             src="https://www.strava.com/clubs/2216534/latest-rides/6694c7f04725dfdf49d6ce9506ea97575cb8fdae?show_rides=true"
             title="MootsFrame Strava Club latest public rides"
-            width="420"
+            width="440"
           />
         </div>
       </div>
@@ -541,7 +542,7 @@ function MootsFrameClubSection() {
 export default function Strava() {
   useEffect(() => {
     const title = "Strava Signals — MootsFrame";
-    const description = "Clubs, races, and rider groups worth watching. Public sources only.";
+    const description = "Clubs, races, and rider groups worth watching.";
     const setMetaContent = (selector: string, content: string) => {
       document.querySelector(selector)?.setAttribute("content", content);
     };
@@ -566,11 +567,11 @@ export default function Strava() {
           Where the ride shows up.
         </h1>
         <div className="max-w-2xl space-y-4">
-        <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
-            Clubs, races, and rider groups worth watching. Public sources only.
-        </p>
+          <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+            Clubs, races, and rider groups worth watching.
+          </p>
           <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.72 0.04 65)" }}>
-            These are public source signals. No partnership, attendance, sponsorship, dealer status, or endorsement is implied.
+            Public source signals.
           </p>
         </div>
       </header>
@@ -581,17 +582,25 @@ export default function Strava() {
 
       <MootsFrameClubSection />
 
-      <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="held-heading">
+      <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="strava-footer-heading">
         <div className="max-w-2xl">
-          <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
-            Held for Later
+          <p id="strava-footer-heading" className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
+            Follow the field notes.
           </p>
-          <h2 id="held-heading" className="font-display text-3xl md:text-4xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>
-            Not live until governed.
-          </h2>
-          <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
-            Public sources only.
-          </p>
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 sm:gap-6">
+            <a href="https://www.instagram.com/mootsframes/" target="_blank" rel="noopener noreferrer" className="font-mono-custom text-xs hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4" style={{ color: "oklch(0.72 0.04 65)" }}>
+              Instagram
+            </a>
+            <a href="https://www.facebook.com/MootsFrame" target="_blank" rel="noopener noreferrer" className="font-mono-custom text-xs hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4" style={{ color: "oklch(0.72 0.04 65)" }}>
+              Facebook
+            </a>
+            <a href="https://www.youtube.com/@Mootsframe" target="_blank" rel="noopener noreferrer" className="font-mono-custom text-xs hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4" style={{ color: "oklch(0.72 0.04 65)" }}>
+              YouTube
+            </a>
+            <a href="https://www.strava.com/clubs/2216534" target="_blank" rel="noopener noreferrer" className="font-mono-custom text-xs hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4" style={{ color: "oklch(0.72 0.04 65)" }}>
+              Strava Club
+            </a>
+          </div>
         </div>
       </section>
     </main>

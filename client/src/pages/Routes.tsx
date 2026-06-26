@@ -147,6 +147,7 @@ function RoutesNav() {
     { label: "← Home", href: "/" },
     { label: "Bikes", href: "/bikes" },
     { label: "Races", href: "/races" },
+    { label: "Switzerland", href: "/routes/switzerland" },
     { label: "Build", href: "/build" },
     { label: "Community", href: "/community" },
     { label: "Dealers", href: "/dealers" },
@@ -297,7 +298,7 @@ function SourceCard({ source }: { source: RouteCoffeeSource }) {
 export default function Routes() {
   useEffect(() => {
     const title = "Routes + Coffee — MootsFrame";
-    const description = "Route sources, coffee stops, ride groups, and rider signals for Moots riders. Public links only. No partnership or endorsement implied.";
+    const description = "Route sources, coffee stops, ride groups, and rider signals for Moots riders.";
     const setMetaContent = (selector: string, content: string) => {
       document.querySelector(selector)?.setAttribute("content", content);
     };
@@ -329,10 +330,29 @@ export default function Routes() {
             Moots riders travel. The frame goes where the rider goes.
           </p>
           <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.72 0.04 65)" }}>
-            Listings are rider signals and public sources. No partnership, attendance, sponsorship, or endorsement is implied.
+            Public route and coffee signals. Open links first.
           </p>
         </div>
       </header>
+
+      <section className="container pb-12" aria-labelledby="switzerland-route-chapter-heading">
+        <Link href="/routes/switzerland" className="block transition-opacity hover:opacity-95 focus:outline focus:outline-2 focus:outline-offset-4">
+          <article className="p-7 md:p-9 flex flex-col gap-4" style={{ background: "oklch(0.24 0.01 60)", border: "1px solid oklch(0.38 0.015 60 / 0.5)", borderLeft: `3px solid ${READABLE_ACCENT}` }}>
+            <p className="font-label text-xs tracking-[0.35em] uppercase" style={{ color: READABLE_ACCENT }}>
+              Route Chapter
+            </p>
+            <h2 id="switzerland-route-chapter-heading" className="font-display text-3xl md:text-4xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>
+              Switzerland / Furka Pass
+            </h2>
+            <p className="font-mono-custom text-sm leading-loose max-w-2xl" style={{ color: "oklch(0.78 0.03 70)" }}>
+              Alpine roads, watch roads, coffee signals, and public source links from Furka toward the Jura.
+            </p>
+            <span className="font-label text-xs tracking-[0.2em] uppercase self-start" style={{ color: READABLE_ACCENT }}>
+              Open Switzerland →
+            </span>
+          </article>
+        </Link>
+      </section>
 
       <section className="container pb-16" aria-labelledby="public-sources-heading">
         <div className="mb-6">
@@ -366,19 +386,27 @@ export default function Routes() {
         </div>
       </section>
 
-      <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="held-heading">
-        <div className="max-w-2xl">
-          <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
-            Held for verification
+      <footer className="py-12 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)", background: "oklch(0.18 0.008 60)" }}>
+        <div className="container flex flex-col gap-4">
+          <p className="font-label text-xs tracking-[0.22em] uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>
+            Follow the field notes.
           </p>
-          <h2 id="held-heading" className="font-display text-3xl md:text-4xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>
-            Not ready until sourced.
-          </h2>
-          <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
-            Named routes, GPX files, meetup starts, best-route claims, and coffee pairings stay held until source links are verified.
-          </p>
+          <div className="flex flex-wrap gap-x-4 gap-y-2">
+            <a href="https://www.instagram.com/MootsFrames/" target="_blank" rel="noopener noreferrer" className="font-mono-custom text-xs hover:underline" style={{ color: "oklch(0.72 0.14 65)" }}>
+              Instagram
+            </a>
+            <a href="https://www.facebook.com/MootsFrame" target="_blank" rel="noopener noreferrer" className="font-mono-custom text-xs hover:underline" style={{ color: "oklch(0.72 0.14 65)" }}>
+              Facebook
+            </a>
+            <a href="https://www.youtube.com/@Mootsframe" target="_blank" rel="noopener noreferrer" className="font-mono-custom text-xs hover:underline" style={{ color: "oklch(0.72 0.14 65)" }}>
+              YouTube
+            </a>
+            <a href="https://www.strava.com/clubs/2216534" target="_blank" rel="noopener noreferrer" className="font-mono-custom text-xs hover:underline" style={{ color: "oklch(0.72 0.14 65)" }}>
+              Strava Club
+            </a>
+          </div>
         </div>
-      </section>
+      </footer>
     </main>
   );
 }
