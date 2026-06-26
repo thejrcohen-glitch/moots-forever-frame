@@ -490,7 +490,7 @@ function SourceSection({ section }: { section: StravaSource["section"] }) {
 function MootsFrameClubSection() {
   return (
     <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="mootsframe-club-heading">
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_420px] gap-6 items-start">
         <article
           className="p-7 md:p-9 min-h-[320px] flex flex-col"
           style={{
@@ -521,15 +521,16 @@ function MootsFrameClubSection() {
             View on Strava →
           </a>
         </article>
-        <div className="p-5 flex justify-center" style={{ background: "oklch(0.24 0.01 60)", border: "1px solid oklch(0.38 0.015 60 / 0.5)" }}>
+        <div className="p-5 flex justify-center lg:justify-end" style={{ background: "oklch(0.24 0.01 60)", border: "1px solid oklch(0.38 0.015 60 / 0.5)" }}>
           <iframe
             allowTransparency={true}
             frameBorder="0"
-            height="454"
+            className="w-full h-[560px] max-w-[420px]"
+            height="560"
             scrolling="no"
             src="https://www.strava.com/clubs/2216534/latest-rides/6694c7f04725dfdf49d6ce9506ea97575cb8fdae?show_rides=true"
             title="MootsFrame Strava Club latest public rides"
-            width="300"
+            width="420"
           />
         </div>
       </div>
@@ -540,7 +541,7 @@ function MootsFrameClubSection() {
 export default function Strava() {
   useEffect(() => {
     const title = "Strava Signals — MootsFrame";
-    const description = "Clubs, races, and rider groups worth watching. Public sources only. No partnership, attendance, sponsorship, or endorsement is implied.";
+    const description = "Clubs, races, and rider groups worth watching. Public sources only.";
     const setMetaContent = (selector: string, content: string) => {
       document.querySelector(selector)?.setAttribute("content", content);
     };
@@ -565,9 +566,9 @@ export default function Strava() {
           Where the ride shows up.
         </h1>
         <div className="max-w-2xl space-y-4">
-          <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
-            Clubs, races, and rider groups worth watching. Public sources only. No partnership, attendance, sponsorship, or endorsement is implied.
-          </p>
+        <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+            Clubs, races, and rider groups worth watching. Public sources only.
+        </p>
           <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.72 0.04 65)" }}>
             These are public source signals. No partnership, attendance, sponsorship, dealer status, or endorsement is implied.
           </p>
@@ -589,7 +590,7 @@ export default function Strava() {
             Not live until governed.
           </h2>
           <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
-            Rider submissions, I'm riding this, photo uploads, Strava profiles, sponsor fields, dealer claims, embeds, maps, and schema stay held until moderation and source rules are ready.
+            Public sources only.
           </p>
         </div>
       </section>

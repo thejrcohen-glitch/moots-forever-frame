@@ -9,110 +9,87 @@ const FURKA_SIGNAL = {
   region: "Switzerland",
   country: "Switzerland",
   territory: "Beyond Territory",
-  status: "Research",
+  status: "Route signal",
   sourceName: "SwitzerlandMobility National Cycling Routes",
   sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/national-routes",
   note: "Furka Pass. Switzerland. A public alpine route signal for riders who look beyond the map.",
-  governanceNote: "Public source signal only. No route ownership, attendance, partnership, or endorsement implied.",
 };
-
-const HELD_ITEMS = [
-  "Rhône Route",
-  "Rhine Route",
-  "Alpine Panorama Route",
-  "Watch brands",
-  "Museums",
-  "Exact connectors",
-  "Ride files",
-  "Maps",
-  "Village stops",
-  "Photos",
-  "Strava, Komoot, and RideWithGPS links",
-];
 
 const WATCH_ROAD_SIGNALS = [
   {
     title: "Jura Route — Swiss National Route 7",
-    status: "Research",
+    status: "Route signal",
     region: "Lake Geneva to Basel",
     territory: "Beyond Territory",
     sourceName: "SwitzerlandMobility National Cycling Routes",
     sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/national-routes",
-    note: "A public national route signal through the Swiss Jura. Nyon to Basel. 266 km by official route length. Research only.",
-    governanceNote: "Research signal only. No route ownership, attendance, partnership, or endorsement implied.",
+    note: "A public national route signal through the Swiss Jura. Nyon to Basel. 266 km by official route length.",
   },
   {
     title: "Vallée de Joux",
-    status: "Research",
+    status: "Watchmaking region",
     region: "Canton Vaud",
     territory: "Beyond Territory",
     sourceName: "Cycling Thread — Jura Route",
     sourceUrl: "https://www.cyclingthread.com/jura-route-cycling-adventure-in-western-switzerland",
-    note: "A quiet valley signal tied to Lac de Joux, the Marchairuz descent, and Swiss watchmaking country. Research only.",
-    governanceNote: "Research signal only. No route ownership, attendance, partnership, or endorsement implied.",
+    note: "A quiet valley signal tied to Lac de Joux, the Marchairuz descent, and Swiss watchmaking country.",
   },
   {
     title: "La Chaux-de-Fonds / Le Locle",
-    status: "Research",
+    status: "Watchmaking region",
     region: "Canton Neuchâtel",
     territory: "Beyond Territory",
     sourceName: "UNESCO World Heritage Centre",
     sourceUrl: "https://whc.unesco.org/en/list/1302/",
-    note: "UNESCO watchmaking urbanism in the Swiss Jura. City signal only. No brand claim.",
-    governanceNote: "Public source signal only. No watch brand, partnership, or endorsement implied.",
+    note: "UNESCO watchmaking urbanism in the Swiss Jura. City signal only.",
   },
 ];
 
 const ALPINE_RESEARCH_SIGNALS = [
   {
     title: "On the Trail of Watches",
-    status: "Research",
+    status: "Watchmaking region",
     region: "La Chaux-de-Fonds",
     territory: "Beyond Territory",
     sourceName: "Switzerland Tourism — On the trail of watches",
     sourceUrl: "https://www.myswitzerland.com/en-us/experiences/on-the-trail-of-watches/",
-    note: "La Chaux-de-Fonds is a public watchmaking city signal in the Swiss Jura. Switzerland Tourism ties the city’s street grid, altitude, UNESCO status, and museum culture to watchmaking. Research only.",
-    governanceNote: "City and culture signal only. No watch brand, sponsor, partner, route ownership, dealer, or endorsement claim.",
+    note: "La Chaux-de-Fonds is a public watchmaking city signal in the Swiss Jura. Switzerland Tourism ties the city’s street grid, altitude, UNESCO status, and museum culture to watchmaking.",
   },
   {
     title: "Furka / Nufenen / Gotthard Loop",
-    status: "Research",
+    status: "Route signal",
     region: "Andermatt / Swiss Alps",
     territory: "Beyond Territory",
     sourceName: "SwitzerlandMobility National Cycling Routes",
     sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/national-routes",
-    note: "A high-alpine riding signal around Andermatt, Furka, Nufenen, Gotthard, and Tremola. Research only.",
-    governanceNote: "Research signal only. No route ownership, attendance, partnership, sponsorship, or endorsement implied.",
+    note: "A high-alpine riding signal around Andermatt, Furka, Nufenen, Gotthard, and Tremola.",
   },
   {
     title: "Octopus Gravel",
-    status: "Research",
+    status: "Route signal",
     region: "Andermatt",
     territory: "Beyond Territory",
     sourceName: "Switzerland Tourism — Octopus Gravel",
     sourceUrl: "https://www.myswitzerland.com/en-us/experiences/events/octopus-gravel/",
-    note: "A public Andermatt gravel event signal built around dead-end alpine climbs. Research only. No attendance or sponsorship claim.",
-    governanceNote: "Research signal only. No route ownership, attendance, partnership, sponsorship, or endorsement implied.",
+    note: "A public Andermatt gravel event signal built around dead-end alpine climbs.",
   },
   {
     title: "Hospental Gravel Routes",
-    status: "Research",
+    status: "Route signal",
     region: "Hospental / Andermatt",
     territory: "Beyond Territory",
     sourceName: "Andermatt Swiss Alps — Hospental gravel routes",
     sourceUrl: "https://maps.andermatt.swiss/en/gravel-bike-routes/hospental/gravel-bike-routes-in-hospental/314685244/",
-    note: "A public gravel route signal near Hospental and Andermatt. Source link only. No map embed, GPX, or route ownership claim.",
-    governanceNote: "Research signal only. No route ownership, attendance, partnership, sponsorship, or endorsement implied.",
+    note: "A public gravel route signal near Hospental and Andermatt. Source link only.",
   },
   {
     title: "Seven Arms Gravel",
-    status: "Research",
+    status: "Route signal",
     region: "Andermatt",
     territory: "Beyond Territory",
     sourceName: "Gravel Union — Seven Arms in the Alps",
     sourceUrl: "https://gravelunion.cc/article/ride-report-gravel-on-seven-arms-in-the-alps",
-    note: "A source-backed alpine gravel story signal from the Andermatt area. Research only.",
-    governanceNote: "Research signal only. No route ownership, attendance, partnership, sponsorship, or endorsement implied.",
+    note: "A source-backed alpine gravel story signal from the Andermatt area.",
   },
 ];
 
@@ -120,86 +97,86 @@ const WATCHES_AND_ROADS_EXPANSION = [
   {
     name: "Geneva start signal",
     location: "Geneva",
-    status: "Verified Public Source",
+    status: "Public source",
     sourceUrl: "https://www.myswitzerland.com/en-us/destinations/geneva/",
-    copy: "A quiet city start point for the Switzerland board. Public destination source only.",
+    copy: "A quiet city start point for the Switzerland board.",
   },
   {
     name: "Jura Route / National Route 7",
     location: "Lake Geneva to Basel",
-    status: "Verified Public Source",
+    status: "Route signal",
     sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/route-7",
-    copy: "A public national cycling route through the Jura. Source signal only.",
+    copy: "A public national cycling route through the Jura.",
   },
   {
     name: "Vallée de Joux",
     location: "Canton Vaud",
-    status: "Verified Public Source",
+    status: "Watchmaking region",
     sourceUrl: "https://www.myswitzerland.com/en-us/destinations/vallee-de-joux/",
     copy: "A public valley signal for watchmaking country and quiet road context.",
   },
   {
     name: "La Chaux-de-Fonds / Le Locle",
     location: "Canton Neuchâtel",
-    status: "Verified Public Source",
+    status: "Watchmaking region",
     sourceUrl: "https://whc.unesco.org/en/list/1302/",
-    copy: "UNESCO-listed watchmaking urbanism. Culture signal only, not a brand claim.",
+    copy: "UNESCO-listed watchmaking urbanism.",
   },
   {
     name: "Furka / Nufenen / Gotthard",
     location: "Andermatt / Swiss Alps",
-    status: "Research",
+    status: "Route signal",
     sourceUrl: "https://www.andermatt.ch/en/summer/cycling/",
-    copy: "High-alpine road context around Andermatt. No route ownership implied.",
+    copy: "High-alpine road context around Andermatt.",
   },
   {
     name: "Hospental gravel routes",
     location: "Hospental / Andermatt",
-    status: "Research",
+    status: "Route signal",
     sourceUrl: "https://maps.andermatt.swiss/",
-    copy: "Public gravel source board for the Andermatt area. No maps embedded here.",
+    copy: "Public gravel source board for the Andermatt area.",
   },
   {
     name: "Octopus Gravel",
     location: "Andermatt",
-    status: "Research",
+    status: "Route signal",
     sourceUrl: "https://www.myswitzerland.com/en-us/experiences/octopus-gravel/",
-    copy: "A public gravel event signal. No attendance, sponsorship, or activation claim.",
+    copy: "A public gravel event signal.",
   },
   {
     name: "Seven Arms Gravel",
     location: "Andermatt area",
-    status: "Research",
+    status: "Route signal",
     sourceUrl: "https://gravelunion.cc/",
-    copy: "A public gravel editorial source for alpine context. Research only.",
+    copy: "A public gravel editorial source for alpine context.",
   },
   {
     name: "On the Trail of Watches",
     location: "La Chaux-de-Fonds",
-    status: "Verified Public Source",
+    status: "Watchmaking region",
     sourceUrl: "https://www.myswitzerland.com/en-us/experiences/on-the-trail-of-watches/",
-    copy: "A public watchmaking culture signal in the Swiss Jura. No brand affiliation implied.",
+    copy: "A public watchmaking culture signal in the Swiss Jura.",
   },
   {
     name: "Rhône Route",
     location: "Swiss national route",
-    status: "Held",
+    status: "Public source",
     sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/route-1",
-    copy: "Held as a public national-route source until the Switzerland board needs expansion.",
+    copy: "A public national-route source.",
   },
   {
     name: "Alpine Panorama Route",
     location: "Swiss national route",
-    status: "Held",
+    status: "Public source",
     sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/route-4",
-    copy: "Held as a public alpine-route source. No itinerary or GPS data is claimed.",
+    copy: "A public alpine-route source.",
   },
   {
     name: "Rhine Route",
     location: "Swiss national route",
-    status: "Held",
+    status: "Public source",
     sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/route-2",
-    copy: "Held as a public national-route source for later review.",
+    copy: "A public national-route source for later review.",
   },
 ] as const;
 
@@ -219,74 +196,74 @@ const COFFEE_SIGNALS = [
     name: "Café du Glacier",
     city: "Andermatt",
     near: "Furka / Nufenen / Gotthard",
-    status: "Research",
+    status: "Coffee signal",
     sourceUrl: "https://www.andermatt.ch/en/gastronomy/",
-    copy: "Coffee signal near the Andermatt route corridor. Publicly listed café. Research only.",
+    copy: "Coffee signal near the Andermatt route corridor. Publicly listed café.",
   },
   {
     name: "Andermatt village hospitality signal",
     city: "Andermatt",
     near: "Gotthard pass corridor",
-    status: "Research",
+    status: "Coffee signal",
     sourceUrl: "https://www.andermatt.ch/en/gastronomy/",
-    copy: "Publicly listed hospitality corridor near Andermatt. Research only.",
+    copy: "Publicly listed hospitality corridor near Andermatt.",
   },
   {
     name: "Geneva café quarter",
     city: "Geneva",
     near: "Geneva start signal",
-    status: "Research",
+    status: "Coffee signal",
     sourceUrl: "https://www.myswitzerland.com/en-us/destinations/geneva/",
-    copy: "Geneva café culture. Public destination source only. Research only.",
+    copy: "Geneva café culture. Public destination source only.",
   },
   {
     name: "La Chaux-de-Fonds café signal",
     city: "La Chaux-de-Fonds",
     near: "Watchmaking region",
-    status: "Research",
+    status: "Coffee signal",
     sourceUrl: "https://www.myswitzerland.com/en-us/destinations/la-chaux-de-fonds/",
-    copy: "Coffee signal in the watchmaking district. Public destination source only. Research only.",
+    copy: "Coffee signal in the watchmaking district. Public destination source only.",
   },
   {
     name: "Andermatt village cafés",
     city: "Andermatt",
     near: "Alpine passes corridor",
-    status: "Research",
+    status: "Coffee signal",
     sourceUrl: "https://www.andermatt.ch/en/gastronomy/",
-    copy: "Publicly listed café corridor in Andermatt. Research signal only.",
+    copy: "Publicly listed café corridor in Andermatt.",
   },
 ] as const;
 
 const DISPATCHES = [
   {
     title: "Andermatt Base",
-    status: "Planned",
+    status: "Route signal",
     note: "Trip base signal for July riding updates.",
   },
   {
     title: "Furka Signal",
-    status: "Planned",
-    note: "Alpine pass dispatch placeholder. Photo, caption, and source link held for approval.",
+    status: "Route signal",
+    note: "Alpine pass dispatch placeholder.",
   },
   {
     title: "Nufenen / Gotthard",
-    status: "Planned",
-    note: "High-alpine road dispatch placeholder. No route file or live tracking.",
+    status: "Route signal",
+    note: "High-alpine road dispatch placeholder.",
   },
   {
     title: "Watch Road",
-    status: "Research",
-    note: "Jura and watchmaking-country dispatch placeholder. Source-backed updates only.",
+    status: "Watchmaking region",
+    note: "Jura and watchmaking-country dispatch placeholder.",
   },
   {
-    title: "Strava Activity Link — Held",
-    status: "Held",
-    note: "Public activity links stay held until approved. No private activity data.",
+    title: "Strava Activity Link",
+    status: "Source",
+    note: "View on Strava.",
   },
   {
-    title: "Instagram Post — Held",
-    status: "Held",
-    note: "Public post links stay held until photo, caption, and source are approved.",
+    title: "Instagram Post",
+    status: "Source",
+    note: "Public post link.",
   },
 ];
 
@@ -490,6 +467,82 @@ function SignalCard() {
   );
 }
 
+function TravelSignalCard() {
+  return (
+    <article
+      className="overflow-hidden flex flex-col min-h-full"
+      style={{ background: "oklch(0.24 0.01 60)", border: "1px solid oklch(0.38 0.015 60 / 0.5)" }}
+    >
+      <a
+        href="https://www.strava.com/athletes/275498"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="relative min-h-[300px] md:min-h-[360px] overflow-hidden transition-opacity hover:opacity-90 focus:outline focus:outline-2 focus:outline-offset-4"
+        aria-label="Follow Ian Zakrocki on Strava"
+      >
+        <img
+          src="/images/ian-andermatt-switzerland.jpg"
+          alt="Rider on a gravel road in the Swiss Alps near Andermatt"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, oklch(0.10 0.006 60 / 0.08), oklch(0.10 0.006 60 / 0.72))" }} />
+        <div className="absolute inset-x-0 bottom-0 p-6 md:p-7">
+          <p className="font-label text-xs tracking-[0.3em] uppercase mb-3" style={{ color: "oklch(0.945 0.018 78)" }}>
+            Travel Signal
+          </p>
+          <h3 className="font-display text-3xl md:text-4xl font-bold leading-tight" style={{ color: "oklch(0.945 0.018 78)" }}>
+            Ian is inbound with his Moots.
+          </h3>
+        </div>
+      </a>
+
+      <div className="p-6 md:p-8 flex flex-col gap-6 flex-1">
+        <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+          Furka, Gotthard, and the watch roads ahead. Follow the public journey on Strava, Instagram, Facebook, and the MootsFrame club.
+        </p>
+        <div className="flex flex-wrap gap-4">
+          <a
+            href="https://www.strava.com/athletes/275498"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-label text-xs tracking-[0.2em] uppercase hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
+            style={{ color: READABLE_ACCENT }}
+          >
+            Ian Strava
+          </a>
+          <a
+            href="https://www.instagram.com/mootsframes/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-label text-xs tracking-[0.2em] uppercase hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
+            style={{ color: READABLE_ACCENT }}
+          >
+            Instagram
+          </a>
+          <a
+            href="https://www.facebook.com/MootsFrame"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-label text-xs tracking-[0.2em] uppercase hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
+            style={{ color: READABLE_ACCENT }}
+          >
+            Facebook
+          </a>
+          <a
+            href="https://www.strava.com/clubs/2216534"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-label text-xs tracking-[0.2em] uppercase hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
+            style={{ color: READABLE_ACCENT }}
+          >
+            MootsFrame Club
+          </a>
+        </div>
+      </div>
+    </article>
+  );
+}
+
 function WatchRoadCard({ signal }: { signal: (typeof WATCH_ROAD_SIGNALS)[number] }) {
   return (
     <article
@@ -542,10 +595,7 @@ function ExpansionSignalCard({ signal }: { signal: (typeof WATCHES_AND_ROADS_EXP
     <article className="p-6 md:p-7 min-h-[300px] flex flex-col" style={{ background: "oklch(0.24 0.01 60)" }}>
       <span
         className="font-label text-xs tracking-[0.18em] uppercase px-2.5 py-1 self-start mb-7"
-        style={{
-          color: signal.status === "Verified Public Source" ? "oklch(0.22 0.01 60)" : "oklch(0.88 0.025 75)",
-          background: signal.status === "Verified Public Source" ? READABLE_ACCENT : "oklch(0.30 0.01 60)",
-        }}
+        style={{ color: "oklch(0.22 0.01 60)", background: READABLE_ACCENT }}
       >
         {signal.status}
       </span>
@@ -607,12 +657,12 @@ function CoffeeSignalCard({ signal }: { signal: (typeof COFFEE_SIGNALS)[number] 
 export default function SwitzerlandRoutes() {
   useEffect(() => {
     const title = "Switzerland Signals — MootsFrame";
-    const description = "A governed Switzerland route signal page for MootsFrame. Public source signals only. No route ownership, attendance, partnership, or endorsement implied.";
+    const description = "Switzerland route signals for MootsFrame. Public source signals only.";
     const jsonLd = {
       "@context": "https://schema.org",
       "@type": "WebPage",
       name: "Switzerland Signals — MootsFrame",
-      description: "Alpine cycling signals from Switzerland. Furka Pass, the Jura Route, Andermatt, and watchmaking country. Research-first. Source-backed.",
+      description: "Alpine cycling signals from Switzerland. Furka Pass, the Jura Route, Andermatt, and watchmaking country.",
       url: "https://mootsframe.com/routes/switzerland",
       isPartOf: {
         "@type": "WebSite",
@@ -684,9 +734,17 @@ export default function SwitzerlandRoutes() {
       <header className="pt-28 pb-16 border-b" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }}>
         <div className="container grid grid-cols-1 lg:grid-cols-[1fr_0.82fr] gap-10 items-center">
           <div>
-            <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
-              Beyond Territory
-            </p>
+            <div
+              className="inline-flex flex-col gap-1 px-4 py-3 mb-5"
+              style={{ background: "oklch(0.55 0.22 28)", borderLeft: "4px solid oklch(0.945 0.018 78)" }}
+            >
+              <p className="font-label text-xs tracking-[0.35em] uppercase" style={{ color: "oklch(0.945 0.018 78)" }}>
+                Switzerland
+              </p>
+              <p className="font-label text-[10px] tracking-[0.28em] uppercase" style={{ color: "oklch(0.945 0.018 78 / 0.86)" }}>
+                Route chapter
+              </p>
+            </div>
             <h1 className="font-display text-5xl md:text-7xl font-bold mb-5" style={{ color: "oklch(0.945 0.018 78)" }}>
               Switzerland Signals
             </h1>
@@ -694,7 +752,7 @@ export default function SwitzerlandRoutes() {
               Alpine roads. Old passes. Source first.
             </p>
             <p className="font-mono-custom text-sm leading-loose max-w-2xl" style={{ color: "oklch(0.78 0.03 70)" }}>
-              Furka is the first alpine signal. The Jura watch road is the next Research layer. From Geneva, the signal points north toward the Jura. The sourced route begins at Nyon on Lake Geneva and runs toward Basel through watchmaking country.
+              Furka is the first alpine signal. The Jura watch road points north toward the Jura. The sourced route begins at Nyon on Lake Geneva and runs toward Basel through watchmaking country.
             </p>
           </div>
           <figure className="relative min-h-[320px] overflow-hidden" style={{ background: "oklch(0.18 0.008 60)", border: "1px solid oklch(0.38 0.015 60 / 0.5)" }}>
@@ -714,15 +772,16 @@ export default function SwitzerlandRoutes() {
 
       <section className="container py-16" aria-labelledby="switzerland-signal-heading">
         <div className="mb-6">
-          <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: "oklch(0.52 0.12 45)" }}>
+          <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
             Route Signal
           </p>
           <h2 id="switzerland-signal-heading" className="font-display text-3xl md:text-4xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>
             First alpine signal.
           </h2>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-5 items-stretch">
           <SignalCard />
+          <TravelSignalCard />
         </div>
       </section>
 
@@ -752,14 +811,16 @@ export default function SwitzerlandRoutes() {
 
       <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="watches-roads-expansion-heading">
         <div className="max-w-4xl mb-9">
-          <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
-            Source Rail
-          </p>
+          <div className="inline-flex items-center px-4 py-2 mb-4" style={{ background: "oklch(0.55 0.22 28)" }}>
+            <p className="font-label text-xs tracking-[0.35em] uppercase" style={{ color: "oklch(0.945 0.018 78)" }}>
+              Switzerland
+            </p>
+          </div>
           <h2 id="watches-roads-expansion-heading" className="font-display text-3xl md:text-5xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>
             Watches + Roads
           </h2>
           <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
-            Public sources for the Switzerland board. No route ownership, sponsorship, attendance, or endorsement is claimed.
+            Open source signals for the Switzerland chapter.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
@@ -773,13 +834,13 @@ export default function SwitzerlandRoutes() {
         <div className="grid grid-cols-1 lg:grid-cols-[0.35fr_1fr] gap-8">
           <div>
             <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
-              Reference
+              Source
             </p>
             <h2 id="watch-brands-heading" className="font-display text-3xl md:text-4xl font-bold mb-5" style={{ color: "oklch(0.945 0.018 78)" }}>
               Watchmaking region.
             </h2>
             <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
-              Watchmaking region. Public source only. Brand references do not imply sponsorship, partnership, endorsement, or MootsFrame affiliation.
+              Official sites. Public source only.
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
@@ -813,7 +874,7 @@ export default function SwitzerlandRoutes() {
             Cafés near the corridor.
           </h2>
           <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
-            Publicly listed cafés and destination signals for later field notes. Research only.
+            Publicly listed cafés and destination signals for later field notes.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
@@ -826,7 +887,7 @@ export default function SwitzerlandRoutes() {
       <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="watch-road-heading">
         <div className="max-w-4xl mb-9">
           <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
-            Research
+            Source
           </p>
           <h2 id="watch-road-heading" className="font-display text-3xl md:text-5xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>
             The Watch Road
@@ -835,7 +896,7 @@ export default function SwitzerlandRoutes() {
             Roads. Watches. Jura.
           </p>
           <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
-            Mechanical time. Mechanical distance. A quiet source board for Ian, Geneva, the Jura, and watchmaking country. These are Research signals only; the deeper details stay held.
+            Mechanical time. Mechanical distance. A quiet source board for Ian, Geneva, the Jura, and watchmaking country.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
@@ -848,13 +909,13 @@ export default function SwitzerlandRoutes() {
       <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="alpine-research-heading">
         <div className="max-w-4xl mb-9">
           <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
-            Research
+            Source
           </p>
           <h2 id="alpine-research-heading" className="font-display text-3xl md:text-5xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>
             Watch Trail / Andermatt Signals
           </h2>
           <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
-            Source-backed watchmaking and alpine riding signals only. No routes, events, brands, or partnerships are claimed here.
+            Open source watchmaking and alpine riding signals.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
@@ -867,7 +928,7 @@ export default function SwitzerlandRoutes() {
       <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="switzerland-dispatches-heading">
         <div className="max-w-4xl mb-9">
           <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
-            Manual Dispatches
+            Dispatches
           </p>
           <h2 id="switzerland-dispatches-heading" className="font-display text-3xl md:text-5xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>
             Switzerland Dispatches
@@ -876,7 +937,7 @@ export default function SwitzerlandRoutes() {
             July 7–14. Andermatt, Furka, Nufenen, Gotthard, Jura, and the watch road.
           </p>
           <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
-            Ian will be riding Switzerland in July. Updates stay source-backed: approved photos, public social links, and public activity links only.
+            Ian is in Switzerland July 7–14. Public links and field notes appear here.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
@@ -897,9 +958,6 @@ export default function SwitzerlandRoutes() {
             </article>
           ))}
         </div>
-        <p className="font-mono-custom text-xs leading-loose mt-7 max-w-4xl" style={{ color: "oklch(0.72 0.04 65)" }}>
-          Dispatches publish only after Ian or J.R. approves the photo, caption, and source link. No live tracking, no scraping, no private activity data.
-        </p>
       </section>
 
       <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="follow-switzerland-dispatch-heading">
@@ -951,7 +1009,7 @@ export default function SwitzerlandRoutes() {
               <img
                 src="/images/mootsframe-logo.png"
                 alt="MootsFrame"
-                className="h-10 w-auto object-contain self-start"
+                className="h-16 md:h-[68px] w-auto object-contain self-start"
               />
               <div>
                 <h3 className="font-display text-2xl font-bold mb-2" style={{ color: "oklch(0.945 0.018 78)" }}>
@@ -994,35 +1052,9 @@ export default function SwitzerlandRoutes() {
             </div>
 
             <p className="font-mono-custom text-xs leading-loose mt-6" style={{ color: "oklch(0.72 0.04 65)" }}>
-              Public links only. No live tracking. Dispatches added here as they are approved.
+              Public links. Dispatches appear here as they publish.
             </p>
           </div>
-        </div>
-      </section>
-
-      <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="held-switzerland-heading">
-        <div className="max-w-3xl">
-          <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
-            Held for Verification
-          </p>
-          <h2 id="held-switzerland-heading" className="font-display text-3xl md:text-4xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>
-            Not public until sourced.
-          </h2>
-          <p className="font-mono-custom text-sm leading-loose mb-8" style={{ color: "oklch(0.78 0.03 70)" }}>
-            Watch brands, museums, exact connectors, ride files, maps, village stops, and photos remain held until each source is clean.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
-            {HELD_ITEMS.map((item) => (
-              <div key={item} className="p-5 min-h-[96px] flex items-center" style={{ background: "oklch(0.24 0.01 60)" }}>
-                <p className="font-label text-xs tracking-[0.18em] uppercase leading-relaxed" style={{ color: "oklch(0.88 0.025 75)" }}>
-                  {item}
-                </p>
-              </div>
-            ))}
-          </div>
-          <p className="font-mono-custom text-sm leading-loose mt-8" style={{ color: "oklch(0.78 0.03 70)" }}>
-            More routes come later. The source comes first.
-          </p>
         </div>
       </section>
     </main>
