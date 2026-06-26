@@ -481,8 +481,8 @@ function TravelSignalCard() {
         aria-label="Follow Ian Zakrocki on Strava"
       >
         <img
-          src="/images/ian-andermatt-switzerland.jpg"
-          alt="Rider on a gravel road in the Swiss Alps near Andermatt"
+          src="/images/ian-furka-pass-moots.jpg"
+          alt="Ian and his Moots titanium bike at Furka Pass in Switzerland."
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, oklch(0.10 0.006 60 / 0.08), oklch(0.10 0.006 60 / 0.72))" }} />
