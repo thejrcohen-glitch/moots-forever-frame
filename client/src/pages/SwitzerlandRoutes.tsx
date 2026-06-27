@@ -880,7 +880,7 @@ export default function SwitzerlandRoutes() {
           "@type": "ItemList",
           "@id": "https://mootsframe.com/routes/switzerland#route-source-map",
           name: "Route Source Map",
-          itemListOrder: "http://schema.org/ItemListOrderAscending",
+          itemListOrder: "https://schema.org/ItemListOrderAscending",
           itemListElement: routeMapEntities.map((entity, index) => ({
             "@type": "ListItem",
             position: index + 1,
