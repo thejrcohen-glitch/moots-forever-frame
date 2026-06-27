@@ -234,6 +234,73 @@ const COFFEE_SIGNALS = [
   },
 ] as const;
 
+const ROUTE_SOURCE_MAPS = [
+  {
+    name: "Furka / Andermatt alpine signal",
+    location: "Andermatt / Furka Pass",
+    status: "Route signal",
+    sourceUrl: "https://www.andermatt.ch/en/summer/cycling/",
+    mapUrl: "https://www.google.com/maps?q=Furka%20Pass%20Andermatt&z=8&output=embed",
+    copy: "High alpine route signal from the Furka and Andermatt corridor.",
+  },
+  {
+    name: "Jura Route / National Route 7",
+    location: "Lake Geneva to Basel",
+    status: "Route signal",
+    sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/route-7",
+    mapUrl: "https://www.google.com/maps?q=SchweizMobil%20Route%207&z=7&output=embed",
+    copy: "Public national route signal through the Swiss Jura.",
+  },
+  {
+    name: "Rhône Route / National Route 1",
+    location: "Swiss national route",
+    status: "Route signal",
+    sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/route-1",
+    mapUrl: "https://www.google.com/maps?q=SchweizMobil%20Route%201&z=7&output=embed",
+    copy: "Public source signal for the Rhône corridor.",
+  },
+  {
+    name: "Rhine Route / National Route 2",
+    location: "Swiss national route",
+    status: "Route signal",
+    sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/route-2",
+    mapUrl: "https://www.google.com/maps?q=SchweizMobil%20Route%202&z=7&output=embed",
+    copy: "Public source signal for the Rhine corridor.",
+  },
+  {
+    name: "Alpine Panorama Route / National Route 4",
+    location: "Swiss national route",
+    status: "Route signal",
+    sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/route-4",
+    mapUrl: "https://www.google.com/maps?q=SchweizMobil%20Route%204&z=7&output=embed",
+    copy: "Public alpine route signal with broad east-west context.",
+  },
+  {
+    name: "La Chaux-de-Fonds / Le Locle watch-road signal",
+    location: "Swiss Jura",
+    status: "Watchmaking region",
+    sourceUrl: "https://whc.unesco.org/en/list/1302/",
+    mapUrl: "https://www.google.com/maps?q=La%20Chaux-de-Fonds%20Le%20Locle&z=10&output=embed",
+    copy: "Watchmaking urbanism signal from the Swiss Jura.",
+  },
+  {
+    name: "Vallée de Joux watch-road signal",
+    location: "Canton Vaud",
+    status: "Watchmaking region",
+    sourceUrl: "https://www.myswitzerland.com/en-us/destinations/vallee-de-joux/",
+    mapUrl: "https://www.google.com/maps?q=Vall%C3%A9e%20de%20Joux&z=10&output=embed",
+    copy: "Quiet valley signal tied to watchmaking country.",
+  },
+  {
+    name: "Andermatt / Hospental gravel source signal",
+    location: "Hospental / Andermatt",
+    status: "Route signal",
+    sourceUrl: "https://maps.andermatt.swiss/",
+    mapUrl: "https://www.google.com/maps?q=Andermatt%20Hospental&z=10&output=embed",
+    copy: "Public gravel source signal near Andermatt and Hospental.",
+  },
+] as const;
+
 const DISPATCHES = [
   {
     title: "Andermatt Base",
@@ -654,53 +721,175 @@ function CoffeeSignalCard({ signal }: { signal: (typeof COFFEE_SIGNALS)[number] 
   );
 }
 
+function RouteSourceMapCard({ signal }: { signal: (typeof ROUTE_SOURCE_MAPS)[number] }) {
+  return (
+    <article className="p-5 md:p-6 min-h-[420px] flex flex-col gap-4" style={{ background: "oklch(0.24 0.01 60)" }}>
+      <div className="flex items-start justify-between gap-4">
+        <span
+          className="font-label text-xs tracking-[0.18em] uppercase px-2.5 py-1"
+          style={{ color: "oklch(0.88 0.025 75)", background: "oklch(0.30 0.01 60)" }}
+        >
+          {signal.status}
+        </span>
+        <span className="font-label text-[10px] tracking-[0.24em] uppercase text-right" style={{ color: READABLE_ACCENT }}>
+          {signal.location}
+        </span>
+      </div>
+      <h3 className="font-display text-2xl md:text-3xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>
+        {signal.name}
+      </h3>
+      <div className="overflow-hidden border" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)", background: "oklch(0.20 0.01 60)" }}>
+        <iframe
+          allowFullScreen
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          src={signal.mapUrl}
+          title={`${signal.name} map preview`}
+          className="h-[220px] w-full"
+        />
+      </div>
+      <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+        {signal.copy}
+      </p>
+      <div className="mt-auto flex flex-wrap gap-4">
+        <a
+          href={signal.sourceUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-label text-xs tracking-[0.2em] uppercase hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
+          style={{ color: READABLE_ACCENT }}
+        >
+          Source →
+        </a>
+        <a
+          href={signal.mapUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-label text-xs tracking-[0.2em] uppercase hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
+          style={{ color: READABLE_ACCENT }}
+        >
+          Open source map →
+        </a>
+      </div>
+    </article>
+  );
+}
+
 export default function SwitzerlandRoutes() {
   useEffect(() => {
     const title = "Switzerland Signals — MootsFrame";
     const description = "Switzerland route signals for MootsFrame. Public source signals only.";
+    const routeMapEntities = ROUTE_SOURCE_MAPS.map((signal, index) => {
+      const entityId = `https://mootsframe.com/routes/switzerland#route-map-${index + 1}`;
+      return {
+        "@type": "Map",
+        "@id": entityId,
+        name: signal.name,
+        description: signal.copy,
+        url: signal.sourceUrl,
+        contentUrl: signal.mapUrl,
+        about: {
+          "@type": "Place",
+          name: signal.location,
+          sameAs: signal.sourceUrl,
+        },
+      };
+    });
     const jsonLd = {
       "@context": "https://schema.org",
-      "@type": "WebPage",
-      name: "Switzerland Signals — MootsFrame",
-      description: "Alpine cycling signals from Switzerland. Furka Pass, the Jura Route, Andermatt, and watchmaking country.",
-      url: "https://mootsframe.com/routes/switzerland",
-      isPartOf: {
-        "@type": "WebSite",
-        name: "MootsFrame",
-        url: "https://mootsframe.com",
-      },
-      about: [
+      "@graph": [
         {
-          "@type": "Place",
-          name: "Furka Pass",
-          description: "Alpine mountain pass in Switzerland. Public cycling route signal.",
-          geo: {
-            "@type": "GeoCoordinates",
-            latitude: 46.5716,
-            longitude: 8.4159,
+          "@type": "WebPage",
+          "@id": "https://mootsframe.com/routes/switzerland#webpage",
+          name: "Switzerland Signals — MootsFrame",
+          description: "Alpine cycling signals from Switzerland. Furka Pass, the Jura Route, Andermatt, and watchmaking country.",
+          url: "https://mootsframe.com/routes/switzerland",
+          isPartOf: {
+            "@type": "WebSite",
+            name: "MootsFrame",
+            url: "https://mootsframe.com",
           },
-        },
-        {
-          "@type": "Place",
-          name: "Andermatt",
-          description: "Alpine cycling hub in Uri, Switzerland. Base for Furka, Nufenen, and Gotthard Pass riding.",
-          geo: {
-            "@type": "GeoCoordinates",
-            latitude: 46.6355,
-            longitude: 8.5942,
+          mainEntity: {
+            "@id": "https://mootsframe.com/routes/switzerland#route-source-map",
           },
+          about: [
+            {
+              "@type": "Place",
+              name: "Furka Pass",
+              description: "Alpine mountain pass in Switzerland. Public cycling route signal.",
+              geo: {
+                "@type": "GeoCoordinates",
+                latitude: 46.5716,
+                longitude: 8.4159,
+              },
+            },
+            {
+              "@type": "Place",
+              name: "Andermatt",
+              description: "Alpine cycling hub in Uri, Switzerland. Base for Furka, Nufenen, and Gotthard Pass riding.",
+              geo: {
+                "@type": "GeoCoordinates",
+                latitude: 46.6355,
+                longitude: 8.5942,
+              },
+            },
+            {
+              "@type": "Place",
+              name: "Geneva",
+              description: "Public start point for the Switzerland route board.",
+            },
+            {
+              "@type": "Place",
+              name: "Lake Geneva to Basel",
+              description: "Swiss Jura corridor for National Route 7.",
+            },
+            {
+              "@type": "Place",
+              name: "Rhône corridor",
+              description: "Public source signal for National Route 1.",
+            },
+            {
+              "@type": "Place",
+              name: "Rhine corridor",
+              description: "Public source signal for National Route 2.",
+            },
+            {
+              "@type": "Place",
+              name: "Alpine Panorama Route corridor",
+              description: "Public source signal for National Route 4.",
+            },
+            {
+              "@type": "Place",
+              name: "La Chaux-de-Fonds",
+              description: "UNESCO World Heritage watchmaking city in the Swiss Jura, Canton Neuchâtel.",
+              sameAs: "https://whc.unesco.org/en/list/1302/",
+            },
+            {
+              "@type": "Place",
+              name: "Vallée de Joux",
+              description: "A quiet valley in Canton Vaud connected to Swiss watchmaking history and the Jura cycling route.",
+            },
+            {
+              "@type": "Place",
+              name: "Hospental",
+              description: "Andermatt gravel corridor source signal.",
+            },
+          ],
         },
         {
-          "@type": "Place",
-          name: "La Chaux-de-Fonds",
-          description: "UNESCO World Heritage watchmaking city in the Swiss Jura, Canton Neuchâtel.",
-          sameAs: "https://whc.unesco.org/en/list/1302/",
+          "@type": "ItemList",
+          "@id": "https://mootsframe.com/routes/switzerland#route-source-map",
+          name: "Route Source Map",
+          itemListOrder: "https://schema.org/ItemListOrderAscending",
+          itemListElement: routeMapEntities.map((entity, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            item: {
+              "@id": entity["@id"],
+            },
+          })),
         },
-        {
-          "@type": "Place",
-          name: "Vallée de Joux",
-          description: "A quiet valley in Canton Vaud connected to Swiss watchmaking history and the Jura cycling route.",
-        },
+        ...routeMapEntities,
       ],
     };
     const setMetaContent = (selector: string, content: string) => {
@@ -826,6 +1015,25 @@ export default function SwitzerlandRoutes() {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
           {WATCHES_AND_ROADS_EXPANSION.map((signal) => (
             <ExpansionSignalCard key={signal.name} signal={signal} />
+          ))}
+        </div>
+      </section>
+
+      <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="route-source-map-heading">
+        <div className="max-w-4xl mb-9">
+          <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
+            Map
+          </p>
+          <h2 id="route-source-map-heading" className="font-display text-3xl md:text-5xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>
+            Route Source Map
+          </h2>
+          <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+            Source-backed map cards. No route ownership implied.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
+          {ROUTE_SOURCE_MAPS.map((signal) => (
+            <RouteSourceMapCard key={signal.name} signal={signal} />
           ))}
         </div>
       </section>
