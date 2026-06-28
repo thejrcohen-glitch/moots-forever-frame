@@ -4,6 +4,37 @@ import OnTheWheelBadge from "@/components/OnTheWheelBadge";
 
 const READABLE_ACCENT = "oklch(0.72 0.14 65)";
 
+interface DispatchCardSignal {
+  title: string;
+  status: string;
+  note: string;
+  imageSrc: string;
+  imageAlt: string;
+  href?: string;
+  linkLabel?: string;
+  imageContain?: boolean;
+}
+
+interface TrailMapSignal {
+  title: string;
+  status: string;
+  region: string;
+  territory: string;
+  sourceName: string;
+  sourceUrl: string;
+  note: string;
+  mapUrl?: string | null;
+}
+
+interface RouteMapSignal {
+  name: string;
+  location: string;
+  status: string;
+  sourceUrl: string;
+  mapUrl?: string | null;
+  copy: string;
+}
+
 const FURKA_SIGNAL = {
   title: "Switzerland / Furka Pass",
   region: "Switzerland",
@@ -90,7 +121,7 @@ const WATCH_ROAD_SIGNALS = [
   },
 ];
 
-const ALPINE_RESEARCH_SIGNALS = [
+const ALPINE_RESEARCH_SIGNALS: TrailMapSignal[] = [
   {
     title: "On the Trail of Watches",
     status: "Watchmaking region",
@@ -99,6 +130,7 @@ const ALPINE_RESEARCH_SIGNALS = [
     sourceName: "Switzerland Tourism — On the trail of watches",
     sourceUrl: "https://www.myswitzerland.com/en-us/experiences/on-the-trail-of-watches/",
     note: "La Chaux-de-Fonds is a public watchmaking city signal in the Swiss Jura. Switzerland Tourism ties the city’s street grid, altitude, UNESCO status, and museum culture to watchmaking.",
+    mapUrl: "https://www.google.com/maps?q=La%20Chaux-de-Fonds%20Switzerland&z=12&output=embed",
   },
   {
     title: "Furka / Nufenen / Gotthard Loop",
@@ -108,6 +140,7 @@ const ALPINE_RESEARCH_SIGNALS = [
     sourceName: "Switzerland Mobility National Cycling Routes",
     sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/national-routes",
     note: "A high-alpine riding signal around Andermatt, Furka, Nufenen, Gotthard, and Tremola.",
+    mapUrl: "https://www.google.com/maps?q=Andermatt%20Furka%20Pass%20Nufenen%20Gotthard%20Switzerland&z=10&output=embed",
   },
   {
     title: "Octopus Gravel",
@@ -117,6 +150,7 @@ const ALPINE_RESEARCH_SIGNALS = [
     sourceName: "Switzerland Tourism — Octopus Gravel",
     sourceUrl: "https://www.myswitzerland.com/en-us/experiences/events/octopus-gravel/",
     note: "A public Andermatt gravel event signal built around dead-end alpine climbs.",
+    mapUrl: "https://www.google.com/maps?q=Andermatt%20Switzerland&z=11&output=embed",
   },
   {
     title: "Hospental Gravel Routes",
@@ -126,6 +160,7 @@ const ALPINE_RESEARCH_SIGNALS = [
     sourceName: "Andermatt Swiss Alps — Hospental gravel routes",
     sourceUrl: "https://maps.andermatt.swiss/en/gravel-bike-routes/hospental/gravel-bike-routes-in-hospental/314685244/",
     note: "A public gravel route signal near Hospental and Andermatt. Source link only.",
+    mapUrl: "https://www.google.com/maps?q=Hospental%20Switzerland&z=12&output=embed",
   },
   {
     title: "Seven Arms Gravel",
@@ -135,6 +170,7 @@ const ALPINE_RESEARCH_SIGNALS = [
     sourceName: "Gravel Union — Seven Arms in the Alps",
     sourceUrl: "https://gravelunion.cc/article/ride-report-gravel-on-seven-arms-in-the-alps",
     note: "A source-backed alpine gravel story signal from the Andermatt area.",
+    mapUrl: "https://www.google.com/maps?q=Andermatt%20Switzerland&z=11&output=embed",
   },
 ];
 
@@ -279,7 +315,7 @@ const COFFEE_SIGNALS = [
   },
 ] as const;
 
-const ROUTE_SOURCE_MAPS = [
+const ROUTE_SOURCE_MAPS: RouteMapSignal[] = [
   {
     name: "Furka / Andermatt alpine signal",
     location: "Andermatt / Furka Pass",
@@ -317,8 +353,8 @@ const ROUTE_SOURCE_MAPS = [
     location: "Swiss national route",
     status: "Route signal",
     sourceUrl: "https://schweizmobil.ch/en/cycling-in-switzerland/route-4",
-    mapUrl: "https://www.google.com/maps?q=Lucerne%20Lake%20Geneva%20SchweizMobil%20Route%204%20Switzerland&z=7&output=embed",
-    copy: "Public alpine route signal with broad east-west context.",
+    mapUrl: null,
+    copy: "Public alpine route signal with broad east-west context. Source card only.",
   },
   {
     name: "La Chaux-de-Fonds / Le Locle watch-road signal",
@@ -346,36 +382,54 @@ const ROUTE_SOURCE_MAPS = [
   },
 ] as const;
 
-const DISPATCHES = [
+const DISPATCHES: DispatchCardSignal[] = [
   {
     title: "Andermatt Base",
     status: "Route signal",
     note: "Trip base signal for July riding updates.",
+    imageSrc: "/images/ian-andermatt-switzerland.jpg",
+    imageAlt: "Ian Zakrocki riding a Moots bike in Andermatt, Switzerland.",
   },
   {
     title: "Furka Signal",
     status: "Route signal",
     note: "Alpine pass dispatch placeholder.",
+    imageSrc: "/images/ian-furka-pass-moots.jpg",
+    imageAlt: "Ian and his Moots titanium bike at Furka Pass in Switzerland.",
   },
   {
     title: "Nufenen / Gotthard",
     status: "Route signal",
     note: "High-alpine road dispatch placeholder.",
+    imageSrc: "/images/ian-furka-pass-moots.jpg",
+    imageAlt: "Ian and his Moots titanium bike at Furka Pass in Switzerland.",
   },
   {
     title: "Watch Road",
     status: "Watchmaking region",
     note: "Jura and watchmaking-country dispatch placeholder.",
+    imageSrc: "/images/mootsframe-logo.png",
+    imageAlt: "MootsFrame logo",
+    imageContain: true,
   },
   {
     title: "Strava Activity Link",
     status: "Source",
     note: "View on Strava.",
+    imageSrc: "/images/mootsframe-logo.png",
+    imageAlt: "MootsFrame logo",
+    imageContain: true,
+    href: "https://www.strava.com/athletes/275498",
+    linkLabel: "View on Strava →",
   },
   {
     title: "Instagram Post",
     status: "Source",
     note: "Public post link.",
+    imageSrc: "/images/ian-steamboat-ride.jpg",
+    imageAlt: "Ian riding a Moots titanium bike in Steamboat Springs, Colorado.",
+    href: "https://www.instagram.com/mootsframes/",
+    linkLabel: "Open Instagram →",
   },
 ];
 
@@ -655,18 +709,68 @@ function TravelSignalCard() {
   );
 }
 
+function DispatchCard({ signal }: { signal: DispatchCardSignal }) {
+  return (
+    <article
+      className="overflow-hidden flex flex-col min-h-[360px]"
+      style={{ background: "oklch(0.24 0.01 60)", border: "1px solid oklch(0.38 0.015 60 / 0.5)" }}
+    >
+      <div className="relative aspect-[16/10] overflow-hidden" style={{ background: "oklch(0.20 0.01 60)" }}>
+        <img
+          src={signal.imageSrc}
+          alt={signal.imageAlt}
+          className={`absolute inset-0 h-full w-full ${signal.imageContain ? "object-contain p-5 md:p-6" : "object-cover"}`}
+        />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, oklch(0.10 0.006 60 / 0.05), oklch(0.10 0.006 60 / 0.66))" }} />
+        <span
+          className="absolute top-4 left-4 font-label text-[10px] tracking-[0.22em] uppercase px-2.5 py-1"
+          style={{ color: "oklch(0.945 0.018 78)", background: "oklch(0.12 0.01 60 / 0.75)" }}
+        >
+          {signal.status}
+        </span>
+      </div>
+      <div className="p-5 md:p-6 flex flex-col gap-4 flex-1">
+        <h3 className="font-display text-2xl md:text-3xl font-bold leading-tight" style={{ color: "oklch(0.945 0.018 78)" }}>
+          {signal.title}
+        </h3>
+        <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+          {signal.note}
+        </p>
+        {signal.href ? (
+          <a
+            href={signal.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-label text-xs tracking-[0.2em] uppercase mt-auto hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4 self-start"
+            style={{ color: READABLE_ACCENT }}
+          >
+            {signal.linkLabel ?? "Open source →"}
+          </a>
+        ) : (
+          <span className="font-label text-xs tracking-[0.2em] uppercase mt-auto self-start" style={{ color: READABLE_ACCENT }}>
+            Source →
+          </span>
+        )}
+      </div>
+    </article>
+  );
+}
+
 function WatchRoadCard({ signal }: { signal: (typeof WATCH_ROAD_SIGNALS)[number] }) {
   return (
     <article
       className="p-6 md:p-7 min-h-[320px] flex flex-col"
-      style={{ background: "oklch(0.24 0.01 60)" }}
+      style={{ background: "oklch(0.24 0.01 60)", borderLeft: `3px solid ${READABLE_ACCENT}` }}
     >
-      <div className="flex items-center justify-between gap-4 mb-7">
+      <div className="flex flex-col gap-3 mb-7">
         <span
           className="font-label text-xs tracking-[0.18em] uppercase px-2.5 py-1"
           style={{ color: "oklch(0.88 0.025 75)", background: "oklch(0.30 0.01 60)" }}
         >
           {signal.status}
+        </span>
+        <span className="font-mono-custom text-[11px] leading-relaxed uppercase" style={{ color: "oklch(0.72 0.04 65)" }}>
+          {signal.sourceName}
         </span>
       </div>
       <p className="font-label text-xs tracking-[0.24em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
@@ -702,34 +806,181 @@ function WatchRoadCard({ signal }: { signal: (typeof WATCH_ROAD_SIGNALS)[number]
   );
 }
 
-function ExpansionSignalCard({ signal }: { signal: (typeof WATCHES_AND_ROADS_EXPANSION)[number] }) {
+function ExpansionSignalCard({
+  signal,
+}: {
+  signal: {
+    name: string;
+    location: string;
+    status: string;
+    sourceUrl: string;
+    copy: string;
+  };
+}) {
   return (
-    <article className="p-6 md:p-7 min-h-[300px] flex flex-col" style={{ background: "oklch(0.24 0.01 60)" }}>
-      <span
-        className="font-label text-xs tracking-[0.18em] uppercase px-2.5 py-1 self-start mb-7"
-        style={{ color: "oklch(0.22 0.01 60)", background: READABLE_ACCENT }}
-      >
-        {signal.status}
-      </span>
-      <p className="font-label text-xs tracking-[0.24em] uppercase mb-3" style={{ color: READABLE_ACCENT }}>
-        {signal.location}
-      </p>
-      <h3 className="font-display text-2xl md:text-3xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>
+    <article className="p-6 md:p-7 min-h-[300px] flex flex-col gap-4" style={{ background: "oklch(0.24 0.01 60)" }}>
+      <div className="flex items-start justify-between gap-4">
+        <span
+          className="font-label text-xs tracking-[0.18em] uppercase px-2.5 py-1"
+          style={{ color: "oklch(0.88 0.025 75)", background: "oklch(0.30 0.01 60)" }}
+        >
+          {signal.status}
+        </span>
+        <span className="font-label text-[10px] tracking-[0.24em] uppercase text-right" style={{ color: READABLE_ACCENT }}>
+          {signal.location}
+        </span>
+      </div>
+      <h3 className="font-display text-2xl md:text-[2rem] font-bold leading-tight" style={{ color: "oklch(0.945 0.018 78)" }}>
         {signal.name}
       </h3>
-      <p className="font-mono-custom text-sm leading-loose mb-7" style={{ color: "oklch(0.78 0.03 70)" }}>
+      <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
         {signal.copy}
       </p>
-      <a
-        href={signal.sourceUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={`Open public source for ${signal.name}`}
-        className="font-label text-xs tracking-[0.2em] uppercase mt-auto hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4 self-start"
-        style={{ color: READABLE_ACCENT }}
-      >
-        Source →
-      </a>
+      <div className="mt-auto flex flex-wrap items-center gap-4">
+        <p className="font-mono-custom text-[11px] uppercase" style={{ color: "oklch(0.72 0.04 65)" }}>
+          Public source
+        </p>
+        <a
+          href={signal.sourceUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-label text-xs tracking-[0.2em] uppercase hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
+          style={{ color: READABLE_ACCENT }}
+        >
+          Source →
+        </a>
+      </div>
+    </article>
+  );
+}
+
+function TrailMapCard({ signal }: { signal: TrailMapSignal }) {
+  return (
+    <article className="p-5 md:p-6 min-h-[420px] flex flex-col gap-4" style={{ background: "oklch(0.24 0.01 60)", borderLeft: `3px solid ${READABLE_ACCENT}` }}>
+      <div className="flex items-start justify-between gap-4">
+        <span
+          className="font-label text-xs tracking-[0.18em] uppercase px-2.5 py-1"
+          style={{ color: "oklch(0.88 0.025 75)", background: "oklch(0.30 0.01 60)" }}
+        >
+          {signal.status}
+        </span>
+        <span className="font-label text-[10px] tracking-[0.24em] uppercase text-right" style={{ color: READABLE_ACCENT }}>
+          {signal.region}
+        </span>
+      </div>
+      <h3 className="font-display text-2xl md:text-3xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>
+        {signal.title}
+      </h3>
+      {signal.mapUrl ? (
+        <div className="overflow-hidden border" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)", background: "oklch(0.20 0.01 60)" }}>
+          <iframe
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            src={signal.mapUrl}
+            title={`${signal.title} map preview`}
+            className="h-[220px] w-full"
+          />
+        </div>
+      ) : (
+        <div className="min-h-[220px] flex items-end p-5 border" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)", background: "linear-gradient(180deg, oklch(0.24 0.01 60), oklch(0.16 0.01 60))" }}>
+          <p className="font-label text-xs tracking-[0.24em] uppercase" style={{ color: READABLE_ACCENT }}>
+            Source-backed card only.
+          </p>
+        </div>
+      )}
+      <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+        {signal.note}
+      </p>
+      <div className="mt-auto flex flex-wrap gap-4 items-center">
+        <span className="font-mono-custom text-[11px] uppercase" style={{ color: "oklch(0.72 0.04 65)" }}>
+          {signal.sourceName}
+        </span>
+        <a
+          href={signal.sourceUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-label text-xs tracking-[0.2em] uppercase hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
+          style={{ color: READABLE_ACCENT }}
+        >
+          Source →
+        </a>
+        {signal.mapUrl ? (
+          <a
+            href={signal.mapUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-label text-xs tracking-[0.2em] uppercase hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
+            style={{ color: READABLE_ACCENT }}
+          >
+            Open source map →
+          </a>
+        ) : null}
+      </div>
+    </article>
+  );
+}
+
+function RouteSourceMapCard({ signal }: { signal: RouteMapSignal }) {
+  return (
+    <article className="p-5 md:p-6 min-h-[420px] flex flex-col gap-4" style={{ background: "oklch(0.24 0.01 60)", borderLeft: `3px solid ${READABLE_ACCENT}` }}>
+      <div className="flex items-start justify-between gap-4">
+        <span
+          className="font-label text-xs tracking-[0.18em] uppercase px-2.5 py-1"
+          style={{ color: "oklch(0.88 0.025 75)", background: "oklch(0.30 0.01 60)" }}
+        >
+          {signal.status}
+        </span>
+        <span className="font-label text-[10px] tracking-[0.24em] uppercase text-right" style={{ color: READABLE_ACCENT }}>
+          {signal.location}
+        </span>
+      </div>
+      <h3 className="font-display text-2xl md:text-3xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>
+        {signal.name}
+      </h3>
+      {signal.mapUrl ? (
+        <div className="overflow-hidden border" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)", background: "oklch(0.20 0.01 60)" }}>
+          <iframe
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            src={signal.mapUrl}
+            title={`${signal.name} map preview`}
+            className="h-[220px] w-full"
+          />
+        </div>
+      ) : (
+        <div className="min-h-[220px] flex items-end p-5 border" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)", background: "linear-gradient(180deg, oklch(0.24 0.01 60), oklch(0.16 0.01 60))" }}>
+          <p className="font-label text-xs tracking-[0.24em] uppercase" style={{ color: READABLE_ACCENT }}>
+            Source-backed card only.
+          </p>
+        </div>
+      )}
+      <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+        {signal.copy}
+      </p>
+      <div className="mt-auto flex flex-wrap gap-4">
+        <a
+          href={signal.sourceUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-label text-xs tracking-[0.2em] uppercase hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
+          style={{ color: READABLE_ACCENT }}
+        >
+          Source →
+        </a>
+        {signal.mapUrl ? (
+          <a
+            href={signal.mapUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-label text-xs tracking-[0.2em] uppercase hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
+            style={{ color: READABLE_ACCENT }}
+          >
+            Open source map →
+          </a>
+        ) : null}
+      </div>
     </article>
   );
 }
@@ -766,60 +1017,6 @@ function CoffeeSignalCard({ signal }: { signal: (typeof COFFEE_SIGNALS)[number] 
   );
 }
 
-function RouteSourceMapCard({ signal }: { signal: (typeof ROUTE_SOURCE_MAPS)[number] }) {
-  return (
-    <article className="p-5 md:p-6 min-h-[420px] flex flex-col gap-4" style={{ background: "oklch(0.24 0.01 60)" }}>
-      <div className="flex items-start justify-between gap-4">
-        <span
-          className="font-label text-xs tracking-[0.18em] uppercase px-2.5 py-1"
-          style={{ color: "oklch(0.88 0.025 75)", background: "oklch(0.30 0.01 60)" }}
-        >
-          {signal.status}
-        </span>
-        <span className="font-label text-[10px] tracking-[0.24em] uppercase text-right" style={{ color: READABLE_ACCENT }}>
-          {signal.location}
-        </span>
-      </div>
-      <h3 className="font-display text-2xl md:text-3xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>
-        {signal.name}
-      </h3>
-      <div className="overflow-hidden border" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)", background: "oklch(0.20 0.01 60)" }}>
-        <iframe
-          allowFullScreen
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-          src={signal.mapUrl}
-          title={`${signal.name} map preview`}
-          className="h-[220px] w-full"
-        />
-      </div>
-      <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
-        {signal.copy}
-      </p>
-      <div className="mt-auto flex flex-wrap gap-4">
-        <a
-          href={signal.sourceUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-label text-xs tracking-[0.2em] uppercase hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
-          style={{ color: READABLE_ACCENT }}
-        >
-          Source →
-        </a>
-        <a
-          href={signal.mapUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-label text-xs tracking-[0.2em] uppercase hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
-          style={{ color: READABLE_ACCENT }}
-        >
-          Open source map →
-        </a>
-      </div>
-    </article>
-  );
-}
-
 export default function SwitzerlandRoutes() {
   useEffect(() => {
     const title = "Switzerland Signals — MootsFrame";
@@ -832,7 +1029,7 @@ export default function SwitzerlandRoutes() {
         name: signal.name,
         description: signal.copy,
         url: signal.sourceUrl,
-        contentUrl: signal.mapUrl,
+        ...(signal.mapUrl ? { contentUrl: signal.mapUrl } : {}),
         about: {
           "@type": "Place",
           name: signal.location,
@@ -1090,26 +1287,26 @@ export default function SwitzerlandRoutes() {
               Source
             </p>
             <h2 id="watch-brands-heading" className="font-display text-3xl md:text-4xl font-bold mb-5" style={{ color: "oklch(0.945 0.018 78)" }}>
-              Watchmaking region.
+              Official watch sources
             </h2>
             <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
               Official sites. Public source only.
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
             {WATCH_BRANDS.map((brand) => (
               <a
                 key={brand.name}
                 href={brand.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-5 min-h-[120px] flex flex-col justify-between transition-opacity hover:opacity-80 focus:outline focus:outline-2 focus:outline-offset-4"
+                className="p-5 min-h-[88px] flex items-center justify-between gap-4 transition-opacity hover:opacity-80 focus:outline focus:outline-2 focus:outline-offset-4"
                 style={{ background: "oklch(0.24 0.01 60)" }}
               >
                 <span className="font-label text-xs tracking-[0.18em] uppercase" style={{ color: "oklch(0.52 0.12 45)" }}>
                   Official Site
                 </span>
-                <span className="font-display text-xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>
+                <span className="font-display text-lg md:text-xl font-bold text-right" style={{ color: "oklch(0.945 0.018 78)" }}>
                   {brand.name} →
                 </span>
               </a>
@@ -1173,7 +1370,7 @@ export default function SwitzerlandRoutes() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
           {ALPINE_RESEARCH_SIGNALS.map((signal) => (
-            <WatchRoadCard key={signal.title} signal={signal} />
+            <TrailMapCard key={signal.title} signal={signal} />
           ))}
         </div>
       </section>
@@ -1195,20 +1392,7 @@ export default function SwitzerlandRoutes() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
           {DISPATCHES.map((dispatch) => (
-            <article key={dispatch.title} className="p-6 md:p-7 min-h-[220px] flex flex-col" style={{ background: "oklch(0.24 0.01 60)" }}>
-              <span
-                className="font-label text-xs tracking-[0.18em] uppercase px-2.5 py-1 self-start mb-7"
-                style={{ color: "oklch(0.88 0.025 75)", background: "oklch(0.30 0.01 60)" }}
-              >
-                {dispatch.status}
-              </span>
-              <h3 className="font-display text-2xl md:text-3xl font-bold mb-4" style={{ color: "oklch(0.945 0.018 78)" }}>
-                {dispatch.title}
-              </h3>
-              <p className="font-mono-custom text-sm leading-loose mt-auto" style={{ color: "oklch(0.78 0.03 70)" }}>
-                {dispatch.note}
-              </p>
-            </article>
+            <DispatchCard key={dispatch.title} signal={dispatch} />
           ))}
         </div>
       </section>
