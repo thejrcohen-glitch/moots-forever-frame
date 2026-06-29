@@ -491,7 +491,7 @@ function SourceSection({ section }: { section: StravaSource["section"] }) {
 function MootsFrameClubSection() {
   return (
     <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="mootsframe-club-heading">
-      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_440px] gap-6 items-start">
+      <div className="flex flex-col gap-6">
         <article
           className="p-7 md:p-9 min-h-[320px] flex flex-col"
           style={{
@@ -522,16 +522,16 @@ function MootsFrameClubSection() {
             View on Strava →
           </a>
         </article>
-        <div className="p-5 flex justify-center lg:justify-end" style={{ background: "oklch(0.24 0.01 60)", border: "1px solid oklch(0.38 0.015 60 / 0.5)" }}>
+        <div className="w-full p-5" style={{ background: "oklch(0.24 0.01 60)", border: "1px solid oklch(0.38 0.015 60 / 0.5)" }}>
           <iframe
             allowTransparency={true}
             frameBorder="0"
-            className="w-full h-[620px] max-w-[440px]"
-            height="620"
+            className="w-full h-[454px]"
+            height="454"
             scrolling="no"
             src="https://www.strava.com/clubs/2216534/latest-rides/6694c7f04725dfdf49d6ce9506ea97575cb8fdae?show_rides=true"
             title="MootsFrame Strava Club latest public rides"
-            width="440"
+            width="100%"
           />
         </div>
       </div>
