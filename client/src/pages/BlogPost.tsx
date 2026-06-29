@@ -28,7 +28,19 @@ const POST_SEO: Partial<Record<string, { title: string; description: string; ogT
   },
 };
 
-const POSTS = [
+interface BlogPostEntry {
+  slug: string;
+  title: string;
+  subtitle?: string;
+  author?: string;
+  date: string;
+  category: string;
+  tags?: string[];
+  body: string[];
+  heroImage?: { src: string; alt: string };
+}
+
+const POSTS: BlogPostEntry[] = [
   {
     slug: "sbt-grvl-steamboat",
     title: "Steamboat",
@@ -251,6 +263,14 @@ export default function BlogPost() {
                     </span>
                   ))}
                 </div>
+              )}
+              {post.heroImage && (
+                <img
+                  src={post.heroImage.src}
+                  alt={post.heroImage.alt}
+                  loading="lazy"
+                  className="w-full object-cover max-h-[480px]"
+                />
               )}
               <div className="mb-10">
                 {post.body.map((paragraph, index) => renderBodyParagraph(paragraph, index))}
