@@ -2357,53 +2357,55 @@ function SocialHub() {
   );
 }
 
-// ─── Follow the Vibe (Instagram) ──────────────────────────────────────────────
+// ─── Instagram Rail ───────────────────────────────────────────────────────────
 function FollowTheVibe() {
+  const instagramCards = Array.from({ length: 6 }, (_, index) => index + 1);
+
   return (
-    <section
-      id="follow-the-vibe"
-      aria-labelledby="follow-the-vibe-heading"
-      className="py-20 relative overflow-hidden"
-      style={{ background: "oklch(0.22 0.01 60)" }}
-    >
+    <section id="follow-the-vibe" aria-labelledby="follow-the-vibe-heading" className="py-20 relative overflow-hidden" style={{ background: "oklch(0.22 0.01 60)" }}>
       <GrainOverlay opacity={0.12} />
       <div className="container relative z-20">
-        <div className="max-w-2xl mx-auto text-center">
+        <div className="max-w-4xl mb-10">
           <p className="font-label text-xs tracking-[0.35em] uppercase mb-3" style={{ color: "oklch(0.72 0.14 65)" }}>
-            Follow the Frame
+            Instagram
           </p>
           <h2 id="follow-the-vibe-heading" className="font-display text-4xl md:text-5xl font-bold" style={{ color: "oklch(0.945 0.018 78)" }}>
-            <span style={{ color: "oklch(0.72 0.14 65)" }}>@MootsFrames</span>
+            @mootsframes
           </h2>
-          <div className="h-px w-24 mx-auto my-6" style={{ background: "oklch(0.38 0.015 60)" }} />
-          <p className="font-mono-custom text-sm leading-loose mb-8" style={{ color: "oklch(0.78 0.03 70)" }}>
-            Field notes, trailhead snapshots, and titanium in the wild from TX, AR, OK, and Whistler.
-          </p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {instagramCards.map((card) => (
+            <a
+              key={`instagram-card-${card}`}
+              href="https://www.instagram.com/mootsframes/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="aspect-square p-5 flex flex-col justify-between transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              style={{ background: "oklch(0.18 0.008 60)", border: "1px solid oklch(0.38 0.015 60 / 0.5)" }}
+              aria-label="View @mootsframes on Instagram"
+            >
+              <div className="flex-1" style={{ background: "linear-gradient(180deg, oklch(0.24 0.01 60), oklch(0.14 0.008 60))" }} />
+              <div className="pt-4">
+                <p className="font-mono-custom text-sm leading-loose mb-4" style={{ color: "oklch(0.78 0.03 70)" }}>
+                  MootsFrame. Titanium. TX / AR / OK.
+                </p>
+                <p className="font-label text-xs tracking-[0.2em] uppercase" style={{ color: "oklch(0.72 0.14 65)" }}>
+                  View on Instagram →
+                </p>
+              </div>
+            </a>
+          ))}
+        </div>
+        <div className="mt-10 flex justify-center">
           <a
-            href="https://www.instagram.com/MootsFrames"
+            href="https://www.instagram.com/mootsframes/"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Follow @MootsFrames on Instagram (opens in a new tab)"
-            className="inline-block font-label text-sm tracking-[0.2em] uppercase px-8 py-3.5 transition-all duration-300 hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            className="font-label text-sm tracking-[0.2em] uppercase px-8 py-3.5 transition-all duration-300 hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
             style={{ background: "oklch(0.72 0.14 65)", color: "oklch(0.22 0.01 60)" }}
           >
-            Follow the field notes on Instagram.
+            Follow @mootsframes on Instagram →
           </a>
-          <a
-            href="https://www.facebook.com/MootsFrame"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Follow MootsFrame on Facebook (opens in a new tab)"
-            className="inline-block font-label text-sm tracking-[0.2em] uppercase px-8 py-3.5 mt-3 transition-all duration-300 hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-            style={{ border: "1px solid oklch(0.72 0.14 65)", color: "oklch(0.72 0.14 65)" }}
-          >
-            Facebook →
-          </a>
-          <p className="font-mono-custom text-xs mt-6" style={{ color: "oklch(0.52 0.04 65)" }}>
-            Prefer to ride first? Reach Ian at{" "}
-            <a href="mailto:ianzak@mac.com" className="hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" style={{ color: "oklch(0.72 0.14 65)" }}>ianzak@mac.com</a>
-            {" "}or call <a href="tel:+19175787687" className="hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" style={{ color: "oklch(0.72 0.14 65)" }}>917-578-7687</a>.
-          </p>
         </div>
       </div>
     </section>
