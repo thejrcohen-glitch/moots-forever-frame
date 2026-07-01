@@ -35,6 +35,26 @@ interface RouteMapSignal {
   copy: string;
 }
 
+interface WatchValleyBrand {
+  brand: string;
+  town: string;
+  region: string;
+  cyclingSignal: string | null;
+  officialUrl: string;
+}
+
+interface WatchValleyRoute {
+  routeId: string;
+  routeName: string;
+  region: string;
+  terrainType: "Road" | "Gravel" | "Mixed";
+  distanceRange: string;
+  watchAnchors: string[];
+  coffeeStops: string[];
+  mootsFit: string;
+  governanceNote: string;
+}
+
 const FURKA_SIGNAL = {
   title: "Switzerland / Furka Pass",
   region: "Switzerland",
@@ -271,6 +291,120 @@ const WATCH_BRANDS = [
   { name: "Rolex", url: "https://www.rolex.com" },
   { name: "Omega", url: "https://www.omegawatches.com" },
 ] as const;
+
+const WATCH_VALLEY_BRANDS: WatchValleyBrand[] = [
+  {
+    brand: "Tissot",
+    town: "Le Locle",
+    region: "Neuchâtel Jura",
+    cyclingSignal:
+      "UCI's first world cycling partner (1995); Official Timekeeper of Tour de France, La Vuelta, Giro d'Italia, Paris-Roubaix, and Liège-Bastogne-Liège",
+    officialUrl: "https://www.tissotwatches.com",
+  },
+  {
+    brand: "TAG Heuer",
+    town: "La Chaux-de-Fonds",
+    region: "Neuchâtel Jura",
+    cyclingSignal:
+      "7-Eleven Cycling Team sponsor (1980s); BMC Racing Team Official Timekeeper since 2017; current Official Timekeeper of the Giro d'Italia and the Haute Route",
+    officialUrl: "https://www.tagheuer.com",
+  },
+  {
+    brand: "Breitling",
+    town: "Grenchen",
+    region: "Bernese Jura",
+    cyclingSignal:
+      "Official sponsor of the Q36.5 Pro Cycling Team — Breitling's first cycling team sponsorship; historical Tour de France and Giro d'Italia timekeeper, 1950s",
+    officialUrl: "https://www.breitling.com",
+  },
+  {
+    brand: "Longines",
+    town: "Saint-Imier",
+    region: "Bernese Jura",
+    cyclingSignal: "Tour de France timekeeping role documented to 1947",
+    officialUrl: "https://www.longines.com",
+  },
+  {
+    brand: "NORQAIN",
+    town: "Tavannes",
+    region: "Bernese Jura",
+    cyclingSignal:
+      "Official timekeeper of TORTOUR ultracycling race; Wild ONE Tortour limited edition built around shock-resistant NORTEQ case",
+    officialUrl: "https://www.norqain.com",
+  },
+  {
+    brand: "TUDOR",
+    town: "Geneva / Sursee (team base)",
+    region: "Switzerland",
+    cyclingSignal:
+      "Founder and title sponsor of TUDOR Pro Cycling Team (road program founded 2022 by Fabian Cancellara; gravel program added April 2025 targeting Unbound Gravel and The Traka); Pelagos D Cycling chronograph with cycling-tuned tachymeter",
+    officialUrl: "https://www.tudorwatch.com",
+  },
+  {
+    brand: "Audemars Piguet",
+    town: "Le Brassus",
+    region: "Vallée de Joux",
+    cyclingSignal: null,
+    officialUrl: "https://www.audemarspiguet.com",
+  },
+  {
+    brand: "Jaeger-LeCoultre",
+    town: "Le Sentier",
+    region: "Vallée de Joux",
+    cyclingSignal: null,
+    officialUrl: "https://www.jaeger-lecoultre.com",
+  },
+  {
+    brand: "Omega",
+    town: "Biel/Bienne",
+    region: "Bernese Jura foot",
+    cyclingSignal: null,
+    officialUrl: "https://www.omegawatches.com",
+  },
+  {
+    brand: "Rolex",
+    town: "Biel/Bienne",
+    region: "Bernese Jura foot",
+    cyclingSignal: null,
+    officialUrl: "https://www.rolex.com",
+  },
+];
+
+const WATCH_VALLEY_ROUTES: WatchValleyRoute[] = [
+  {
+    routeId: "unesco-watch-triangle",
+    routeName: "UNESCO Watch Triangle",
+    region: "Le Locle / La Chaux-de-Fonds / Vue des Alpes",
+    terrainType: "Road",
+    distanceRange: "40–50km",
+    watchAnchors: ["Tissot", "TAG Heuer", "Breitling"],
+    coffeeStops: ["Black Drop Coffee, La Chaux-de-Fonds", "La Ferme des Brandt, La Chaux-de-Fonds outskirts"],
+    mootsFit: "Vamoots RCS or Routt 45",
+    governanceNote: "Editorial route signal. No GPX, no route ownership, no factory access claimed.",
+  },
+  {
+    routeId: "valley-of-giants",
+    routeName: "Valley of Giants",
+    region: "Biel/Bienne / Grenchen / Saint-Imier",
+    terrainType: "Road",
+    distanceRange: "60km base (Grenchenberg climb optional — separate harder variant)",
+    watchAnchors: ["Omega", "Rolex", "Breitling", "Longines", "NORQAIN"],
+    coffeeStops: ["OAK Biel, Zentralstrasse", "Farel Bistro, old-town Bienne"],
+    mootsFit: "Vamoots RCS for base route; Routt RSL if the day turns competitive",
+    governanceNote: "Editorial route signal. No GPX, no route ownership, no factory access claimed.",
+  },
+  {
+    routeId: "vallee-de-joux-gravel-escape",
+    routeName: "Haute-Horlogerie Gravel Escape",
+    region: "Le Sentier / Le Brassus / Lac de Joux / Col du Marchairuz",
+    terrainType: "Gravel",
+    distanceRange: "~50km mixed surface",
+    watchAnchors: ["Audemars Piguet", "Jaeger-LeCoultre", "TUDOR"],
+    coffeeStops: ["Hôtel des Horlogers Café, Le Brassus", "Café Restaurant du Marchairuz, Col du Marchairuz"],
+    mootsFit: "Routt 45 — the clearest titanium all-road match in the set",
+    governanceNote: "Editorial route signal. No GPX, no route ownership, no factory access claimed. Seasonal spring mud is a real safety note.",
+  },
+];
 
 const COFFEE_SIGNALS = [
   {
@@ -1493,6 +1627,110 @@ export default function SwitzerlandRoutes() {
             </p>
           </div>
         </div>
+      </section>
+
+      <section className="container py-16 border-t" style={{ borderColor: "oklch(0.38 0.015 60 / 0.5)" }} aria-labelledby="watch-valley-pilgrimage-heading">
+        <div className="max-w-4xl mb-10">
+          <h2 id="watch-valley-pilgrimage-heading" className="font-display text-3xl md:text-5xl font-bold mb-5" style={{ color: "oklch(0.945 0.018 78)" }}>
+            Watch Valley Pilgrimage
+          </h2>
+          <p className="font-mono-custom text-sm md:text-base leading-loose whitespace-pre-line" style={{ color: "oklch(0.78 0.03 70)" }}>
+            The Swiss Jura is not built for speed. It is built for tolerances.
+            The same ridgelines that shaped Swiss watchmaking shape the roads
+            between Le Locle, La Chaux-de-Fonds, Biel/Bienne, Grenchen, and
+            the Vallée de Joux. A Moots frame and a Swiss watch movement reward
+            the same kind of buyer: someone who understands permanence, handwork,
+            and the difference between good and exceptional. Time matters. So does
+            the road.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-px mb-12" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
+          {WATCH_VALLEY_ROUTES.map((route) => (
+            <article key={route.routeId} className="p-6 md:p-7 flex flex-col gap-4 min-h-[360px]" style={{ background: "oklch(0.24 0.01 60)" }}>
+              <div className="flex flex-wrap gap-2">
+                <span className="font-label text-xs tracking-[0.18em] uppercase px-2.5 py-1" style={{ color: "oklch(0.88 0.025 75)", background: "oklch(0.30 0.01 60)" }}>
+                  {route.terrainType}
+                </span>
+                <span className="font-label text-xs tracking-[0.18em] uppercase px-2.5 py-1" style={{ color: READABLE_ACCENT, background: "oklch(0.20 0.01 60)" }}>
+                  {route.distanceRange}
+                </span>
+              </div>
+              <div>
+                <h3 className="font-display text-2xl md:text-3xl font-bold leading-tight mb-3" style={{ color: "oklch(0.945 0.018 78)" }}>
+                  {route.routeName}
+                </h3>
+                <p className="font-label text-xs tracking-[0.24em] uppercase" style={{ color: READABLE_ACCENT }}>
+                  {route.region}
+                </p>
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <p className="font-label text-[11px] tracking-[0.24em] uppercase mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>
+                    Watch anchors
+                  </p>
+                  <ul className="space-y-1 font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+                    {route.watchAnchors.map((anchor) => (
+                      <li key={anchor}>{anchor}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <p className="font-label text-[11px] tracking-[0.24em] uppercase mb-2" style={{ color: "oklch(0.52 0.12 45)" }}>
+                    Coffee stops
+                  </p>
+                  <ul className="space-y-1 font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+                    {route.coffeeStops.map((stop) => (
+                      <li key={stop}>{stop}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+                {route.mootsFit}
+              </p>
+              <p className="font-label text-xs tracking-[0.2em] uppercase mt-auto" style={{ color: READABLE_ACCENT }}>
+                {route.governanceNote}
+              </p>
+            </article>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px" style={{ background: "oklch(0.38 0.015 60 / 0.5)" }}>
+          {WATCH_VALLEY_BRANDS.map((brand) => (
+            <article key={brand.brand} className="p-6 md:p-7 min-h-[260px] flex flex-col gap-4" style={{ background: "oklch(0.24 0.01 60)" }}>
+              <div>
+                <h3 className="font-display text-2xl md:text-3xl font-bold leading-tight" style={{ color: "oklch(0.945 0.018 78)" }}>
+                  {brand.brand}
+                </h3>
+                <p className="font-label text-xs tracking-[0.24em] uppercase mt-3" style={{ color: READABLE_ACCENT }}>
+                  {brand.town}
+                </p>
+                <p className="font-mono-custom text-xs leading-loose mt-2" style={{ color: "oklch(0.52 0.04 65)" }}>
+                  {brand.region}
+                </p>
+              </div>
+              {brand.cyclingSignal ? (
+                <p className="font-mono-custom text-sm leading-loose" style={{ color: "oklch(0.78 0.03 70)" }}>
+                  {brand.cyclingSignal}
+                </p>
+              ) : null}
+              <a
+                href={brand.officialUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-label text-xs tracking-[0.2em] uppercase mt-auto hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
+                style={{ color: READABLE_ACCENT }}
+              >
+                Official Site →
+              </a>
+            </article>
+          ))}
+        </div>
+
+        <p className="font-mono-custom text-sm leading-loose mt-6" style={{ color: "oklch(0.78 0.03 70)" }}>
+          Watchmaker names and links are used as public route research references. No sponsorship, partnership, factory access, or endorsement by MootsFrame is implied. Route descriptions are editorial signals only — not claimed GPX files, not owned routes.
+        </p>
       </section>
     </main>
   );
