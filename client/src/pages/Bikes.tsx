@@ -4,7 +4,7 @@
  * official Moots product and category pages. No fabricated imagery.
  */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "wouter";
 
 if (typeof window !== "undefined") {
@@ -357,6 +357,46 @@ function CategorySection({ section }: { section: Section }) {
 }
 
 export default function Bikes() {
+  useEffect(() => {
+    const schemaId = "vamoots-rcs-product-json-ld";
+    document.getElementById(schemaId)?.remove();
+
+    const script = document.createElement("script");
+    script.id = schemaId;
+    script.type = "application/ld+json";
+    script.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Product",
+      name: "Moots Vamoots RCS",
+      description:
+        "The Moots Vamoots RCS is a titanium endurance road bike built for riders who want Moots craftsmanship on pavement. Hand-built in Steamboat Springs, Colorado. Available for demo in Texas, Arkansas, and Oklahoma through MootsFrame.",
+      brand: {
+        "@type": "Brand",
+        name: "Moots",
+        url: "https://moots.com",
+      },
+      image: "https://moots.com/cdn/shop/files/VaMootsRCSAPEX01.jpg",
+      url: "https://mootsframe.com/models/vamoots-rcs",
+      manufacturer: {
+        "@type": "Organization",
+        name: "Moots",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Steamboat Springs",
+          addressRegion: "CO",
+          addressCountry: "US",
+        },
+      },
+      material: "Titanium 3Al/2.5V alloy",
+      countryOfOrigin: "US",
+    });
+    document.head.appendChild(script);
+
+    return () => {
+      script.remove();
+    };
+  }, []);
+
   return (
     <div className="min-h-screen" style={{ background: "oklch(0.22 0.01 60)" }}>
       <BikesNav />
