@@ -18,6 +18,7 @@ interface Bike {
   tagline: string;
   description: string;
   url: string;
+  modelPage?: string;
 }
 
 interface Section {
@@ -46,6 +47,7 @@ const SECTIONS: Section[] = [
         description:
           "The lightweight Routt for fast gravel days. Tight clearance, sharp handling, all-day titanium.",
         url: "https://moots.com/products/routt-rsl",
+        modelPage: "/bikes/routt-rsl",
       },
       {
         name: "Routt 45",
@@ -53,6 +55,7 @@ const SECTIONS: Section[] = [
         description:
           "Built around 45mm rubber. The middle of the Routt family — the one that goes everywhere.",
         url: "https://moots.com/products/routt-45",
+        modelPage: "/bikes/routt-45",
       },
       {
         name: "Routt YBB",
@@ -60,6 +63,7 @@ const SECTIONS: Section[] = [
         description:
           "Moots' patented YBB rear suspension takes the edge off the worst chatter without slowing you down.",
         url: "https://moots.com/products/routt-ybb",
+        modelPage: "/bikes/routt-ybb",
       },
       {
         name: "Routt CRD",
@@ -67,6 +71,7 @@ const SECTIONS: Section[] = [
         description:
           "The original Routt platform. Capable, balanced, and quietly fast.",
         url: "https://moots.com/products/routt-crd",
+        modelPage: "/bikes/routt-crd",
       },
       {
         name: "Routt ESC",
@@ -92,6 +97,7 @@ const SECTIONS: Section[] = [
         description:
           "Long-mile geometry with a smooth, planted feel. Built for the way most people actually ride.",
         url: "https://moots.com/collections/road",
+        modelPage: "/bikes/vamoots-crd",
       },
       {
         name: "Vamoots 33",
@@ -99,6 +105,7 @@ const SECTIONS: Section[] = [
         description:
           "Clearance for 33mm rubber. Modern road, classic Moots ride quality.",
         url: "https://moots.com/collections/road",
+        modelPage: "/bikes/vamoots-33",
       },
       {
         name: "Vamoots RCS",
@@ -106,6 +113,7 @@ const SECTIONS: Section[] = [
         description:
           "Stiffer, sharper, and still unmistakably titanium. The Vamoots for spirited days.",
         url: "https://moots.com/products/vamoots-rcs",
+        modelPage: "/bikes/vamoots-rcs",
       },
     ],
   },
@@ -124,6 +132,7 @@ const SECTIONS: Section[] = [
         description:
           "A modern trail hardtail in titanium. Forgiving when you want it, sharp when you ask.",
         url: "https://moots.com/products/womble",
+        modelPage: "/bikes/womble",
       },
       {
         name: "Mountaineer",
@@ -131,6 +140,7 @@ const SECTIONS: Section[] = [
         description:
           "A Moots cornerstone. Light, fast, and built to outlast carbon by a couple of decades.",
         url: "https://moots.com/collections/mountain",
+        modelPage: "/bikes/mountaineer",
       },
       {
         name: "MXC",
@@ -138,6 +148,7 @@ const SECTIONS: Section[] = [
         description:
           "Race-leaning XC geometry in titanium. Long days in the saddle, no rattle in the bones.",
         url: "https://moots.com/collections/mountain",
+        modelPage: "/bikes/mxc",
       },
     ],
   },
@@ -307,6 +318,15 @@ function BikeCard({ bike, accent }: { bike: Bike; accent: string }) {
       >
         View {bike.name} on moots.com →
       </a>
+      {bike.modelPage && (
+        <Link
+          href={bike.modelPage}
+          className="block mt-3 font-label text-xs tracking-[0.2em] uppercase hover:opacity-70 transition-opacity focus:outline focus:outline-2 focus:outline-offset-4"
+          style={{ color: "oklch(0.72 0.14 65)" }}
+        >
+          View model →
+        </Link>
+      )}
     </article>
   );
 }
