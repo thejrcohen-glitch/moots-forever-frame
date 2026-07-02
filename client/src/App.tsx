@@ -15,6 +15,7 @@ import BuildConfigurator from "@/pages/BuildConfigurator";
 import Admin from "@/pages/Admin";
 import Comparison from "@/pages/Comparison";
 import Bikes from "@/pages/Bikes";
+import Womble from "./pages/models/Womble";
 import Races from "@/pages/Races";
 import Routes from "@/pages/Routes";
 import SwitzerlandRoutes from "@/pages/SwitzerlandRoutes";
@@ -80,6 +81,7 @@ function Router() {
       <Route path={"/admin"} component={IS_STATIC_SITE ? StaticUnavailablePage : Admin} />
       <Route path={"/comparison"} component={Comparison} />
       <Route path={"/bikes"} component={Bikes} />
+      <Route path={"/bikes/womble"} component={Womble} />
       <Route path={"/races"} component={Races} />
       <Route path={"/routes/switzerland"} component={SwitzerlandRoutes} />
       <Route path={"/routes"} component={Routes} />
