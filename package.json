@@ -107,12 +107,20 @@
     "vitest": "^4.1.6"
   },
   "packageManager": "pnpm@10.28.2+sha512.41872f037ad22f7348e3b1debbaf7e867cfd448f2726d9cf74c08f19507c31d2c8e7a11525b983febc2df640b5438dee6023ebb1f84ed43cc2d654d2bc326264",
+  "overrides": {
+    "@babel/core": "7.29.7",
+    "dompurify": "3.4.11",
+    "form-data": "4.0.6"
+  },
   "pnpm": {
     "patchedDependencies": {
       "wouter@3.7.1": "patches/wouter@3.7.1.patch"
     },
     "overrides": {
+      "@babel/core": "7.29.7",
+      "dompurify": "3.4.11",
       "esbuild": "0.28.1",
+      "form-data": "4.0.6",
       "tailwindcss>nanoid": "3.3.7"
     }
   }
