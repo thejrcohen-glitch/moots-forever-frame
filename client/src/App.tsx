@@ -21,6 +21,7 @@ import SwitzerlandRoutes from "@/pages/SwitzerlandRoutes";
 import Strava from "@/pages/Strava";
 import Blog from "@/pages/Blog";
 import BlogPost from "@/pages/BlogPost";
+import Bentonville from "./pages/locations/Bentonville";
 
 const ANALYTICS_ENDPOINT = import.meta.env.VITE_ANALYTICS_ENDPOINT;
 const ANALYTICS_WEBSITE_ID = import.meta.env.VITE_ANALYTICS_WEBSITE_ID;
@@ -86,6 +87,7 @@ function Router() {
       <Route path={"/strava"} component={Strava} />
       <Route path={"/blog"} component={Blog} />
       <Route path={"/blog/:slug"} component={BlogPost} />
+      <Route path="/locations/bentonville" component={Bentonville} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
